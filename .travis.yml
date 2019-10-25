@@ -5,14 +5,12 @@ jdk:
 branches:
   only:
     - master
-      
 install:
-  - ls -la
   - cd ./events
   - ls -la 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:  
-  - mvnw test -B
+  - ./mvnw test -B
 
 
 
