@@ -10,7 +10,8 @@ install:
   - ls -la 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:  
-  - mvn compile
+  - mvn compile  # iskompajlira app i stavi .jar u traget folder
+  - cd target
   - ls -la
   # - mvn test -B
 
