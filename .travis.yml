@@ -7,7 +7,7 @@ branches:
     - master
       
 install:
-   cd ./events && mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+   cd ./events && mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:  
   cd ./events && mvnw test -B
 
