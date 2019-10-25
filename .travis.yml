@@ -11,8 +11,9 @@ install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:  
   - mvn compile  # iskompajlira app i stavi .jar u traget folder
-  - cd target
-  - ls -la
+  # - cd target
+  # - ls -la
+  - java -jar target/events-0.0.1-SNAPSHOT.jar
   # - mvn test -B
 
 
