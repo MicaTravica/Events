@@ -2,12 +2,14 @@ language: java
 jdk:
   - openjdk8
 # da bilda samo kad se pushne na master
-jobs:
-include:
-  - name: buildSping
-    if: branch = master
-    install: ./events/mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-    script: ./events/mvnw test -B
+branches:
+  only:
+    - master
+      
+install:
+   cd ./events && mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script:  
+  cd ./events && mvnw test -B
 
 
 
