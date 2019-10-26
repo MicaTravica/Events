@@ -7,9 +7,10 @@ services:
 branches:
   only:
     - master
-before_install:
-  - mysql -e 'CREATE DATABASE events_database;'
-  - mysql -e 'SELECT * FROM mysql.user WHERE User="travis";'
+before_script:
+- mysql -u root -e 'CREATE DATABASE events_database;'
+- mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
+- mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
 test:
   adapter: mysql2
   database: events_database
