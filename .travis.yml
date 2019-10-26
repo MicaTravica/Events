@@ -1,15 +1,25 @@
 language: java
 jdk:
   - openjdk8
+services:
+  - mysql
 # da bilda samo kad se pushne na master
 branches:
   only:
     - master
+before_install:
+  - mysql -e 'CREATE DATABASE events_database;'
+test:
+  adapter: mysql2
+  database: events_database
+  username: travis
+  encoding: utf8    
 install:
   - cd ./events
   - ls -la 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:  
+  # onda da napravim bazu koja se zove 
   - mvn compile  # iskompajlira app i stavi .jar u traget folder
   # - cd target
   # - ls -la
