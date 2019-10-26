@@ -7,6 +7,7 @@ services:
 branches:
   only:
     - master
+# poresavanja za bazu
 before_script:
 - mysql -u root -e 'CREATE DATABASE events_database;'
 - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
@@ -20,12 +21,8 @@ install:
   - cd ./events
   - ls -la 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-  # poresavanja za bazu
 script:  
-  # onda da napravim bazu koja se zove 
   - mvn compile  # iskompajlira app i stavi .jar u traget folder
-  # - cd target
-  # - ls -la
   - java -jar target/events-0.0.1-SNAPSHOT.jar
   - curl "http://localhost:8080";
   # - mvn test -B
