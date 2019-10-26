@@ -21,10 +21,18 @@ install:
   - cd ./events 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:  
-  - mvn compile  # iskompajlira app i stavi .jar u traget folder
-  - java -jar target/events-0.0.1-SNAPSHOT.jar
-  - curl -I http://localhost:8080
-  # - mvn test -B
+  #########
+  # ovo samo ako hoces da izblidas i da pokrenes app
+  # - mvn compile  # iskompajlira app i stavi .jar u traget folder
+  # - java -jar target/events-0.0.1-SNAPSHOT.jar
+  # - curl -I http://localhost:8080
+  ########
+  
+  ########
+  # izbilda app i pokrene testove iz foldera tests za backend
+  - mvn test -B
+  ########
+  
 
 
 
