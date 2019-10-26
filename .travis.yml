@@ -14,7 +14,7 @@ branches:
     - master
 # poresavanja za bazu
 before_script:
-- mysql -u root -e 'CREATE DATABASE DB_NAME;'
+- mysql -u root -e 'CREATE DATABASE events_database;'
 - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
 - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
 # test:
@@ -42,7 +42,8 @@ script:
   # dodat sonar qube
   - mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=DusanBucan_Events
   ########
-  - ls -la
+
+  - ls la
 
 
 
