@@ -14,14 +14,9 @@ branches:
     - master
 # poresavanja za bazu
 before_script:
-- mysql -u root -e 'CREATE DATABASE events_database;'
-- mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
-- mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
-# test:
-#   adapter: mysql2
-#   database: events_database
-#   username: travis
-#   encoding: utf8    
+  - mysql -u root -e 'CREATE DATABASE events_database;'
+  - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
+  - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
 install:
   - cd ./events 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
