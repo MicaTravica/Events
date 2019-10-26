@@ -42,8 +42,7 @@ script:
   # dodat sonar qube
   - mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=DusanBucan_Events
   ########
-
-   - ls -la
+  - ls -la
 
 
 
