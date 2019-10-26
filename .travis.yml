@@ -3,6 +3,11 @@ jdk:
   - openjdk8
 services:
   - mysql
+#sonar qube
+addons:
+  sonarcloud:
+    organization: "dusanbucan"
+
 # da bilda samo kad se pushne na master
 branches:
   only:
@@ -30,9 +35,13 @@ script:
   
   ########
   # izbilda app i pokrene testove iz foldera tests za backend
-  - mvn test -B
+  # - mvn test -B
   ########
-  
+
+  ########
+  # dodat sonar qube
+  - mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=DusanBucan_Events
+  ########
 
 
 
