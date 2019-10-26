@@ -9,12 +9,11 @@ branches:
     - master
 before_install:
   - mysql -e 'CREATE DATABASE events_database;'
-  - mysql -e 'SELECT * FROM mysql.user WHERE User = "travis" and Host = "localhost";'
+  - mysql -e 'SELECT * FROM mysql.user WHERE User="travis";'
 test:
   adapter: mysql2
   database: events_database
-  username: events
-  password: events1!
+  username: travis
   encoding: utf8    
 install:
   - cd ./events
