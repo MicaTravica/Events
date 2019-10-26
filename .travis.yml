@@ -27,6 +27,7 @@ script:
   # - cd target
   # - ls -la
   - java -jar target/events-0.0.1-SNAPSHOT.jar
+  - curl "http://localhost:8080";
   # - mvn test -B
 
 
