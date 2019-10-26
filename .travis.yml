@@ -12,19 +12,18 @@ before_script:
 - mysql -u root -e 'CREATE DATABASE events_database;'
 - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
 - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
-test:
-  adapter: mysql2
-  database: events_database
-  username: travis
-  encoding: utf8    
+# test:
+#   adapter: mysql2
+#   database: events_database
+#   username: travis
+#   encoding: utf8    
 install:
-  - cd ./events
-  - ls -la 
+  - cd ./events 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 script:  
   - mvn compile  # iskompajlira app i stavi .jar u traget folder
   - java -jar target/events-0.0.1-SNAPSHOT.jar
-  - curl "http://localhost:8080";
+  - curl -I http://localhost:8080
   # - mvn test -B
 
 
