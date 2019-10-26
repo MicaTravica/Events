@@ -18,6 +18,9 @@ install:
   - cd ./events
   - ls -la 
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  # poresavanja za bazu
+  - mysql -u root -p
+  - GRANT ALL PRIVILEGES ON *.* TO 'events'@'localhost' IDENTIFIED BY 'events1!';
 script:  
   # onda da napravim bazu koja se zove 
   - mvn compile  # iskompajlira app i stavi .jar u traget folder
