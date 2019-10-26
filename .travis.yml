@@ -1,0 +1,35 @@
+language: java
+jdk:
+  - openjdk8
+services:
+  - mysql
+#sonar qube
+addons:
+  sonarcloud:
+    organization: "dusanbucan"
+jobs:
+  include:
+    - 
+      if: (type = push AND branch = master) #OR (type = pull_request)
+      before_script:
+        - mysql -u root -e 'CREATE DATABASE events_database;'
+        - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
+        - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
+      install:
+        - cd ./events 
+        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      script:  
+        #########
+        # ovo samo ako hoces da izblidas i da pokrenes app
+        # - mvn compile  # iskompajlira app i stavi .jar u traget folder
+        # - java -jar target/events-0.0.1-SNAPSHOT.jar
+        # - curl -I http://localhost:8080
+        ########
+      
+        ########
+        # dodat sonar qube
+        - mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=DusanBucan_Events
+        ########
+
+
+
