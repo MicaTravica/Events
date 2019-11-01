@@ -22,27 +22,20 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Sector {
+public class SectorCapacity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
 	
-	private int sectorRows;
-	private int sectorColumns;
+	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Ticket> tickets;
 	
 	@ManyToOne
-	@JoinColumn(name="hall_id", referencedColumnName="id")
-	private Hall hall;
+	@JoinColumn(name="sector_id", referencedColumnName="id")
+	private Sector sector;
 	
-	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PriceList> priceLists;
-	
-	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<SectorCapacity> sectorCapacities;
-	
-	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Seat> seats;
-	
+	private int capacity;
+	private int free;
+
 }
