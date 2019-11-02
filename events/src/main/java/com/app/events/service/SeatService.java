@@ -10,4 +10,6 @@ public interface SeatService {
 	public SeatDTO create(Seat seat);
 	
 	public SeatDTO update(Seat seat);
+
+	public void delete(Long id);
 }

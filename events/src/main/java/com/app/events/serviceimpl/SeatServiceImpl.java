@@ -47,8 +47,11 @@ public class SeatServiceImpl implements SeatService {
 	     SeatDTO updatedSeatDTO = new SeatDTO(updatedSeat);
 	        
 	     return updatedSeatDTO;
-	     
-	     
+	}
+
+	@Override
+	public void delete(Long id) {
+		seatRepository.deleteById(id);
 	}
 
 }
