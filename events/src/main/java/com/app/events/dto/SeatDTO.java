@@ -17,6 +17,17 @@ public class SeatDTO {
 		this.seatColumn = seat.getSeatColumn();
 		// this.sector = new SectorDTO(seat.getSector());
 	}
+	
+	public Seat toSeat() {
+		Seat seat = new Seat();
+		
+		seat.setId(this.getId());
+		seat.setSeatRow(this.getSeatRow());
+		seat.setSeatColumn(this.getSeatColumn());
+		//seat.setSector(this.getSector().toSector());
+
+		return seat;
+	}
 
 	public Long getId() {
 		return id;

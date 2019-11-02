@@ -23,4 +23,32 @@ public class SeatServiceImpl implements SeatService {
 		return seatDTO;
 	}
 
+	@Override
+	public SeatDTO create(Seat seat) {
+
+		Seat newSeat = seatRepository.save(seat);
+		SeatDTO newSeatDTO = new SeatDTO(newSeat);
+
+		return newSeatDTO;
+	}
+
+	@Override
+	public SeatDTO update(Seat seat) throws RuntimeException {
+		 Seat seatToUpdate = seatRepository.findById(seat.getId()).get();
+	     if (seatToUpdate == null) { 
+	    	 throw new RuntimeException("Not found."); // custom exception here!
+	     }
+	     
+	     seatToUpdate.setSeatColumn(seat.getSeatColumn());
+	     seatToUpdate.setSeatRow(seat.getSeatRow());
+	     seatToUpdate.setSector(seat.getSector());
+	     
+	     Seat updatedSeat = seatRepository.save(seatToUpdate);
+	     SeatDTO updatedSeatDTO = new SeatDTO(updatedSeat);
+	        
+	     return updatedSeatDTO;
+	     
+	     
+	}
+
 }
