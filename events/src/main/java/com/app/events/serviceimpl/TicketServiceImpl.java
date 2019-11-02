@@ -1,0 +1,58 @@
+package com.app.events.serviceimpl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.app.events.dto.TicketDTO;
+import com.app.events.model.Ticket;
+import com.app.events.repository.TicketRepository;
+import com.app.events.service.TicketService;
+
+public class TicketServiceImpl implements TicketService {
+
+	@Autowired
+	private TicketRepository ticketRepository;
+
+	@Override
+	public TicketDTO findOne(Long id) {
+
+		Ticket Ticket = ticketRepository.findById(id).get();
+		TicketDTO TicketDTO = new TicketDTO(Ticket);
+
+		return TicketDTO;
+	}
+
+	@Override
+	public TicketDTO create(Ticket ticket) {
+
+		Ticket newTicket = ticketRepository.save(ticket);
+		TicketDTO newTicketDTO = new TicketDTO(newTicket);
+
+		return newTicketDTO;
+	}
+
+	@Override
+	public TicketDTO update(Ticket ticket) throws RuntimeException {
+		Ticket ticketToUpdate = ticketRepository.findById(ticket.getId()).get();
+		if (ticketToUpdate == null) {
+			throw new RuntimeException("Not found."); // custom exception here!
+		}
+
+		ticketToUpdate.setBarCode(ticket.getBarCode());
+		ticketToUpdate.setTicketState(ticket.getTicketState());
+		ticketToUpdate.setUser(ticket.getUser());
+		ticketToUpdate.setEvent(ticket.getEvent());
+		ticketToUpdate.setSeat(ticket.getSeat());
+		ticketToUpdate.setSectorCapacity(ticket.getSectorCapacity());
+
+		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
+		TicketDTO updatedTicketDTO = new TicketDTO(updatedTicket);
+
+		return updatedTicketDTO;
+	}
+
+	@Override
+	public void delete(Long id) {
+		ticketRepository.deleteById(id);
+	}
+
+}
