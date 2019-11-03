@@ -30,7 +30,6 @@ public class SectorController {
 		if (sector == null) {
 			return new ResponseEntity<SectorDTO>(HttpStatus.NOT_FOUND);
 		}
-		System.out.println(sector.toString());
 		return new ResponseEntity<SectorDTO>(sector, HttpStatus.OK);
 	}
 

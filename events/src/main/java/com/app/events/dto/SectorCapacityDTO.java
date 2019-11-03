@@ -1,5 +1,6 @@
 package com.app.events.dto;
 
+import com.app.events.model.Sector;
 import com.app.events.model.SectorCapacity;
 
 import lombok.Getter;
@@ -21,9 +22,17 @@ public class SectorCapacityDTO {
 
 	public SectorCapacityDTO(SectorCapacity sectorCapacity) {
         this.id = sectorCapacity.getId();
-        //this.sector = new SectorDTO(sectorCapacity.getSector());
+        
         this.capacity = sectorCapacity.getCapacity();
         this.free = sectorCapacity.getFree();
+        Sector mappedSector = 
+            new Sector(
+                sectorCapacity.getSector().getId(),
+                sectorCapacity.getSector().getName(),
+                sectorCapacity.getSector().getSectorColumns(),
+                sectorCapacity.getSector().getSectorRows()
+            );
+        this.sector = new SectorDTO(mappedSector);
 	}
 
 }
