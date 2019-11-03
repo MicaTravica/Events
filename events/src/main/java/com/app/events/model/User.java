@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.app.events.dto.UserDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,6 +33,7 @@ public class User {
 	private String name;
 	private String surname;
 	private String phone;
+	private String username;
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
@@ -39,4 +42,15 @@ public class User {
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Ticket> tickets;
 	
+	
+	public User(UserDTO userDTO) {
+		this.id = userDTO.getId();
+		this.email = userDTO.getEmail();
+		this.name = userDTO.getName();
+		this.surname = userDTO.getSurname();
+		this.phone = userDTO.getPhone();
+		this.username = userDTO.getUsername();
+		this.password = userDTO.getPassword();
+		this.userRole = userDTO.getUserRole();
+	}
 }

@@ -1,12 +1,14 @@
 package com.app.events.serviceimpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.app.events.dto.TicketDTO;
 import com.app.events.model.Ticket;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.TicketService;
 
+@Service
 public class TicketServiceImpl implements TicketService {
 
 	@Autowired
