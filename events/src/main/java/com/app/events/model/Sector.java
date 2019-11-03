@@ -44,5 +44,10 @@ public class Sector {
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Seat> seats;
-	
+
+	public Sector(String name, int sectorRows, int sectorColumns){
+		this.name = name;
+		this.sectorRows = sectorRows;
+		this.sectorColumns = sectorColumns;
+	}
 }
