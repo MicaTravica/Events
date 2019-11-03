@@ -21,6 +21,7 @@ import lombok.Setter;
 public class Seat {
 
 	@Id
+	@Getter
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private int seatRow;
@@ -29,5 +30,39 @@ public class Seat {
 	@ManyToOne
 	@JoinColumn(name="sector_id", referencedColumnName="id")
 	private Sector sector;
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public int getSeatRow() {
+		return seatRow;
+	}
+
+	public void setSeatRow(int seatRow) {
+		this.seatRow = seatRow;
+	}
+
+	public int getSeatColumn() {
+		return seatColumn;
+	}
+
+	public void setSeatColumn(int seatColumn) {
+		this.seatColumn = seatColumn;
+	}
+
+	public Sector getSector() {
+		return sector;
+	}
+
+	public void setSector(Sector sector) {
+		this.sector = sector;
+	}
+	
+	
 	
 }
