@@ -1,5 +1,6 @@
 package com.app.events.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -37,12 +38,26 @@ public class Sector {
 	private Hall hall;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PriceList> priceLists;
+	private Set<PriceList> priceLists = new HashSet<PriceList>();
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<SectorCapacity> sectorCapacities;
+	private Set<SectorCapacity> sectorCapacities = new HashSet<SectorCapacity>();
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Seat> seats;
-	
+	private Set<Seat> seats = new HashSet<Seat>();
+
+	public Sector(String name, int sectorRows, int sectorColumns){
+		this.name = name;
+		this.sectorRows = sectorRows;
+		this.sectorColumns = sectorColumns;
+		this.priceLists = new HashSet<PriceList>();
+	}
+
+	public Sector(Long id, String name, int sectorRows, int sectorColumns){
+		this.id = id;
+		this.name = name;
+		this.sectorRows = sectorRows;
+		this.sectorColumns = sectorColumns;
+		this.priceLists = new HashSet<PriceList>();
+	}
 }
