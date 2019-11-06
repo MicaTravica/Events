@@ -35,10 +35,19 @@ public class EventDTO {
         this.toDate = event.getToDate();
         this.eventState = event.getEventState();
         this.eventType = event.getEventType();
+   
     }
 
 	public Event toEvent() {
-		return null;
+			Event event = new Event( this.getId(), 
+				this.getName(),
+				this.getDescription(), 
+				this.getFromDate(),
+				this.getToDate(),
+				this.getEventState(),
+				this.getEventType());
+
+			return event;
 	}
 
 	public Event toSimpleEvent() {
@@ -51,6 +60,7 @@ public class EventDTO {
 						this.getEventType(),
 						this.place.toSimplePlace(),
 						new HashSet<>(),
-						null);
+						null
+		);
 	}
 }
