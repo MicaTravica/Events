@@ -2,6 +2,8 @@ package com.app.events.dto;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 
 import lombok.Getter;
@@ -29,36 +31,12 @@ public class SectorDTO {
 		this.name = sector.getName();
 		this.sectorRows = sector.getSectorRows();
 		this.sectorColumns = sector.getSectorColumns(); 
-		this.hall = new HallDTO(sector.getHall());
+		this.hall = this.getHallInfo(sector.getHall());
 		sector.getPriceLists().stream()
 			.forEach(y-> this.priceLists.add(new PriceListDTO(y)));
 		sector.getSectorCapacities()
 			.forEach(x->this.sectorCapacities.add(new SectorCapacityDTO(x)));
 		sector.getSeats().forEach(x->this.seats.add(new SeatDTO(x)));
-	}
-
-	public Sector toSector()
-	{
-		Sector sector = new Sector( this.getId(), 
-									this.getName(),
-									this.getSectorRows(), 
-									this.getSectorColumns()
-								);
-		sector.setHall(this.getHall().toSimpleHall());
-		this.getPriceLists()
-			.forEach(priceList->
-				sector.getPriceLists().add(priceList.toPriceList())
-			);
-		this.getSectorCapacities()
-			.forEach(sectorCapacity->
-				sector.getSectorCapacities().add(sectorCapacity.toSectorCapacity())
-			);
-		this.getSeats()
-			.forEach(seat->
-				sector.getSeats().add(seat.toSeat())
-			);
-
-		return sector;
 	}
 
 	public Sector toSimpleSector() {
@@ -84,4 +62,37 @@ public class SectorDTO {
             )
             : null;
 	}
+
+	public Sector toSector(){
+		Sector sector = new Sector( this.getId(), 
+									this.getName(),
+									this.getSectorRows(), 
+									this.getSectorColumns()
+								);
+		sector.setHall(new Hall(this.hall.getId()));
+		this.getPriceLists()
+			.forEach(priceList->
+				sector.getPriceLists().add(priceList.toPriceList())
+			);
+		this.getSectorCapacities()
+			.forEach(sectorCapacity->
+				sector.getSectorCapacities().add(sectorCapacity.toSectorCapacity())
+			);
+		this.getSeats()
+			.forEach(seat->
+				sector.getSeats().add(seat.toSeat())
+			);
+
+		return sector;
+	}
+
+	public HallDTO getHallInfo(Hall hall)
+	{
+		return hall != null ?
+			new HallDTO(hall.getId(), 
+						hall.getName()
+					)
+			: null;
+	}
+
 }
