@@ -50,6 +50,7 @@ public class EventDTO {
 						this.getEventState(),
 						this.getEventType(),
 						this.place.toSimplePlace(),
-						new HashSet<>());
+						new HashSet<>(),
+						null);
 	}
 }
