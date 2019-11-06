@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.MediaDTO;
 import com.app.events.model.Media;
-import com.app.events.model.Sector;
 import com.app.events.service.MediaService;
 
 @RestController
@@ -37,7 +36,7 @@ public class MediaController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<MediaDTO>> getMediaForEvent(@PathVariable("id") Long id) {
 		return new ResponseEntity<>(mediaService.findAllForEvent(id).stream()
-									.map(m -> new MediaDTO(m))
+									.map(MediaDTO::new)
 									.collect(Collectors.toList()),HttpStatus.OK);
 	}
 
@@ -50,9 +49,9 @@ public class MediaController extends BaseController {
 
 
 	@DeleteMapping(value = "/media/{id}}")
-	public ResponseEntity<Sector> deleteMedia(@PathVariable("id") Long id) throws Exception {
+	public ResponseEntity<String> deleteMedia(@PathVariable("id") Long id) throws Exception {
 		mediaService.delete(id);
-		return new ResponseEntity<Sector>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("Media is deleted", HttpStatus.NO_CONTENT);
 	}
 
 }
