@@ -17,7 +17,7 @@ import com.app.events.model.Sector;
 import com.app.events.service.SectorService;
 
 @RestController
-public class SectorController {
+public class SectorController extends BaseController{
 
 	@Autowired
 	private SectorService sectorService;
@@ -34,17 +34,13 @@ public class SectorController {
 
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sectorDTO) throws Exception {
-		try {
 			Sector savedSector = sectorService.create(sectorDTO.toSector());
 			sectorDTO = new SectorDTO(savedSector);
 			return new ResponseEntity<>(sectorDTO, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
 	}
 
 	@PutMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO){
+	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO) throws Exception{
 		Sector updatedSector = sectorService.update(sectorDTO.toSector());
 		if (updatedSector != null) {
 			sectorDTO = new SectorDTO(updatedSector);

@@ -6,9 +6,9 @@ public interface SectorService {
 
 	public Sector findOne(Long id);
 
-	public Sector create(Sector sector);
+	public Sector create(Sector sector) throws Exception;
 
-	public Sector update(Sector sector);
+	public Sector update(Sector sector) throws Exception;
 
 	public void delete(Long id);
 

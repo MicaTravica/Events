@@ -2,6 +2,9 @@ package com.app.events.serviceimpl;
 
 import java.util.Optional;
 
+import com.app.events.exception.HallDoesntExist;
+import com.app.events.exception.SectorDoesntExistException;
+import com.app.events.exception.SectorExistException;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 import com.app.events.repository.HallRepository;
@@ -35,30 +38,30 @@ public class SectorServiceImpl implements SectorService {
     }
 
     @Override
-    public Sector create(Sector sector) {
+    public Sector create(Sector sector) throws Exception{
         if(sector.getId() != null){
-            throw new RuntimeException("Sector already exists and has ID."); // custom exception here!
+            throw new SectorExistException("Section with id: " + sector.getId() + "exists");
         }
         Optional<Hall> optHall = hallRepository.findById(sector.getHall().getId());
         if(optHall.isPresent()){
             sector.setHall(optHall.get());
             return this.sectorRepository.save(sector);
         }
-        throw new RuntimeException("Hall don't exists"); // custom exception here!
+        throw new HallDoesntExist("Hall doesn't exists");
     }
 
     @Override
-    public Sector update(Sector sector) {
+    public Sector update(Sector sector) throws Exception{
         Optional<Sector> sectorOpt = this.sectorRepository.findById(sector.getId());
         if( !sectorOpt.isPresent())
         {
-            throw new RuntimeException("Not found."); // custom exception here!
+            throw new SectorDoesntExistException("Not found sector."); 
         }
         Sector sectorToUpdate = sectorOpt.get();
         Optional<Hall> hallOpt = this.hallRepository.findById(sector.getHall().getId());
         if( !hallOpt.isPresent())
         {
-            throw new RuntimeException("Not found hall."); // custom exception here!
+            throw new HallDoesntExist("Not found hall."); // custom exception here!
         }
         sectorToUpdate.setHall(hallOpt.get());
         sectorToUpdate.setName(sector.getName());
