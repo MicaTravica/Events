@@ -35,7 +35,7 @@ public class Sector {
 	
 	@ManyToOne
 	@JoinColumn(name="hall_id", referencedColumnName="id")
-	private Hall hall;
+	private Hall hall = new Hall();
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PriceList> priceLists = new HashSet<PriceList>();

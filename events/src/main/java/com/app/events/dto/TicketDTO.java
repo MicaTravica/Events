@@ -3,6 +3,14 @@ package com.app.events.dto;
 import com.app.events.model.Ticket;
 import com.app.events.model.TicketState;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class TicketDTO {
 	
 	private Long id;
@@ -36,10 +44,21 @@ public class TicketDTO {
 //		ticket.setEvent(this.getEvent().toEvent());
 //		ticket.setSeat(this.getSeat().toSeat());
 //		ticket.setSectorCapacity(this.getSectorCapacity().toSectorCapacity());
-
 		return ticket;
 	}
-	
+
+	// treba da se doradi za null---> nego da vraca normalne vrednosti
+	public Ticket toSimpleTicket() {
+		return new Ticket(
+						this.getId(),
+						this.getBarCode(),
+						this.getTicketState(),
+						null,
+						null,
+						null,
+						null
+					);
+	}
 	
 	public Long getId() {
 		return id;
@@ -59,6 +78,7 @@ public class TicketDTO {
 	public void setTicketState(TicketState ticketState) {
 		this.ticketState = ticketState;
 	}
+
 
 	
 	

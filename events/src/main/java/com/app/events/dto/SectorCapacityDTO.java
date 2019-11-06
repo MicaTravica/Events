@@ -1,6 +1,8 @@
 package com.app.events.dto;
 
-import com.app.events.model.Sector;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 import com.app.events.model.SectorCapacity;
 
 import lombok.Getter;
@@ -13,26 +15,32 @@ import lombok.Setter;
 public class SectorCapacityDTO {
 
     private Long id;
-
-    //private Set<Ticket> tickets;
+    private Set<TicketDTO> tickets = new HashSet<>();
     private SectorDTO sector;
-
     private int capacity;
 	private int free;
 
 	public SectorCapacityDTO(SectorCapacity sectorCapacity) {
         this.id = sectorCapacity.getId();
-        
         this.capacity = sectorCapacity.getCapacity();
         this.free = sectorCapacity.getFree();
-        Sector mappedSector = 
-            new Sector(
-                sectorCapacity.getSector().getId(),
-                sectorCapacity.getSector().getName(),
-                sectorCapacity.getSector().getSectorColumns(),
-                sectorCapacity.getSector().getSectorRows()
-            );
-        this.sector = new SectorDTO(mappedSector);
+        this.sector = SectorDTO.makeSimpleSectorDTO(sectorCapacity.getSector());
+        sectorCapacity.getTickets()
+                    .forEach(ticket->{
+                        this.tickets.add(new TicketDTO(ticket));
+                    });
 	}
 
+	public SectorCapacity toSectorCapacity() {
+        return new SectorCapacity( this.getId(),
+                                this.getTickets()
+                                    .stream()
+                                    .map(ticketDTO->{
+                                        return ticketDTO.toSimpleTicket();
+                                    })
+                                    .collect(Collectors.toSet()),
+                                this.getSector().toSimpleSector(),
+                                this.getCapacity(),
+                                this.getFree());
+    }
 }

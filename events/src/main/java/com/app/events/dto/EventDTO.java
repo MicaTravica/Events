@@ -1,6 +1,7 @@
 package com.app.events.dto;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.app.events.model.Event;
@@ -15,7 +16,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class EventDTO {
-
 	
 	private Long id;
 	private String name;
@@ -25,10 +25,8 @@ public class EventDTO {
 	private EventState eventState;
 	private EventType eventType;
 	private PlaceDTO place;
-	private Set<PriceListDTO> priceLists;
+	private Set<PriceListDTO> priceLists = new HashSet<>();
 	
-	
-	  
     public EventDTO(Event event) {
         this.id = event.getId();
         this.name = event.getName();
@@ -37,6 +35,21 @@ public class EventDTO {
         this.toDate = event.getToDate();
         this.eventState = event.getEventState();
         this.eventType = event.getEventType();
-        
     }
+
+	public Event toEvent() {
+		return null;
+	}
+
+	public Event toSimpleEvent() {
+		return new Event(this.getId(),
+						this.getName(),
+						this.getDescription(), 
+						this.getFromDate(),
+						this.getToDate(),
+						this.getEventState(),
+						this.getEventType(),
+						this.place.toSimplePlace(),
+						new HashSet<>());
+	}
 }
