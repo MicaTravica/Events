@@ -58,9 +58,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers("/index.html", "/api/login", "/api/registration").permitAll() 
 				.antMatchers(HttpMethod.POST, "/api/**")
 					.hasAuthority("ADMIN") //only administrator can add and edit data
-				.antMatchers(HttpMethod.GET, "/api/users", "/api/regularusers", "/api/user/**")
+				.antMatchers(HttpMethod.GET, "/api/users", "/api/regularusers", "/api/user/**", "/api/media")
 					.hasAuthority("ADMIN")
-				.antMatchers(HttpMethod.GET, "/api/user/me")
+				.antMatchers(HttpMethod.DELETE, "/api/meida/**")
+					.hasAuthority("ADMIN")
+				.antMatchers(HttpMethod.GET, "/api/user/me", "/media/**", "/media/event/**")
 					.hasAnyAuthority("ADMIN","REGULAR")
 				.antMatchers(HttpMethod.PUT, "/api/user", "/api/user/password")
 					.hasAnyAuthority("ADMIN","REGULAR")

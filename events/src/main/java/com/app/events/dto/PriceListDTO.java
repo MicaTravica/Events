@@ -47,7 +47,8 @@ public class PriceListDTO {
                     event.getEventState(),
                     event.getEventType(), 
                     event.getPlace(),  // ovo jos kad ostali zavrse pogledaj!!!
-                    new HashSet<>()
+                    new HashSet<>(),
+                    null
                 )
             )
             : null;

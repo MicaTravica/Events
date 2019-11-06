@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -50,17 +49,17 @@ public class UserController extends BaseController {
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
-		Authentication authentication = authenticationManager.authenticate(token);
+		authenticationManager.authenticate(token);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getUsername());
-		return new ResponseEntity<String>(tokenUtils.generateToken(userDetails), HttpStatus.OK);
+		return new ResponseEntity<>(tokenUtils.generateToken(userDetails), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/registration", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
 				 produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?>registration(@RequestBody UserDTO userDTO) throws Exception{
+	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws Exception{
 		userService.registration(new User(userDTO));
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>("You are welcome", HttpStatus.OK);
 	}
 	
 	
@@ -68,7 +67,7 @@ public class UserController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<UserDTO>> getUsers() {
 		return new ResponseEntity<>(userService.findAll().stream()
-											.map(u -> new UserDTO(u))
+											.map(UserDTO::new)
 											.collect(Collectors.toList()), HttpStatus.OK);
 	}
 	
@@ -76,7 +75,7 @@ public class UserController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<UserDTO>> getRegularUsers() {
 		return new ResponseEntity<>(userService.findAllRegular().stream()
-									.map(u -> new UserDTO(u))
+									.map(UserDTO::new)
 									.collect(Collectors.toList()), HttpStatus.OK);
 	}
 	
@@ -103,9 +102,9 @@ public class UserController extends BaseController {
 	@PutMapping(value= "/user/password", 
 				consumes= MediaType.APPLICATION_JSON_VALUE, 
 				produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> changePassword(@RequestBody PasswordChangeDTO pcDto) throws Exception
+	public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTO pcDto) throws Exception
 	{
 		userService.changeUserPassword(pcDto, SecurityContextHolder.getContext().getAuthentication().getName());
-	    return new ResponseEntity<>(HttpStatus.OK);
+	    return new ResponseEntity<>("Password changed", HttpStatus.OK);
 	}
 }

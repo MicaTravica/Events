@@ -9,6 +9,7 @@ public enum UserRole {
         name = s;
     }
 
+    @Override
     public String toString() {
        return this.name;
     }

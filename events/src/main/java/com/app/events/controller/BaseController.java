@@ -16,7 +16,7 @@ public abstract class BaseController {
 //	return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
 	@ExceptionHandler({AuthenticationException.class, UsernameNotFoundException.class})
 	public ResponseEntity<String> authenticationException(Exception e) {
-		return new ResponseEntity<String>("Invalid login", HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>("Invalid login", HttpStatus.BAD_REQUEST);
 	}
 }
 
