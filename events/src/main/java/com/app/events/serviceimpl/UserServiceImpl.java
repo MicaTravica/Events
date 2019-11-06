@@ -7,6 +7,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.app.events.dto.PasswordChangeDTO;
+import com.app.events.exception.EmailExistsException;
+import com.app.events.exception.UserNotFoundByUsernameException;
+import com.app.events.exception.UserNotFoundException;
+import com.app.events.exception.UsernameExistsException;
+import com.app.events.exception.WrongPasswordException;
 import com.app.events.model.User;
 import com.app.events.model.UserRole;
 import com.app.events.repository.UserRepository;
@@ -19,9 +24,11 @@ public class UserServiceImpl implements UserService {
 	private UserRepository userRepository;
 	
 	@Override
-	public User registration(User user) throws Exception {
-		if(userRepository.findByUsername(user.getUsername()).isPresent() && userRepository.findByEmail(user.getEmail()).isPresent()) {
-			throw new Exception();
+	public User registration(User user) throws UsernameExistsException, EmailExistsException {
+		if(userRepository.findByUsername(user.getUsername()).isPresent()) {
+			throw new UsernameExistsException();
+		} else if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+			throw new EmailExistsException();
 		}
 		user.setUserRole(UserRole.REGULAR);
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -39,32 +46,32 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findOne(Long id) throws Exception {
-		return userRepository.findById(id).orElseThrow(()->new Exception());
+	public User findOne(Long id) throws UserNotFoundException {
+		return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
 	}
 
 	@Override
-	public User update(User user) throws Exception {
-		User userToUpdate = userRepository.findById(user.getId()).orElseThrow(() -> new Exception());
+	public User update(User user) throws UserNotFoundException {
+		User userToUpdate = userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException(user.getId()));
 		userToUpdate.update(user);
 		return userRepository.save(userToUpdate);
 	}
 
 	@Override
-	public void changeUserPassword(PasswordChangeDTO pcDto, String username) throws Exception {
-		User user = userRepository.findByUsername(username).orElseThrow(() ->  new Exception());
+	public void changeUserPassword(PasswordChangeDTO pcDto, String username) throws WrongPasswordException, UserNotFoundByUsernameException {
+		User user = userRepository.findByUsername(username).orElseThrow(() ->  new UserNotFoundByUsernameException(username));
 		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 		if(bcpe.matches(pcDto.getOldPassword(), user.getPassword())) {
 			user.setPassword(bcpe.encode(pcDto.getNewPassword()));
 			userRepository.save(user);
 		}else {
-			throw new Exception();
+			throw new WrongPasswordException();
 		}
 	}
 
 	@Override
-	public User findOneByUsername(String name) throws Exception {
-		return userRepository.findByUsername(name).orElseThrow(() ->  new Exception());
+	public User findOneByUsername(String name) throws UserNotFoundByUsernameException {
+		return userRepository.findByUsername(name).orElseThrow(() ->  new UserNotFoundByUsernameException(name));
 	}
 
 }
