@@ -1,11 +1,7 @@
 package com.app.events.dto;
-
-import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
-import com.app.events.model.Event;
-import com.app.events.model.EventState;
-import com.app.events.model.EventType;
 import com.app.events.model.Place;
 
 import lombok.Getter;
@@ -26,12 +22,22 @@ public class PlaceDTO {
 	private Set<EventDTO> events;
 	private Set<HallDTO> halls;
 	
-	  public PlaceDTO(Place place) {
-	        this.id = place.getId();
-	        this.name = place.getName();
-	        this.address = place.getAddress();
-	        this.latitude = place.getLatitude();
-	        this.longitude = place.getLongitude();
-	        
-	    }
+	public PlaceDTO(Place place) {
+	    this.id = place.getId();
+	    this.name = place.getName();
+	    this.address = place.getAddress();
+	    this.latitude = place.getLatitude();
+	    this.longitude = place.getLongitude();    
+	}
+
+	public Place toSimplePlace() {
+		return new Place(this.getId(),
+						this.getName(),
+						this.getAddress(),
+						this.getLatitude(),
+						this.getLongitude(),
+						new HashSet<>(),
+						new HashSet<>()
+					);
+	}
 }

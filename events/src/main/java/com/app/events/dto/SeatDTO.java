@@ -1,21 +1,19 @@
 package com.app.events.dto;
 
 import com.app.events.model.Seat;
-import com.app.events.model.Sector;
 
 public class SeatDTO {
 
 	private Long id;
 	private int seatRow;
 	private int seatColumn;
-
-	// private SectorDTO sector;
+	private SectorDTO sector;
 
 	public SeatDTO(Seat seat) {
 		this.id = seat.getId();
 		this.seatRow = seat.getSeatRow();
 		this.seatColumn = seat.getSeatColumn();
-		// this.sector = new SectorDTO(seat.getSector());
+		this.sector = SectorDTO.makeSimpleSectorDTO(seat.getSector());
 	}
 	
 	public Seat toSeat() {
@@ -24,7 +22,7 @@ public class SeatDTO {
 		seat.setId(this.getId());
 		seat.setSeatRow(this.getSeatRow());
 		seat.setSeatColumn(this.getSeatColumn());
-		//seat.setSector(this.getSector().toSector());
+		seat.setSector(this.getSector().toSimpleSector());
 
 		return seat;
 	}
@@ -53,9 +51,9 @@ public class SeatDTO {
 		this.seatColumn = seatColumn;
 	}
 
-//	public int getSector() {
-//		return sector;
-//	}
+	public SectorDTO getSector() {
+		return sector;
+	}
 //
 //	public void setSector(int sector) {
 //		this.sector = sector;
