@@ -1,15 +1,18 @@
 package com.app.events.service;
 
-import com.app.events.dto.PlaceDTO;
+import java.util.Collection;
+
 import com.app.events.model.Place;
 
 public interface PlaceService {
 
-	public PlaceDTO findOne(Long id);
+	public Collection<Place> findAll();
+	
+	public Place findOne(Long id);
 
-	public PlaceDTO create(Place place);
+	public Place create(Place place);
 
-	public PlaceDTO update(Place place);
+	public Place update(Place place);
 
 	public void delete(Long id);
 }

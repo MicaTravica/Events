@@ -1,5 +1,8 @@
 package com.app.events.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,33 +27,46 @@ public class HallController {
 
 	@Autowired
 	private HallService hallService;
+	
+	@GetMapping(value = "/api/halls", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<HallDTO>> getHalls(){
+		Collection<Hall> halls = hallService.findAll();
+		Collection<HallDTO> hallsDTO = new ArrayList<>();
+		for(Hall h : halls) {
+			hallsDTO.add(new HallDTO(h));
+		}
+		return new ResponseEntity<>(hallsDTO, HttpStatus.OK);
+	}
+	
 
 	@GetMapping(value = "/api/hall/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HallDTO> getHall(@PathVariable("id") Long id) {
-		HallDTO hall = hallService.findOne(id);
+		Hall hall = hallService.findOne(id);
 		if (hall == null) {
 			return new ResponseEntity<HallDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<HallDTO>(hall, HttpStatus.OK);
+		return new ResponseEntity<HallDTO>(new HallDTO(hall), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/hall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<HallDTO> createHall(@RequestBody Hall hall) throws Exception {
+	public ResponseEntity<HallDTO> createHall(@RequestBody HallDTO hallDTO) throws Exception {
 		try {
-			HallDTO savedHall = hallService.create(hall);
-			return new ResponseEntity<HallDTO>(savedHall, HttpStatus.CREATED);
+			Hall hall = new Hall(hallDTO);
+			Hall savedHall = hallService.create(hall);
+			return new ResponseEntity<HallDTO>(new HallDTO(savedHall), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<HallDTO>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(value = "/api/hall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<HallDTO> updateHall(@RequestBody Hall hall) throws Exception {
-		HallDTO hallUpdated = hallService.update(hall);
-		if (hallUpdated == null) {
+	public ResponseEntity<HallDTO> updateHall(@RequestBody HallDTO hallDTO) throws Exception {
+		Hall hall = new Hall(hallDTO);
+		Hall updatedHall = hallService.update(hall);
+		if (updatedHall == null) {
 			return new ResponseEntity<HallDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<HallDTO>(hallUpdated, HttpStatus.OK);
+		return new ResponseEntity<HallDTO>(new HallDTO(updatedHall), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/hall/{id}")
