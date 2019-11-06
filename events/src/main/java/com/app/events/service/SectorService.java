@@ -1,15 +1,15 @@
 package com.app.events.service;
 
-import com.app.events.dto.SectorDTO;
+import com.app.events.exception.SectorDoesntExistException;
 import com.app.events.model.Sector;
 
 public interface SectorService {
 
-	public SectorDTO findOne(Long id);
+	public Sector findOne(Long id) throws SectorDoesntExistException;
 
-	public SectorDTO create(Sector sector);
+	public Sector create(Sector sector) throws Exception;
 
-	public SectorDTO update(Sector sector);
+	public Sector update(Sector sector) throws Exception;
 
 	public void delete(Long id);
 

@@ -1,5 +1,8 @@
 package com.app.events.controller;
 
+import com.app.events.exception.SectorDoesntExistException;
+import com.app.events.exception.SectorExistException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -18,6 +21,13 @@ public abstract class BaseController {
 	public ResponseEntity<String> authenticationException(Exception e) {
 		return new ResponseEntity<>("Invalid login", HttpStatus.BAD_REQUEST);
 	}
+
+	@ExceptionHandler({SectorExistException.class, SectorDoesntExistException.class})
+	public ResponseEntity<String> sectorExceptions(Exception e){
+		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+	}
+
+
 }
 
 

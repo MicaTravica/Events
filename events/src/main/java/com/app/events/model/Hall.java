@@ -36,4 +36,7 @@ public class Hall {
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Sector> sectors;
 	
+	public Hall(Long id){
+		this.id = id;
+	}
 }

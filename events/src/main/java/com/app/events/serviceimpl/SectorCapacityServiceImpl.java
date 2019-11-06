@@ -18,7 +18,6 @@ public class SectorCapacityServiceImpl implements SectorCapacityService {
     public SectorCapacityDTO findOne(Long id) {
         SectorCapacity sectorCapacity = this.sectorCapacityRepository.findById(id).get();
         SectorCapacityDTO sectorDTO = new SectorCapacityDTO(sectorCapacity);
-
         return sectorDTO;
     }
 
