@@ -46,23 +46,23 @@ public class SectorDTO {
 								);
 		sector.setHall(this.getHall().toSimpleHall());
 		this.getPriceLists()
-			.forEach(priceList->{
-				sector.getPriceLists().add(priceList.toPriceList());
-			});
+			.forEach(priceList->
+				sector.getPriceLists().add(priceList.toPriceList())
+			);
 		this.getSectorCapacities()
-			.forEach(sectorCapacity->{
-				sector.getSectorCapacities().add(sectorCapacity.toSectorCapacity());
-			});
+			.forEach(sectorCapacity->
+				sector.getSectorCapacities().add(sectorCapacity.toSectorCapacity())
+			);
 		this.getSeats()
-			.forEach(seat->{
-				sector.getSeats().add(seat.toSeat());
-			});
+			.forEach(seat->
+				sector.getSeats().add(seat.toSeat())
+			);
 
 		return sector;
 	}
 
 	public Sector toSimpleSector() {
-		return this != null ?
+		return id != 0 ?
 			new Sector( 
 				this.getId(),
 				this.getName(),

@@ -26,18 +26,16 @@ public class SectorCapacityDTO {
         this.free = sectorCapacity.getFree();
         this.sector = SectorDTO.makeSimpleSectorDTO(sectorCapacity.getSector());
         sectorCapacity.getTickets()
-                    .forEach(ticket->{
-                        this.tickets.add(new TicketDTO(ticket));
-                    });
+                    .forEach(ticket->
+                        this.tickets.add(new TicketDTO(ticket))
+                    );
 	}
 
 	public SectorCapacity toSectorCapacity() {
         return new SectorCapacity( this.getId(),
                                 this.getTickets()
                                     .stream()
-                                    .map(ticketDTO->{
-                                        return ticketDTO.toSimpleTicket();
-                                    })
+                                    .map(ticketDTO-> ticketDTO.toSimpleTicket())
                                     .collect(Collectors.toSet()),
                                 this.getSector().toSimpleSector(),
                                 this.getCapacity(),

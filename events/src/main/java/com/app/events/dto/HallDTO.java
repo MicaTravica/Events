@@ -33,7 +33,7 @@ public class HallDTO {
 			this.sectors.add(new SectorDTO(mappedSector));
 		});   
 	}
-
+	
 	public Hall toSimpleHall() {
 		return new Hall(this.getId(),
 						this.getName(), 

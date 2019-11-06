@@ -17,7 +17,6 @@ import com.app.events.dto.SectorDTO;
 import com.app.events.model.Sector;
 import com.app.events.service.SectorService;
 
-@CrossOrigin(origins = "*")
 @RestController
 public class SectorController {
 
@@ -29,35 +28,36 @@ public class SectorController {
 		Sector sector = sectorService.findOne(id);
 		if (sector != null) {
 			SectorDTO sectorDTO = new SectorDTO(sector);
-			return new ResponseEntity<SectorDTO>(sectorDTO, HttpStatus.OK);
+			return new ResponseEntity<>(sectorDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<SectorDTO>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sector) throws Exception {
+	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sectorDTO) throws Exception {
 		try {
-			Sector savedSector = sectorService.create(sector);
-			SectorDTO sectorDTO = new SectorDTO(savedSector);
-			return new ResponseEntity<SectorDTO>(sectorDTO, HttpStatus.CREATED);
+			Sector savedSector = sectorService.create(sectorDTO.toSector());
+			sectorDTO = new SectorDTO(savedSector);
+			return new ResponseEntity<>(sectorDTO, HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<SectorDTO>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> updateSector(@RequestBody Sector sector) throws Exception {
-		SectorDTO updatedSector = sectorService.update(sector);
-		if (updatedSector == null) {
-			return new ResponseEntity<SectorDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO){
+		Sector updatedSector = sectorService.update(sectorDTO.toSector());
+		if (updatedSector != null) {
+			sectorDTO = new SectorDTO(updatedSector);
+			return new ResponseEntity<>(sectorDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<SectorDTO>(updatedSector, HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@DeleteMapping(value = "/api/sector/{id}")
 	public ResponseEntity<Sector> deleteSector(@PathVariable("id") Long id) {
 		sectorService.delete(id);
-		return new ResponseEntity<Sector>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }
