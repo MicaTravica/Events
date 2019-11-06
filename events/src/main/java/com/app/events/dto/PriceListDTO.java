@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PriceListDTO {
 
-    private Long id;
+	private Long id;
     private double price;
     private EventDTO event;
     private SectorDTO sector;

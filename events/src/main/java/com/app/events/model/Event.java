@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.app.events.dto.EventDTO;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -51,5 +53,26 @@ public class Event {
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Media> mediaList;
+	
+	public Event(EventDTO event) {
+		   this.id = event.getId();
+	        this.name = event.getName();
+	        this.description = event.getDescription();
+	        this.fromDate = event.getFromDate();
+	        this.toDate = event.getToDate();
+	        this.eventState = event.getEventState();
+	        this.eventType = event.getEventType();
+	}
+
+	public Event(Long id, String name, String description, Date fromDate, Date toDate, EventState eventState,
+			EventType eventType) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
+		this.eventState = eventState;
+		this.eventType = eventType;
+	}
 	
 }

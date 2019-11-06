@@ -1,5 +1,8 @@
 package com.app.events.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,32 +26,44 @@ public class PlaceController {
 	@Autowired
 	private PlaceService placeService;
 
+	@GetMapping(value = "/api/places", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<PlaceDTO>> getPlaces(){
+		Collection<Place> places = placeService.findAll();
+		Collection<PlaceDTO> placesDTO = new ArrayList<>();
+		for(Place p : places) {
+			placesDTO.add(new PlaceDTO(p));
+		}
+		return new ResponseEntity<>(placesDTO, HttpStatus.OK);
+	}
+	
 	@GetMapping(value = "/api/place/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlaceDTO> getPlace(@PathVariable("id") Long id) {
-		PlaceDTO place = placeService.findOne(id);
+		Place place = placeService.findOne(id);
 		if (place == null) {
 			return new ResponseEntity<PlaceDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<PlaceDTO>(place, HttpStatus.OK);
+		return new ResponseEntity<PlaceDTO>(new PlaceDTO(place), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PlaceDTO> createPlace(@RequestBody Place place) throws Exception {
+	public ResponseEntity<PlaceDTO> createPlace(@RequestBody PlaceDTO placeDTO) throws Exception {
 		try {
-			PlaceDTO savedPlace = placeService.create(place);
-			return new ResponseEntity<PlaceDTO>(savedPlace, HttpStatus.CREATED);
+			Place place = new Place(placeDTO);
+			Place savedPlace = placeService.create(place);
+			return new ResponseEntity<PlaceDTO>(new PlaceDTO(savedPlace), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<PlaceDTO>(HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@PutMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PlaceDTO> updatePlace(@RequestBody Place place) throws Exception {
-		PlaceDTO placeUpdated = placeService.update(place);
-		if (placeUpdated == null) {
+	public ResponseEntity<PlaceDTO> updatePlace(@RequestBody PlaceDTO placeDTO) throws Exception {
+		Place place = new Place(placeDTO);
+		Place updatedPlace = placeService.update(place);
+		if (updatedPlace == null) {
 			return new ResponseEntity<PlaceDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<PlaceDTO>(placeUpdated, HttpStatus.OK);
+		return new ResponseEntity<PlaceDTO>(new PlaceDTO(updatedPlace), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/place/{id}")
