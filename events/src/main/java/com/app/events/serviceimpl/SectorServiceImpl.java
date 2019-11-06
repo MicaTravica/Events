@@ -45,7 +45,6 @@ public class SectorServiceImpl implements SectorService {
             return this.sectorRepository.save(sector);
         }
         throw new RuntimeException("Hall don't exists"); // custom exception here!
-        
     }
 
     @Override
@@ -62,13 +61,10 @@ public class SectorServiceImpl implements SectorService {
             throw new RuntimeException("Not found hall."); // custom exception here!
         }
         sectorToUpdate.setHall(hallOpt.get());
-	    sectorToUpdate.setName(sector.getName());
-        sectorToUpdate.setPriceLists(sector.getPriceLists());
-        sectorToUpdate.setSeats(sector.getSeats());
-        sectorToUpdate.setSectorCapacities(sector.getSectorCapacities());
+        sectorToUpdate.setName(sector.getName());
         sectorToUpdate.setSectorColumns(sector.getSectorColumns());
         sectorToUpdate.setSectorRows(sector.getSectorRows());
-	    return this.sectorRepository.save(sectorToUpdate);
+        return this.sectorRepository.save(sectorToUpdate);
     }
 
     @Override

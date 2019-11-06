@@ -1,8 +1,5 @@
 package com.app.events.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 
@@ -20,11 +17,7 @@ public class SectorDTO {
 
 	private int sectorRows;
 	private int sectorColumns;
-
 	private HallDTO hall;
-	private Set<PriceListDTO> priceLists = new HashSet<PriceListDTO>();
-	private Set<SectorCapacityDTO> sectorCapacities = new HashSet<SectorCapacityDTO>();
-	private Set<SeatDTO> seats = new HashSet<SeatDTO>();;
 
 	public SectorDTO(Sector sector) {
 		this.id = sector.getId();
@@ -32,11 +25,6 @@ public class SectorDTO {
 		this.sectorRows = sector.getSectorRows();
 		this.sectorColumns = sector.getSectorColumns(); 
 		this.hall = this.getHallInfo(sector.getHall());
-		sector.getPriceLists().stream()
-			.forEach(y-> this.priceLists.add(new PriceListDTO(y)));
-		sector.getSectorCapacities()
-			.forEach(x->this.sectorCapacities.add(new SectorCapacityDTO(x)));
-		sector.getSeats().forEach(x->this.seats.add(new SeatDTO(x)));
 	}
 
 	public Sector toSimpleSector() {
@@ -70,19 +58,6 @@ public class SectorDTO {
 									this.getSectorColumns()
 								);
 		sector.setHall(new Hall(this.hall.getId()));
-		this.getPriceLists()
-			.forEach(priceList->
-				sector.getPriceLists().add(priceList.toPriceList())
-			);
-		this.getSectorCapacities()
-			.forEach(sectorCapacity->
-				sector.getSectorCapacities().add(sectorCapacity.toSectorCapacity())
-			);
-		this.getSeats()
-			.forEach(seat->
-				sector.getSeats().add(seat.toSeat())
-			);
-
 		return sector;
 	}
 
