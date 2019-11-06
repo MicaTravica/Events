@@ -53,4 +53,11 @@ public class User {
 		this.password = userDTO.getPassword();
 		this.userRole = userDTO.getUserRole();
 	}
+
+
+	public void update(User user) {
+		this.name = user.getName();
+		this.surname = user.getSurname();
+		this.phone = user.getPhone();
+	}
 }

@@ -1,5 +1,6 @@
 package com.app.events.dto;
 
+import com.app.events.model.User;
 import com.app.events.model.UserRole;
 
 import lombok.AllArgsConstructor;
@@ -21,4 +22,14 @@ public class UserDTO {
 	private String username;
 	private String password;
 	private UserRole userRole;
+	
+	public UserDTO(User u) {
+		this.id = u.getId();
+		this.email = u.getEmail();
+		this.name = u.getName();
+		this.surname = u.getSurname();
+		this.phone = u.getPhone();
+		this.username = u.getUsername();
+		this.userRole = u.getUserRole();
+	}
 }
