@@ -49,4 +49,7 @@ public class Event {
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PriceList> priceLists;
 	
+	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	private Set<Media> mediaList;
+	
 }
