@@ -1,5 +1,7 @@
 package com.app.events.serviceimpl;
 
+import java.util.Optional;
+
 import com.app.events.dto.SectorDTO;
 import com.app.events.model.Sector;
 import com.app.events.repository.PriceListRepository;
@@ -23,31 +25,27 @@ public class SectorServiceImpl implements SectorService {
     private SectorCapacityRepository sectorCapacityRepository;
 
     @Override
-    public SectorDTO findOne(Long id) {
-        Sector sector = this.sectorRepository.findById(id).get();
-        sector.setPriceLists(priceListRepository.findBySectorId(id));
-        sector.setSectorCapacities(sectorCapacityRepository.findBySectorId(id));
-        SectorDTO sectorDTO = new SectorDTO(sector);
-
-        return sectorDTO;
+    public Sector findOne(Long id) {
+        Optional<Sector> sectorOpt = this.sectorRepository.findById(id);
+        return sectorOpt.isPresent() == true ? sectorOpt.get() : new Sector();
     }
 
     @Override
-    public SectorDTO create(Sector sector) {
-        if(sector.getId() != null){
+    public Sector create(SectorDTO sectorDTO) {
+        if(sectorDTO.getId() != null){
             throw new RuntimeException("Sector already exists and has ID."); // custom exception here!
         }
-        sector.getPriceLists().forEach(list->list.setSector(sector));
-        sector.getSectorCapacities()
-            .forEach(list-> {
-                list.setSector(sector);
-                list.setFree(list.getCapacity());
-                }
-            );
-        Sector savedSector = this.sectorRepository.save(sector);
-        SectorDTO sectorDTO = new SectorDTO(savedSector);
-        
-        return sectorDTO;
+        return null;
+        // prebaci dto na obican....
+
+        // sectorDTO.getPriceLists().forEach(list->list.setSector(null));
+        // sectorDTO.getSectorCapacities()
+        //     .forEach(list-> {
+        //         list.setSector(sectorDTO);
+        //         list.setFree(list.getCapacity());
+        //         }
+        //     );
+        // return this.sectorRepository.save(sector);  
     }
 
     @Override

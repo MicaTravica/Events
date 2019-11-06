@@ -5,9 +5,9 @@ import com.app.events.model.Sector;
 
 public interface SectorService {
 
-	public SectorDTO findOne(Long id);
+	public Sector findOne(Long id);
 
-	public SectorDTO create(Sector sector);
+	public Sector create(SectorDTO sector);
 
 	public SectorDTO update(Sector sector);
 

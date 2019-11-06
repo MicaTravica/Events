@@ -26,18 +26,20 @@ public class SectorController {
 
 	@GetMapping(value = "/api/sector/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorDTO> getSector(@PathVariable("id") Long id) {
-		SectorDTO sector = sectorService.findOne(id);
-		if (sector == null) {
-			return new ResponseEntity<SectorDTO>(HttpStatus.NOT_FOUND);
+		Sector sector = sectorService.findOne(id);
+		if (sector != null) {
+			SectorDTO sectorDTO = new SectorDTO(sector);
+			return new ResponseEntity<SectorDTO>(sectorDTO, HttpStatus.OK);
 		}
-		return new ResponseEntity<SectorDTO>(sector, HttpStatus.OK);
+		return new ResponseEntity<SectorDTO>(HttpStatus.NOT_FOUND);
 	}
 
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> createSector(@RequestBody Sector sector) throws Exception {
+	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sector) throws Exception {
 		try {
-			SectorDTO savedSector = sectorService.create(sector);
-			return new ResponseEntity<SectorDTO>(savedSector, HttpStatus.CREATED);
+			Sector savedSector = sectorService.create(sector);
+			SectorDTO sectorDTO = new SectorDTO(savedSector);
+			return new ResponseEntity<SectorDTO>(sectorDTO, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<SectorDTO>(HttpStatus.BAD_REQUEST);
 		}
