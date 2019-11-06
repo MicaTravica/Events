@@ -22,15 +22,11 @@ public abstract class BaseController {
 		return new ResponseEntity<>("Invalid login", HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler({SectorExistException.class})
-	public ResponseEntity<String> sectorExistsException(Exception e){
+	@ExceptionHandler({SectorExistException.class, SectorDoesntExistException.class})
+	public ResponseEntity<String> sectorExceptions(Exception e){
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}
-	@ExceptionHandler({SectorDoesntExistException.class})
-	public ResponseEntity<String> sectorDoesntExistsException(Exception e){
-		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-	}
-	
+
 
 }
 

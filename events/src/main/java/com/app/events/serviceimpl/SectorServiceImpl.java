@@ -32,9 +32,11 @@ public class SectorServiceImpl implements SectorService {
     private HallRepository hallRepository;
 
     @Override
-    public Sector findOne(Long id) {
-        Optional<Sector> sectorOpt = this.sectorRepository.findById(id);
-        return sectorOpt.isPresent() == true ? sectorOpt.get() : null;
+    public Sector findOne(Long id) throws SectorDoesntExistException{
+        return this.sectorRepository.findById(id)
+                    .orElseThrow(
+                        ()-> new SectorDoesntExistException("sector doesn't exist")
+                    ); 
     }
 
     @Override

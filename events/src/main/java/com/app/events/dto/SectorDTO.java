@@ -63,11 +63,7 @@ public class SectorDTO {
 
 	public HallDTO getHallInfo(Hall hall)
 	{
-		return hall != null ?
-			new HallDTO(hall.getId(), 
-						hall.getName()
-					)
-			: null;
+		return hall != null ? new HallDTO(hall.getId(),hall.getName()): null;
 	}
 
 }

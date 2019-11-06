@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.SectorDTO;
+import com.app.events.exception.SectorDoesntExistException;
 import com.app.events.model.Sector;
 import com.app.events.service.SectorService;
 
@@ -23,13 +24,10 @@ public class SectorController extends BaseController{
 	private SectorService sectorService;
 
 	@GetMapping(value = "/api/sector/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> getSector(@PathVariable("id") Long id) {
+	public ResponseEntity<SectorDTO> getSector(@PathVariable("id") Long id) throws SectorDoesntExistException{
 		Sector sector = sectorService.findOne(id);
-		if (sector != null) {
-			SectorDTO sectorDTO = new SectorDTO(sector);
-			return new ResponseEntity<>(sectorDTO, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		return new ResponseEntity<>(new SectorDTO(sector), HttpStatus.OK);
+		
 	}
 
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
