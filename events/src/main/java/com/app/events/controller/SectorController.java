@@ -37,18 +37,13 @@ public class SectorController extends BaseController{
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sectorDTO) throws Exception {
 			Sector savedSector = sectorService.create(sectorMapper.toSector(sectorDTO));
-			sectorDTO = new SectorDTO(savedSector);
-			return new ResponseEntity<>(sectorDTO, HttpStatus.CREATED);
+			return new ResponseEntity<>(sectorMapper.toDTO(savedSector), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO) throws Exception{
 		Sector updatedSector = sectorService.update(sectorMapper.toSector(sectorDTO));
-		if (updatedSector != null) {
-			sectorDTO = new SectorDTO(updatedSector);
-			return new ResponseEntity<>(sectorDTO, HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(sectorMapper.toDTO(updatedSector), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/sector/{id}")

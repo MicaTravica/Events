@@ -47,12 +47,7 @@ public class SectorServiceImpl implements SectorService {
     @Override
     public Sector update(Sector sector) throws Exception{
         Sector sectorToUpdate = this.findOne(sector.getId());
-        Optional<Hall> hallOpt = this.hallRepository.findById(sector.getHall().getId());
-        if( !hallOpt.isPresent())
-        {
-            throw new HallDoesntExist("Not found hall.");
-        }
-        sectorToUpdate = this.prepareSectorFields(sectorToUpdate, sector, hallOpt);
+        sectorToUpdate = this.prepareSectorFields(sectorToUpdate, sector);
         return this.sectorRepository.save(sectorToUpdate);
     }
 
@@ -61,9 +56,8 @@ public class SectorServiceImpl implements SectorService {
         this.sectorRepository.deleteById(id);
     }
 
-    public Sector prepareSectorFields(Sector toUpdate, Sector newSector, Optional<Hall> hallOpt)
+    public Sector prepareSectorFields(Sector toUpdate, Sector newSector)
     {
-        toUpdate.setHall(hallOpt.get());
         toUpdate.setName(newSector.getName());
         toUpdate.setSectorColumns(newSector.getSectorColumns());
         toUpdate.setSectorRows(newSector.getSectorRows());

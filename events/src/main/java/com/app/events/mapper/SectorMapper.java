@@ -12,9 +12,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SectorMapper {
 
-    @Autowired
-    private SectorService sectorService;
-
     public SectorDTO toDTO(Sector sector) {
         return new SectorDTO(sector);
     }
@@ -27,10 +24,6 @@ public class SectorMapper {
                     );
         sector.setHall(new Hall(sectorDTO.getHall().getId()));
         return sector;
-    }
-
-    public Sector findSectorFromDTO(SectorDTO sectorDTO) throws SectorDoesntExistException {
-        return sectorService.findOne(sectorDTO.getId());
     }
 
 }
