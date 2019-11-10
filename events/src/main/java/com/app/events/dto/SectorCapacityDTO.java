@@ -1,7 +1,5 @@
 package com.app.events.dto;
 
-import java.util.HashSet;
-
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.SectorCapacity;
 
@@ -31,11 +29,4 @@ public class SectorCapacityDTO {
         this.sector = sectorMapper.toDTO(sectorCapacity.getSector());
 	}
 
-	public SectorCapacity toSectorCapacity() {
-        return new SectorCapacity( this.getId(),
-                                new HashSet<>(),
-                                sectorMapper.toSector(this.getSector()),
-                                this.getCapacity(),
-                                this.getFree());
-    }
 }
