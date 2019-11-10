@@ -11,6 +11,8 @@ public interface SectorService {
 
 	public Sector update(Sector sector) throws Exception;
 
-	public void delete(Long id);
+	public void delete(Long id) throws IllegalArgumentException;
+
+	public Sector prepareSectorFields(Sector toUpdate, Sector newSector);
 
 }

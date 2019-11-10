@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,9 +35,12 @@ public class SectorCapacity {
 	
 	@ManyToOne
 	@JoinColumn(name="sector_id", referencedColumnName="id")
+	@NotNull(message = "SectorCapacity must be asociated with Sector")
 	private Sector sector;
 	
+	@PositiveOrZero(message ="capacity must be positive number or zero")
 	private int capacity;
-	private int free;
 
+	@PositiveOrZero(message ="free must be positive number or zero")
+	private int free;
 }

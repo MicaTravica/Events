@@ -3,8 +3,11 @@ package com.app.events.dto;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.app.events.mapper.SectorMapper;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +17,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class HallDTO {
+
+	@Autowired
+	private SectorMapper sectorMapper;
 
 	private Long id;
 	private String name;
@@ -50,7 +56,7 @@ public class HallDTO {
 						this.getSectors()
 							.stream()
 							.map(sectorDTO->{
-								return sectorDTO.toSimpleSector();
+								return sectorMapper.toSector(sectorDTO);
 							})
 							.collect(Collectors.toSet())
 					);

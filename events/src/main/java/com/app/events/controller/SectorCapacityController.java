@@ -1,6 +1,7 @@
 package com.app.events.controller;
 
 import com.app.events.dto.SectorCapacityDTO;
+import com.app.events.exception.SectorCapacityDoesntExistException;
 import com.app.events.model.SectorCapacity;
 import com.app.events.service.SectorCapacityService;
 
@@ -25,32 +26,25 @@ public class SectorCapacityController {
 	private SectorCapacityService sectorCapacityService;
 
 	@GetMapping(value = "/api/sectorCapacity/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorCapacityDTO> getSectorCapacity(@PathVariable("id") Long id) {
-		SectorCapacityDTO sector = sectorCapacityService.findOne(id);
-		if (sector == null) {
-			return new ResponseEntity<SectorCapacityDTO>(HttpStatus.NOT_FOUND);
-		}
-		System.out.println(sector.toString());
-		return new ResponseEntity<SectorCapacityDTO>(sector, HttpStatus.OK);
+	public ResponseEntity<SectorCapacityDTO> getSectorCapacity(@PathVariable("id") Long id)
+			throws SectorCapacityDoesntExistException {
+		SectorCapacity sectorCapacity = sectorCapacityService.findOne(id);
+		return new ResponseEntity<SectorCapacityDTO>
+			(new SectorCapacityDTO(sectorCapacity), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorCapacityDTO> createSectorCapacity(@RequestBody SectorCapacity sector) throws Exception {
-		try {
-			SectorCapacityDTO savedSector = sectorCapacityService.create(sector);
-			return new ResponseEntity<SectorCapacityDTO>(savedSector, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<SectorCapacityDTO>(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<SectorCapacityDTO> createSectorCapacity(@RequestBody SectorCapacityDTO sectorCapacity) throws Exception {
+
+		SectorCapacity savedSector = sectorCapacityService.create(sectorCapacity.toSectorCapacity());
+		return new ResponseEntity<SectorCapacityDTO>
+			(new SectorCapacityDTO(savedSector), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorCapacityDTO> updateSectorCapacity(@RequestBody SectorCapacity sector) throws Exception {
-		SectorCapacityDTO updatedSector = sectorCapacityService.update(sector);
-		if (updatedSector == null) {
-			return new ResponseEntity<SectorCapacityDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<SectorCapacityDTO>(updatedSector, HttpStatus.OK);
+	public ResponseEntity<SectorCapacityDTO> updateSectorCapacity(@RequestBody SectorCapacityDTO param) throws Exception {
+		SectorCapacity updatedSector = sectorCapacityService.update(param.toSectorCapacity());
+		return new ResponseEntity<SectorCapacityDTO>(new SectorCapacityDTO(updatedSector), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/sectorCapacity/{id}")
