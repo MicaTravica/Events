@@ -1,12 +1,8 @@
 package com.app.events.mapper;
 
 import com.app.events.dto.SectorDTO;
-import com.app.events.exception.SectorDoesntExistException;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
-import com.app.events.service.SectorService;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -3,7 +3,6 @@ package com.app.events.dto;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.app.events.exception.SectorDoesntExistException;
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
@@ -57,12 +56,7 @@ public class HallDTO {
 						this.getSectors()
 							.stream()
 							.map(sectorDTO->{
-								try {
-									return sectorMapper.findSectorFromDTO(sectorDTO);
-								} catch (SectorDoesntExistException e) {
-									e.printStackTrace();
-									return null;
-								}
+								return sectorMapper.toSector(sectorDTO);
 							})
 							.collect(Collectors.toSet())
 					);
