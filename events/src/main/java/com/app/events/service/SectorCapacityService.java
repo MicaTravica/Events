@@ -1,15 +1,15 @@
 package com.app.events.service;
 
-import com.app.events.dto.SectorCapacityDTO;
+import com.app.events.exception.SectorCapacityDoesntExistException;
 import com.app.events.model.SectorCapacity;
 
 public interface SectorCapacityService {
 
-	public SectorCapacityDTO findOne(Long id);
+	public SectorCapacity findOne(Long id) throws SectorCapacityDoesntExistException;
 
-	public SectorCapacityDTO create(SectorCapacity sector);
+	public SectorCapacity create(SectorCapacity sector) throws Exception;
 
-	public SectorCapacityDTO update(SectorCapacity sector);
+	public SectorCapacity update(SectorCapacity sector) throws Exception;
 
 	public void delete(Long id);
 

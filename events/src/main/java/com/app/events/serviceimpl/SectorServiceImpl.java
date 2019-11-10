@@ -8,8 +8,6 @@ import com.app.events.exception.SectorExistException;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 import com.app.events.repository.HallRepository;
-import com.app.events.repository.PriceListRepository;
-import com.app.events.repository.SectorCapacityRepository;
 import com.app.events.repository.SectorRepository;
 import com.app.events.service.SectorService;
 
@@ -21,12 +19,6 @@ public class SectorServiceImpl implements SectorService {
 
     @Autowired
     private SectorRepository sectorRepository;
-
-    @Autowired
-    private PriceListRepository priceListRepository;
-
-    @Autowired
-    private SectorCapacityRepository sectorCapacityRepository;
 
     @Autowired
     private HallRepository hallRepository;
