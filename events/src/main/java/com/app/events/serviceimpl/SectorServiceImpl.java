@@ -54,27 +54,28 @@ public class SectorServiceImpl implements SectorService {
 
     @Override
     public Sector update(Sector sector) throws Exception{
-        Optional<Sector> sectorOpt = this.sectorRepository.findById(sector.getId());
-        if( !sectorOpt.isPresent())
-        {
-            throw new SectorDoesntExistException("Not found sector."); 
-        }
-        Sector sectorToUpdate = sectorOpt.get();
+        Sector sectorToUpdate = this.findOne(sector.getId());
         Optional<Hall> hallOpt = this.hallRepository.findById(sector.getHall().getId());
         if( !hallOpt.isPresent())
         {
-            throw new HallDoesntExist("Not found hall."); // custom exception here!
+            throw new HallDoesntExist("Not found hall.");
         }
-        sectorToUpdate.setHall(hallOpt.get());
-        sectorToUpdate.setName(sector.getName());
-        sectorToUpdate.setSectorColumns(sector.getSectorColumns());
-        sectorToUpdate.setSectorRows(sector.getSectorRows());
+        sectorToUpdate = this.prepareSectorFields(sectorToUpdate, sector, hallOpt);
         return this.sectorRepository.save(sectorToUpdate);
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(Long id) throws IllegalArgumentException{
         this.sectorRepository.deleteById(id);
+    }
+
+    public Sector prepareSectorFields(Sector toUpdate, Sector newSector, Optional<Hall> hallOpt)
+    {
+        toUpdate.setHall(hallOpt.get());
+        toUpdate.setName(newSector.getName());
+        toUpdate.setSectorColumns(newSector.getSectorColumns());
+        toUpdate.setSectorRows(newSector.getSectorRows());
+        return toUpdate;
     }
 
 }

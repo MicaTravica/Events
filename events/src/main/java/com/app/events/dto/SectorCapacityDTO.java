@@ -3,7 +3,11 @@ package com.app.events.dto;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.app.events.mapper.SectorMapper;
 import com.app.events.model.SectorCapacity;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +17,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class SectorCapacityDTO {
+
+	@Autowired
+	private SectorMapper sectorMapper;
 
     private Long id;
     private Set<TicketDTO> tickets = new HashSet<>();
@@ -24,7 +31,7 @@ public class SectorCapacityDTO {
         this.id = sectorCapacity.getId();
         this.capacity = sectorCapacity.getCapacity();
         this.free = sectorCapacity.getFree();
-        this.sector = SectorDTO.makeSimpleSectorDTO(sectorCapacity.getSector());
+        this.sector = sectorMapper.toDTO(sectorCapacity.getSector());
         sectorCapacity.getTickets()
                     .forEach(ticket->
                         this.tickets.add(new TicketDTO(ticket))
@@ -37,7 +44,7 @@ public class SectorCapacityDTO {
                                     .stream()
                                     .map(ticketDTO-> ticketDTO.toSimpleTicket())
                                     .collect(Collectors.toSet()),
-                                this.getSector().toSimpleSector(),
+                                sectorMapper.toSector(this.getSector()),
                                 this.getCapacity(),
                                 this.getFree());
     }

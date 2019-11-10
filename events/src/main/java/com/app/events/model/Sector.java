@@ -12,6 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,11 +31,16 @@ public class Sector {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotBlank(message = "name can not be empty string")
 	private String name;
 	
+	@PositiveOrZero(message ="number of rows must be positive number or zero")
 	private int sectorRows;
+	
+	@PositiveOrZero(message ="number of columns must be positive number or zero")
 	private int sectorColumns;
 	
+	@NotNull(message = "sector must be asociated with hall")
 	@ManyToOne
 	@JoinColumn(name="hall_id", referencedColumnName="id")
 	private Hall hall = new Hall();
