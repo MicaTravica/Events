@@ -3,8 +3,6 @@ package com.app.events.dto;
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.SectorCapacity;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
