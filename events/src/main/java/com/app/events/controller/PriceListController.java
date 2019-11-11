@@ -23,25 +23,22 @@ public class PriceListController {
 	@Autowired
 	private PriceListService priceListService;
 
-	@Autowired
-	private PriceListMapper priceListMapper;
-
 	@GetMapping(value = "/api/priceList/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PriceListDTO> getPriceList(@PathVariable("id") Long id) {
 		PriceList priceList = priceListService.findOne(id);
-		return new ResponseEntity<>(priceListMapper.toDTO(priceList), HttpStatus.OK);
+		return new ResponseEntity<>(PriceListMapper.toDTO(priceList), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PriceListDTO> createPriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
-		PriceList savedPriceList = priceListService.create(priceListMapper.toPriceList(priceListDTO));
-		return new ResponseEntity<>(priceListMapper.toDTO(savedPriceList), HttpStatus.CREATED);
+		PriceList savedPriceList = priceListService.create(PriceListMapper.toPriceList(priceListDTO));
+		return new ResponseEntity<>(PriceListMapper.toDTO(savedPriceList), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PriceListDTO> updatePriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
-		PriceList updatedPriceList = priceListService.update(priceListMapper.toPriceList(priceListDTO));
-		return new ResponseEntity<>(priceListMapper.toDTO(updatedPriceList),HttpStatus.OK);
+		PriceList updatedPriceList = priceListService.update(PriceListMapper.toPriceList(priceListDTO));
+		return new ResponseEntity<>(PriceListMapper.toDTO(updatedPriceList),HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/priceList/{id}")

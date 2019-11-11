@@ -22,28 +22,25 @@ import com.app.events.service.SectorService;
 public class SectorController extends BaseController{
 
 	@Autowired
-	private SectorMapper sectorMapper;
-
-	@Autowired
 	private SectorService sectorService;
 
 	@GetMapping(value = "/api/sector/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorDTO> getSector(@PathVariable("id") Long id) throws SectorDoesntExistException{
 		Sector sector = sectorService.findOne(id);
-		return new ResponseEntity<>(sectorMapper.toDTO(sector), HttpStatus.OK);
+		return new ResponseEntity<>(SectorMapper.toDTO(sector), HttpStatus.OK);
 		
 	}
 
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sectorDTO) throws Exception {
-			Sector savedSector = sectorService.create(sectorMapper.toSector(sectorDTO));
-			return new ResponseEntity<>(sectorMapper.toDTO(savedSector), HttpStatus.CREATED);
+			Sector savedSector = sectorService.create(SectorMapper.toSector(sectorDTO));
+			return new ResponseEntity<>(SectorMapper.toDTO(savedSector), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO) throws Exception{
-		Sector updatedSector = sectorService.update(sectorMapper.toSector(sectorDTO));
-		return new ResponseEntity<>(sectorMapper.toDTO(updatedSector), HttpStatus.OK);
+		Sector updatedSector = sectorService.update(SectorMapper.toSector(sectorDTO));
+		return new ResponseEntity<>(SectorMapper.toDTO(updatedSector), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/sector/{id}")

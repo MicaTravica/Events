@@ -14,9 +14,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SectorCapacityDTO {
 
-	@Autowired
-	private SectorMapper sectorMapper;
-
     private Long id;
     private SectorDTO sector;
     private int capacity;
@@ -26,7 +23,7 @@ public class SectorCapacityDTO {
         this.id = sectorCapacity.getId();
         this.capacity = sectorCapacity.getCapacity();
         this.free = sectorCapacity.getFree();
-        this.sector = sectorMapper.toDTO(sectorCapacity.getSector());
+        this.sector = SectorMapper.toDTO(sectorCapacity.getSector());
 	}
 
 }

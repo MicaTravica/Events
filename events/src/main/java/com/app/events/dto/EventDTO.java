@@ -58,7 +58,7 @@ public class EventDTO {
 						this.getToDate(),
 						this.getEventState(),
 						this.getEventType(),
-						this.place.toSimplePlace(),
+						this.place != null ? this.place.toSimplePlace(): null,
 						new HashSet<>(),
 						null
 		);

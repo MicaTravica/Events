@@ -3,12 +3,7 @@ package com.app.events.dto;
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.Seat;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class SeatDTO {
-
-	@Autowired
-	private SectorMapper sectorMapper;
 
 	private Long id;
 	private int seatRow;
@@ -19,7 +14,7 @@ public class SeatDTO {
 		this.id = seat.getId();
 		this.seatRow = seat.getSeatRow();
 		this.seatColumn = seat.getSeatColumn();
-		this.sector = sectorMapper.toDTO(seat.getSector());
+		this.sector = SectorMapper.toDTO(seat.getSector());
 	}
 	
 	public Seat toSeat() {
@@ -28,7 +23,7 @@ public class SeatDTO {
 		seat.setId(this.getId());
 		seat.setSeatRow(this.getSeatRow());
 		seat.setSeatColumn(this.getSeatColumn());
-		seat.setSector(sectorMapper.toSector(this.getSector()));
+		seat.setSector(SectorMapper.toSector(this.getSector()));
 
 		return seat;
 	}
