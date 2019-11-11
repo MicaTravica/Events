@@ -2,6 +2,7 @@ package com.app.events.controller;
 
 import com.app.events.dto.SectorCapacityDTO;
 import com.app.events.exception.SectorCapacityDoesntExistException;
+import com.app.events.mapper.SectorCapacityMapper;
 import com.app.events.model.SectorCapacity;
 import com.app.events.service.SectorCapacityService;
 
@@ -23,28 +24,42 @@ import org.springframework.web.bind.annotation.RestController;
 public class SectorCapacityController {
 
 	@Autowired
+	private SectorCapacityMapper sectorCapacityMapper;
+
+	@Autowired
 	private SectorCapacityService sectorCapacityService;
 
 	@GetMapping(value = "/api/sectorCapacity/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorCapacityDTO> getSectorCapacity(@PathVariable("id") Long id)
 			throws SectorCapacityDoesntExistException {
+		
 		SectorCapacity sectorCapacity = sectorCapacityService.findOne(id);
 		return new ResponseEntity<SectorCapacityDTO>
-			(new SectorCapacityDTO(sectorCapacity), HttpStatus.OK);
+			(
+				sectorCapacityMapper.toDTO(sectorCapacity),
+				HttpStatus.OK
+			);
 	}
 
 	@PostMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorCapacityDTO> createSectorCapacity(@RequestBody SectorCapacityDTO sectorCapacity) throws Exception {
+	public ResponseEntity<SectorCapacityDTO> createSectorCapacity(@RequestBody SectorCapacityDTO sectorCapacityDTO) throws Exception {
 
-		SectorCapacity savedSector = sectorCapacityService.create(sectorCapacity.toSectorCapacity());
+		SectorCapacity savedSector = sectorCapacityService.create(sectorCapacityMapper.toSectorCapacity(sectorCapacityDTO));
 		return new ResponseEntity<SectorCapacityDTO>
-			(new SectorCapacityDTO(savedSector), HttpStatus.CREATED);
+			(
+				sectorCapacityMapper.toDTO(savedSector),
+				HttpStatus.CREATED
+			);
 	}
 
 	@PutMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorCapacityDTO> updateSectorCapacity(@RequestBody SectorCapacityDTO param) throws Exception {
-		SectorCapacity updatedSector = sectorCapacityService.update(param.toSectorCapacity());
-		return new ResponseEntity<SectorCapacityDTO>(new SectorCapacityDTO(updatedSector), HttpStatus.OK);
+		SectorCapacity updatedSector = sectorCapacityService.update(sectorCapacityMapper.toSectorCapacity(param));
+		return new ResponseEntity<SectorCapacityDTO>
+		(
+			sectorCapacityMapper.toDTO(updatedSector),
+			HttpStatus.OK
+		);
 	}
 
 	@DeleteMapping(value = "/api/sectorCapacity/{id}")

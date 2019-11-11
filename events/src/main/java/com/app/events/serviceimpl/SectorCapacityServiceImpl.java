@@ -50,5 +50,4 @@ public class SectorCapacityServiceImpl implements SectorCapacityService {
     public void delete(Long id) {
         this.sectorCapacityRepository.deleteById(id);
     }
-
 }
