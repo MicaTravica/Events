@@ -1,5 +1,9 @@
 package com.app.events.controller;
 
+import com.app.events.dto.TicketDTO;
+import com.app.events.model.Ticket;
+import com.app.events.service.TicketService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,11 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.app.events.dto.TicketDTO;
-import com.app.events.model.Ticket;
-import com.app.events.service.TicketService;
 
 @RestController
 public class TicketController {
@@ -32,7 +33,7 @@ public class TicketController {
 	}
 
 	@PostMapping(value = "/api/tickets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TicketDTO> createTicket(Ticket ticket) throws Exception {
+	public ResponseEntity<TicketDTO> createTicket(@RequestBody Ticket ticket) throws Exception {
 
 		try {
 			TicketDTO savedTicket = ticketService.create(ticket);
@@ -43,7 +44,7 @@ public class TicketController {
 	}
 
 	@PutMapping(value = "/api/tickets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TicketDTO> updateTicket(Ticket ticket) throws Exception {
+	public ResponseEntity<TicketDTO> updateTicket(@RequestBody Ticket ticket) throws Exception {
 		TicketDTO updatedTicket = ticketService.update(ticket);
 		if (updatedTicket == null) {
 			return new ResponseEntity<TicketDTO>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -38,13 +38,8 @@ public class TicketServiceImpl implements TicketService {
 		if (ticketToUpdate == null) {
 			throw new RuntimeException("Not found."); // custom exception here!
 		}
-
-		ticketToUpdate.setBarCode(ticket.getBarCode());
+		
 		ticketToUpdate.setTicketState(ticket.getTicketState());
-		ticketToUpdate.setUser(ticket.getUser());
-		ticketToUpdate.setEvent(ticket.getEvent());
-		ticketToUpdate.setSeat(ticket.getSeat());
-		ticketToUpdate.setSectorCapacity(ticket.getSectorCapacity());
 
 		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
 		TicketDTO updatedTicketDTO = new TicketDTO(updatedTicket);

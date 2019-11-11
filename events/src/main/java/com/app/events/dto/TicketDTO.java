@@ -17,20 +17,20 @@ public class TicketDTO {
 	private String barCode;
 	private TicketState ticketState;
 	
-	// private UserDTO user;
-	// private EventDTO event;
-	// private SeatDTO seat;
-	// private SectorCapacityDTO sectorCapacity;
+	private UserDTO user;
+	private EventDTO event;
+	private SeatDTO seat;
+	private SectorCapacityDTO sectorCapacity;
 	
 	public TicketDTO(Ticket ticket) {
 		this.id = ticket.getId();
 		this.barCode = ticket.getBarCode();
 		this.ticketState = ticket.getTicketState();
 		
-//		this.user = new UserDTO(ticket.getUser());
-//		this.event = new EventDTO(ticket.getEvent());
-//		this.seat = new SeatDTO(ticket.getSeat());
-//		this.sectorCapacity = new SectorCapacityDTO(ticket.getSectorCapacity());
+		this.user = new UserDTO(ticket.getUser());
+		this.event = new EventDTO(ticket.getEvent());
+		this.seat = new SeatDTO(ticket.getSeat());
+		this.sectorCapacity = new SectorCapacityDTO(ticket.getSectorCapacity());
 	}
 
 	public Ticket toTicket() {
@@ -40,10 +40,10 @@ public class TicketDTO {
 		ticket.setBarCode(this.getBarCode());
 		ticket.setTicketState(this.getTicketState());
 		
-//		ticket.setUser(this.getUser().toUser());
-//		ticket.setEvent(this.getEvent().toEvent());
-//		ticket.setSeat(this.getSeat().toSeat());
-//		ticket.setSectorCapacity(this.getSectorCapacity().toSectorCapacity());
+		// ticket.setUser(this.getUser().toUser());
+		ticket.setEvent(this.getEvent().toEvent());
+		ticket.setSeat(this.getSeat().toSeat());
+		ticket.setSectorCapacity(this.getSectorCapacity().toSectorCapacity());
 		return ticket;
 	}
 
