@@ -11,12 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.app.events.dto.PasswordChangeDTO;
-import com.app.events.exception.EmailExistsException;
+import com.app.events.exception.ExistsException;
+import com.app.events.exception.NotFoundException;
 import com.app.events.exception.PasswordShortException;
-import com.app.events.exception.TokenNotFoundException;
 import com.app.events.exception.UserNotFoundByUsernameException;
-import com.app.events.exception.UserNotFoundException;
-import com.app.events.exception.UsernameExistsException;
 import com.app.events.exception.WrongPasswordException;
 import com.app.events.model.User;
 import com.app.events.model.UserRole;
@@ -39,11 +37,11 @@ public class UserServiceImpl implements UserService {
 	private MailService mailService;
 	
 	@Override
-	public User registration(User user) throws UsernameExistsException, EmailExistsException, MessagingException, PasswordShortException {
+	public User registration(User user) throws MessagingException, PasswordShortException, ExistsException {
 		if(userRepository.findByUsername(user.getUsername()).isPresent()) {
-			throw new UsernameExistsException();
+			throw new ExistsException("Username");
 		} else if(userRepository.findByEmail(user.getEmail()).isPresent()) {
-			throw new EmailExistsException();
+			throw new ExistsException("Email");
 		} else if(user.getPassword().length() < 8) {
 			throw new PasswordShortException();
 		}
@@ -67,15 +65,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User findOne(Long id) throws UserNotFoundException {
-		return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
+	public User findOne(Long id) throws NotFoundException  {
+		return userRepository.findById(id).orElseThrow(()->new NotFoundException("User"));
 	}
 
 	@Override
-	public User update(User user) throws UserNotFoundException, UsernameExistsException {
-		User userToUpdate = userRepository.findById(user.getId()).orElseThrow(() -> new UserNotFoundException(user.getId()));
+	public User update(User user) throws NotFoundException, ExistsException {
+		User userToUpdate = userRepository.findById(user.getId()).orElseThrow(() -> new NotFoundException("User"));
 		if(!user.getUsername().equals(userToUpdate.getUsername()) && userRepository.findByUsername(user.getUsername()).isPresent()) {
-			throw new UsernameExistsException();
+			throw new ExistsException("Username");
 		}
 		userToUpdate.update(user);
 		return userRepository.save(userToUpdate);
@@ -94,12 +92,12 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public void verifiedUserEmail(String token) throws TokenNotFoundException {
+	public void verifiedUserEmail(String token) throws NotFoundException {
 		VerificationToken verificationToken = verificationTokenService.getVerificationToken(token);
 	    User user = verificationToken.getUser();
 	    Calendar cal = Calendar.getInstance();
 	    if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-	    	throw new TokenNotFoundException();
+	    	throw new NotFoundException("User");
 	    }
 	    user.setVerified(true);
 		userRepository.save(user);

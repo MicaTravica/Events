@@ -25,7 +25,7 @@ public class MailServiceImpl implements MailService {
 		String message = "<html><head><meta charset=\"UTF-8\"></head>"
 				+ "<body><h3>Events app - Wellcome!</h3><br>"
 				+ "<div><p>You can verify your email "
-				+ "<a target=\"_blank\" href = \"http://localhost:8080/api/email/verify/" + token 
+				+ "<a target=\"_blank\" href = \"http://localhost:8080/api/user/verify/" + token 
 				+ "\"><u>here</u></a>!.</p></div></body></html>";
         mmHelper.setText(message, true);
 		mmHelper.setTo(email);

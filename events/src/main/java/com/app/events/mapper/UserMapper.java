@@ -1,5 +1,7 @@
 package com.app.events.mapper;
 
+import java.util.HashSet;
+
 import org.springframework.stereotype.Component;
 
 import com.app.events.dto.UserDTO;
@@ -13,6 +15,6 @@ public class UserMapper {
 	}
 	
 	public User toUser(UserDTO userDto) {
-		return new User(userDto.getId(), userDto.getName(), userDto.getSurname(), userDto.getPhone(), userDto.getEmail(), false, userDto.getUsername(), userDto.getPassword(), userDto.getUserRole(), null);
+		return new User(userDto.getId(), userDto.getName(), userDto.getSurname(), userDto.getPhone(), userDto.getEmail(), false, userDto.getUsername(), userDto.getPassword(), userDto.getUserRole(), new HashSet<>());
 	}
 }

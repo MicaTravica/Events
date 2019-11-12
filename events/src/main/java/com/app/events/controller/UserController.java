@@ -92,7 +92,7 @@ public class UserController extends BaseController {
 		return new ResponseEntity<>(userMapper.toDTO(userService.findOne(id)), HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/user/me", 
+	@GetMapping(value = "/userme", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> getMyData(Principal user) throws Exception {
 		return new ResponseEntity<>(userMapper.toDTO(userService.findOneByUsername(user.getName())), HttpStatus.OK);
@@ -115,7 +115,7 @@ public class UserController extends BaseController {
 	    return new ResponseEntity<>("Password changed", HttpStatus.OK);
 	}
 	
-	@PutMapping(value= "/user/email/verified/{token}",  
+	@GetMapping(value= "/user/verify/{token}",  
 			produces=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> verifiedEmail(@PathVariable("token") String token) throws Exception
 	{
