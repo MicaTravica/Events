@@ -1,10 +1,6 @@
 package com.app.events.mapper;
 
-import java.util.HashSet;
-
-import com.app.events.dto.SectorCapacityDTO;
 import com.app.events.dto.TicketDTO;
-import com.app.events.model.SectorCapacity;
 import com.app.events.model.Ticket;
 import com.app.events.model.User;
 
@@ -42,7 +38,7 @@ public class TicketMapper {
         return new Ticket(
             ticketDTO.getId(),
             ticketDTO.getTicketState(),
-            new User(ticketDTO.getUserId()
+            new User(ticketDTO.getUserId())
         );
     }
     

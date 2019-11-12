@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.EventDTO;
+import com.app.events.mapper.EventMapper;
 import com.app.events.model.Event;
 import com.app.events.service.EventService;
 
@@ -30,7 +31,7 @@ public class EventController {
 		Collection<Event> events = eventService.findAll();
 		Collection<EventDTO> eventsDTO = new ArrayList<>();
 		for(Event e : events) {
-			eventsDTO.add(new EventDTO(e));
+			eventsDTO.add(EventMapper.toDTO(e));
 		}
 		return new ResponseEntity<>(eventsDTO, HttpStatus.OK);
 	}
@@ -41,16 +42,16 @@ public class EventController {
 		if (event == null) {
 			return new ResponseEntity<EventDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<EventDTO>(new EventDTO(event), HttpStatus.OK);
+		return new ResponseEntity<EventDTO>(EventMapper.toDTO(event), HttpStatus.OK);
 	}
 
 	
 	@PostMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO event) throws Exception {
 		try {
-			Event savedEvent = new Event(event);
+			Event savedEvent = EventMapper.toEvent(event);
 			Event newEvent = eventService.create(savedEvent);
-			return new ResponseEntity<EventDTO>(new EventDTO(newEvent), HttpStatus.CREATED);
+			return new ResponseEntity<EventDTO>(EventMapper.toDTO(newEvent), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<EventDTO>(HttpStatus.BAD_REQUEST);
 		}
@@ -59,12 +60,12 @@ public class EventController {
 
 	@PutMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> updateEvent(@RequestBody EventDTO eventDTO) throws Exception {
-		Event event = new Event(eventDTO);
+		Event event = EventMapper.toEvent(eventDTO);
 		Event updatedEvent = eventService.update(event);
 		if (updatedEvent == null) {
 			return new ResponseEntity<EventDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<EventDTO>( new EventDTO(updatedEvent), HttpStatus.OK);
+		return new ResponseEntity<EventDTO>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/event/{id}")

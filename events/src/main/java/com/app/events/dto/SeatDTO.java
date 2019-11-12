@@ -1,8 +1,5 @@
 package com.app.events.dto;
 
-import com.app.events.mapper.SectorMapper;
-import com.app.events.model.Seat;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

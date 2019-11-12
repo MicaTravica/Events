@@ -1,9 +1,4 @@
 package com.app.events.dto;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.app.events.model.Place;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
