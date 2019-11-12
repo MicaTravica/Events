@@ -7,8 +7,6 @@ import com.app.events.mapper.SectorMapper;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,9 +15,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class HallDTO {
-
-	@Autowired
-	private SectorMapper sectorMapper;
 
 	private Long id;
 	private String name;
@@ -56,7 +51,7 @@ public class HallDTO {
 						this.getSectors()
 							.stream()
 							.map(sectorDTO->{
-								return sectorMapper.toSector(sectorDTO);
+								return SectorMapper.toSector(sectorDTO);
 							})
 							.collect(Collectors.toSet())
 					);
