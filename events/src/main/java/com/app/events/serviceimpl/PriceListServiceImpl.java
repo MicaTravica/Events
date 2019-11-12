@@ -1,11 +1,16 @@
 package com.app.events.serviceimpl;
 
-import com.app.events.dto.PriceListDTO;
+import com.app.events.exception.ResourceExistsException;
+import com.app.events.model.Event;
 import com.app.events.model.PriceList;
+import com.app.events.model.Sector;
 import com.app.events.repository.PriceListRepository;
+import com.app.events.service.EventService;
 import com.app.events.service.PriceListService;
+import com.app.events.service.SectorService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,40 +19,35 @@ public class PriceListServiceImpl implements PriceListService {
     @Autowired
     private PriceListRepository priceListRepository;
 
-    @Override
-    public PriceListDTO findOne(Long id) {
-        PriceList priceList = this.priceListRepository.findById(id).get();
-        PriceListDTO priceListDTO = new PriceListDTO(priceList);
+    @Autowired
+    private SectorService sectorService;
 
-        return priceListDTO;
+    @Autowired
+    private EventService eventService;
+
+    @Override
+    public PriceList findOne(Long id) throws ResourceNotFoundException{
+        return this.priceListRepository.findById(id)
+                    .orElseThrow(()-> new ResourceNotFoundException("PriceList not found"));
     }
 
     @Override
-    public PriceListDTO create(PriceList priceList) {
+    public PriceList create(PriceList priceList) throws Exception {
         if(priceList.getId() != null){
-            throw new RuntimeException("PriceList already exists and has ID."); // custom exception here!
+            throw new ResourceExistsException("PriceList already exists and has ID.");
         }
-        PriceList savedPriceList = this.priceListRepository.save(priceList);
-        PriceListDTO priceListCapacityDTO = new PriceListDTO(savedPriceList);
-        
-        return priceListCapacityDTO;
+        Sector sector = sectorService.findOne(priceList.getSector().getId());
+        priceList.setSector(sector);
+        Event event = eventService.findOne(priceList.getEvent().getId());
+        priceList.setEvent(event);
+        return this.priceListRepository.save(priceList);
     }
 
     @Override
-    public PriceListDTO update(PriceList priceList) {
-        PriceList priceListToUpdate = this.priceListRepository.findById(priceList.getId()).get();
-	    if (priceListToUpdate == null) { 
-	    	throw new RuntimeException("Not found."); // custom exception here!
-        }	    
-
+    public PriceList update(PriceList priceList) {
+        PriceList priceListToUpdate = this.findOne(priceList.getId());
         priceListToUpdate.setPrice(priceList.getPrice());
-        priceListToUpdate.setEvent(priceList.getEvent());
-        priceListToUpdate.setSector(priceList.getSector());
-        
-        PriceList updatedPriceList = this.priceListRepository.save(priceListToUpdate);
-	    PriceListDTO updatedPriceListDTO = new PriceListDTO(updatedPriceList);
-	        
-	    return updatedPriceListDTO;
+        return this.priceListRepository.save(priceListToUpdate);
     }
 
     @Override

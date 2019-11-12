@@ -3,8 +3,6 @@ package com.app.events.dto;
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.SectorCapacity;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,9 +11,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class SectorCapacityDTO {
-
-	@Autowired
-	private SectorMapper sectorMapper;
 
     private Long id;
     private SectorDTO sector;
@@ -26,7 +21,7 @@ public class SectorCapacityDTO {
         this.id = sectorCapacity.getId();
         this.capacity = sectorCapacity.getCapacity();
         this.free = sectorCapacity.getFree();
-        this.sector = sectorMapper.toDTO(sectorCapacity.getSector());
+        this.sector = SectorMapper.toDTO(sectorCapacity.getSector());
 	}
 
 }

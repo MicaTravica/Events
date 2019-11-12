@@ -24,9 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SectorCapacityController {
 
 	@Autowired
-	private SectorCapacityMapper sectorCapacityMapper;
-
-	@Autowired
 	private SectorCapacityService sectorCapacityService;
 
 	@GetMapping(value = "/api/sectorCapacity/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -36,7 +33,7 @@ public class SectorCapacityController {
 		SectorCapacity sectorCapacity = sectorCapacityService.findOne(id);
 		return new ResponseEntity<SectorCapacityDTO>
 			(
-				sectorCapacityMapper.toDTO(sectorCapacity),
+				SectorCapacityMapper.toDTO(sectorCapacity),
 				HttpStatus.OK
 			);
 	}
@@ -44,20 +41,20 @@ public class SectorCapacityController {
 	@PostMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorCapacityDTO> createSectorCapacity(@RequestBody SectorCapacityDTO sectorCapacityDTO) throws Exception {
 
-		SectorCapacity savedSector = sectorCapacityService.create(sectorCapacityMapper.toSectorCapacity(sectorCapacityDTO));
+		SectorCapacity savedSector = sectorCapacityService.create(SectorCapacityMapper.toSectorCapacity(sectorCapacityDTO));
 		return new ResponseEntity<SectorCapacityDTO>
 			(
-				sectorCapacityMapper.toDTO(savedSector),
+				SectorCapacityMapper.toDTO(savedSector),
 				HttpStatus.CREATED
 			);
 	}
 
 	@PutMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<SectorCapacityDTO> updateSectorCapacity(@RequestBody SectorCapacityDTO param) throws Exception {
-		SectorCapacity updatedSector = sectorCapacityService.update(sectorCapacityMapper.toSectorCapacity(param));
+		SectorCapacity updatedSector = sectorCapacityService.update(SectorCapacityMapper.toSectorCapacity(param));
 		return new ResponseEntity<SectorCapacityDTO>
 		(
-			sectorCapacityMapper.toDTO(updatedSector),
+			SectorCapacityMapper.toDTO(updatedSector),
 			HttpStatus.OK
 		);
 	}

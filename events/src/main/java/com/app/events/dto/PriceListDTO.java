@@ -30,17 +30,8 @@ public class PriceListDTO {
     public PriceListDTO(PriceList priceList) {
         this.id = priceList.getId();
         this.price = priceList.getPrice();
-        this.sector = sectorMapper.toDTO(priceList.getSector());
+        this.sector = SectorMapper.toDTO(priceList.getSector());
         this.event = this.makeEventDTO(priceList.getEvent());
-    }
-
-	public PriceList toPriceList() {
-		return new PriceList (
-                    this.getId(), 
-                    this.getPrice(),
-                    this.getEvent().toSimpleEvent(),
-                    sectorMapper.toSector(this.getSector())
-                );
     }
 
     public EventDTO makeEventDTO(Event event)

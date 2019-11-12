@@ -1,15 +1,16 @@
 package com.app.events.service;
 
-import com.app.events.dto.PriceListDTO;
 import com.app.events.model.PriceList;
+
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 public interface PriceListService {
 
-	public PriceListDTO findOne(Long id);
+	public PriceList findOne(Long id) throws ResourceNotFoundException;
 
-	public PriceListDTO create(PriceList sector);
+	public PriceList create(PriceList sector) throws Exception;
 
-	public PriceListDTO update(PriceList sector);
+	public PriceList update(PriceList sector) throws Exception;
 
 	public void delete(Long id);
 
