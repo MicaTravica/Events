@@ -48,9 +48,6 @@ public class UserController extends BaseController {
 	@Autowired
 	ApplicationEventPublisher eventPubisher;
 	
-	@Autowired
-	private UserMapper userMapper;
-	
 	@PostMapping(value="/login",
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
 				 produces = MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +62,7 @@ public class UserController extends BaseController {
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws Exception{
-		userService.registration(userMapper.toUser(userDTO));
+		userService.registration(UserMapper.toUser(userDTO));
 		return new ResponseEntity<>("You are registred, now you need to verify your email", HttpStatus.OK);
 	}
 	
@@ -74,7 +71,7 @@ public class UserController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<UserDTO>> getUsers() {
 		return new ResponseEntity<>(userService.findAll().stream()
-											.map(user -> userMapper.toDTO(user))
+											.map(user -> UserMapper.toDTO(user))
 											.collect(Collectors.toList()), HttpStatus.OK);
 	}
 	
@@ -82,20 +79,20 @@ public class UserController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<UserDTO>> getRegularUsers() {
 		return new ResponseEntity<>(userService.findAllRegular().stream()
-									.map(user -> userMapper.toDTO(user))
+									.map(user -> UserMapper.toDTO(user))
 									.collect(Collectors.toList()), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/user/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) throws Exception {
-		return new ResponseEntity<>(userMapper.toDTO(userService.findOne(id)), HttpStatus.OK);
+		return new ResponseEntity<>(UserMapper.toDTO(userService.findOne(id)), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/userme", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> getMyData(Principal user) throws Exception {
-		return new ResponseEntity<>(userMapper.toDTO(userService.findOneByUsername(user.getName())), HttpStatus.OK);
+		return new ResponseEntity<>(UserMapper.toDTO(userService.findOneByUsername(user.getName())), HttpStatus.OK);
 	}
 
 
@@ -103,7 +100,7 @@ public class UserController extends BaseController {
 				consumes = MediaType.APPLICATION_JSON_VALUE, 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) throws Exception {
-		return new ResponseEntity<>(userMapper.toDTO(userService.update(userMapper.toUser(userDto))), HttpStatus.OK);
+		return new ResponseEntity<>(UserMapper.toDTO(userService.update(UserMapper.toUser(userDto))), HttpStatus.OK);
 	}
 	
 	@PutMapping(value= "/user/password", 

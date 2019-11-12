@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.PlaceDTO;
+import com.app.events.mapper.PlaceMapper;
 import com.app.events.model.Place;
 import com.app.events.service.PlaceService;
 
@@ -31,7 +32,7 @@ public class PlaceController {
 		Collection<Place> places = placeService.findAll();
 		Collection<PlaceDTO> placesDTO = new ArrayList<>();
 		for(Place p : places) {
-			placesDTO.add(new PlaceDTO(p));
+			placesDTO.add(PlaceMapper.toDTO(p));
 		}
 		return new ResponseEntity<>(placesDTO, HttpStatus.OK);
 	}
@@ -42,15 +43,15 @@ public class PlaceController {
 		if (place == null) {
 			return new ResponseEntity<PlaceDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<PlaceDTO>(new PlaceDTO(place), HttpStatus.OK);
+		return new ResponseEntity<PlaceDTO>(PlaceMapper.toDTO(place), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlaceDTO> createPlace(@RequestBody PlaceDTO placeDTO) throws Exception {
 		try {
-			Place place = new Place(placeDTO);
+			Place place = PlaceMapper.toPlace(placeDTO);
 			Place savedPlace = placeService.create(place);
-			return new ResponseEntity<PlaceDTO>(new PlaceDTO(savedPlace), HttpStatus.CREATED);
+			return new ResponseEntity<PlaceDTO>(PlaceMapper.toDTO(savedPlace), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<PlaceDTO>(HttpStatus.BAD_REQUEST);
 		}
@@ -58,12 +59,12 @@ public class PlaceController {
 
 	@PutMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlaceDTO> updatePlace(@RequestBody PlaceDTO placeDTO) throws Exception {
-		Place place = new Place(placeDTO);
+		Place place = PlaceMapper.toPlace(placeDTO);
 		Place updatedPlace = placeService.update(place);
 		if (updatedPlace == null) {
 			return new ResponseEntity<PlaceDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<PlaceDTO>(new PlaceDTO(updatedPlace), HttpStatus.OK);
+		return new ResponseEntity<PlaceDTO>(PlaceMapper.toDTO(updatedPlace), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/place/{id}")

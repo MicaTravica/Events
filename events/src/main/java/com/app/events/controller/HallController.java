@@ -16,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.HallDTO;
+import com.app.events.mapper.HallMapper;
 import com.app.events.model.Hall;
 import com.app.events.service.HallService;
-
-
-
 
 @RestController
 public class HallController {
@@ -33,7 +31,7 @@ public class HallController {
 		Collection<Hall> halls = hallService.findAll();
 		Collection<HallDTO> hallsDTO = new ArrayList<>();
 		for(Hall h : halls) {
-			hallsDTO.add(new HallDTO(h));
+			hallsDTO.add(HallMapper.toDTO(h));
 		}
 		return new ResponseEntity<>(hallsDTO, HttpStatus.OK);
 	}
@@ -45,7 +43,7 @@ public class HallController {
 		if (hall == null) {
 			return new ResponseEntity<HallDTO>(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<HallDTO>(new HallDTO(hall), HttpStatus.OK);
+		return new ResponseEntity<HallDTO>(HallMapper.toDTO(hall), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/hall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -53,7 +51,7 @@ public class HallController {
 		try {
 			Hall hall = new Hall(hallDTO);
 			Hall savedHall = hallService.create(hall);
-			return new ResponseEntity<HallDTO>(new HallDTO(savedHall), HttpStatus.CREATED);
+			return new ResponseEntity<HallDTO>(HallMapper.toDTO(savedHall), HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<HallDTO>(HttpStatus.BAD_REQUEST);
 		}
@@ -66,7 +64,7 @@ public class HallController {
 		if (updatedHall == null) {
 			return new ResponseEntity<HallDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<HallDTO>(new HallDTO(updatedHall), HttpStatus.OK);
+		return new ResponseEntity<HallDTO>(HallMapper.toDTO(updatedHall), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/hall/{id}")
