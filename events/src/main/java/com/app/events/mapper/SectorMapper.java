@@ -1,5 +1,7 @@
 package com.app.events.mapper;
 
+import java.util.HashSet;
+
 import com.app.events.dto.SectorDTO;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
@@ -7,17 +9,22 @@ import com.app.events.model.Sector;
 public class SectorMapper {
 
     public static SectorDTO toDTO(Sector sector) {
-        return new SectorDTO(sector);
+        return new SectorDTO(sector.getId(), sector.getName(), 
+                            sector.getSectorRows(), sector.getSectorRows(),
+                            sector.getHall().getId()  
+                        );
     }
     
     public static Sector toSector(SectorDTO sectorDTO){
-		Sector sector = new Sector( sectorDTO.getId(), 
+		return new Sector( sectorDTO.getId(), 
                         sectorDTO.getName(),
                         sectorDTO.getSectorRows(), 
-                        sectorDTO.getSectorColumns()
+                        sectorDTO.getSectorColumns(),
+                        new Hall(sectorDTO.getHallId()),
+                        new HashSet<>(),
+                        new HashSet<>(),
+                        new HashSet<>()
                     );
-        sector.setHall(sectorDTO.getHall() != null ? new Hall(sectorDTO.getHall().getId()) : null);
-        return sector;
     }
 
 }

@@ -8,7 +8,12 @@ import com.app.events.model.SectorCapacity;
 public class SectorCapacityMapper {
 
     public static SectorCapacityDTO toDTO(SectorCapacity sectorCapacity) {
-        return new SectorCapacityDTO(sectorCapacity);
+        return new SectorCapacityDTO(
+                    sectorCapacity.getId(),
+                    SectorMapper.toDTO(sectorCapacity.getSector()),
+                    sectorCapacity.getCapacity(),
+                    sectorCapacity.getFree()
+                );
     }
     
     public static SectorCapacity toSectorCapacity(SectorCapacityDTO sectorCapacityDTO) {
