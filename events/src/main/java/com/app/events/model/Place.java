@@ -44,9 +44,6 @@ public class Place {
 	private double longitude;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Event> events;
-	
-	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Hall> halls;
 	
 	public Place(Long id){
