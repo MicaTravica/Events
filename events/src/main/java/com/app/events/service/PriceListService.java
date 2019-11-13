@@ -1,16 +1,16 @@
 package com.app.events.service;
 
+import com.app.events.exception.ResourceExistsException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.PriceList;
-
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 public interface PriceListService {
 
 	public PriceList findOne(Long id) throws ResourceNotFoundException;
 
-	public PriceList create(PriceList sector) throws Exception;
+	public PriceList create(PriceList sector) throws ResourceExistsException, ResourceNotFoundException;
 
-	public PriceList update(PriceList sector) throws Exception;
+	public PriceList update(PriceList sector) throws ResourceNotFoundException;
 
 	public void delete(Long id);
 

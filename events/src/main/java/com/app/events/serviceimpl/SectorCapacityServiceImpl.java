@@ -1,14 +1,14 @@
 package com.app.events.serviceimpl;
 
-import com.app.events.exception.SectorCapacityDoesntExistException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Sector;
 import com.app.events.model.SectorCapacity;
 import com.app.events.repository.SectorCapacityRepository;
 import com.app.events.service.SectorCapacityService;
 import com.app.events.service.SectorService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class SectorCapacityServiceImpl implements SectorCapacityService {
@@ -20,10 +20,10 @@ public class SectorCapacityServiceImpl implements SectorCapacityService {
     private SectorService sectorService;
 
     @Override
-    public SectorCapacity findOne(Long id) throws SectorCapacityDoesntExistException{
+    public SectorCapacity findOne(Long id) throws ResourceNotFoundException{
         return this.sectorCapacityRepository.findById(id)
                     .orElseThrow(
-                        ()-> new SectorCapacityDoesntExistException("sector capacity doesn't exist")
+                        ()-> new ResourceNotFoundException("Sector capacity")
                     ); 
     }
 
@@ -39,7 +39,7 @@ public class SectorCapacityServiceImpl implements SectorCapacityService {
     }
 
     @Override
-    public SectorCapacity update(SectorCapacity sectorCapacity) throws Exception {
+    public SectorCapacity update(SectorCapacity sectorCapacity) throws ResourceNotFoundException {
         SectorCapacity sectorCapacityToUpdate = this.findOne(sectorCapacity.getId());
         sectorCapacityToUpdate.setFree(sectorCapacity.getFree());
         sectorCapacityToUpdate.setCapacity(sectorCapacity.getCapacity());

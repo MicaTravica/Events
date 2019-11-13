@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.MediaDTO;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.MediaMapper;
 import com.app.events.service.MediaService;
 
@@ -28,7 +29,7 @@ public class MediaController extends BaseController {
 	
 	@GetMapping(value = "/media/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MediaDTO> getMedia(@PathVariable("id") Long id) throws Exception {
+	public ResponseEntity<MediaDTO> getMedia(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.findOne(id)),HttpStatus.OK);
 	}
 	
@@ -43,13 +44,13 @@ public class MediaController extends BaseController {
 	@PostMapping(value = "/media", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE, 
 				 produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDto) throws Exception {
+	public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDto) throws ResourceNotFoundException {
 		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.crate(MediaMapper.toMedia(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
 	}
 
 
 	@DeleteMapping(value = "/media/{id}}")
-	public ResponseEntity<String> deleteMedia(@PathVariable("id") Long id) throws Exception {
+	public ResponseEntity<String> deleteMedia(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		mediaService.delete(id);
 		return new ResponseEntity<>("Media is deleted", HttpStatus.NO_CONTENT);
 	}

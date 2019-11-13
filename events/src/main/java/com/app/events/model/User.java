@@ -56,11 +56,6 @@ public class User {
 		this.verified = false;
 	}
 	
-	public void changeEmail(String email) {
-		this.email = email;
-		this.verified = false;
-	}
-
 	public User(Long userId) {
 		this.id = userId;
 	}

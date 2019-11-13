@@ -1,6 +1,8 @@
 package com.app.events.controller;
 
 import com.app.events.dto.PriceListDTO;
+import com.app.events.exception.ResourceExistsException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.PriceListMapper;
 import com.app.events.model.PriceList;
 import com.app.events.service.PriceListService;
@@ -24,19 +26,19 @@ public class PriceListController {
 	private PriceListService priceListService;
 
 	@GetMapping(value = "/api/priceList/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PriceListDTO> getPriceList(@PathVariable("id") Long id) {
+	public ResponseEntity<PriceListDTO> getPriceList(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		PriceList priceList = priceListService.findOne(id);
 		return new ResponseEntity<>(PriceListMapper.toDTO(priceList), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PriceListDTO> createPriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
+	public ResponseEntity<PriceListDTO> createPriceList(@RequestBody PriceListDTO priceListDTO) throws ResourceExistsException, ResourceNotFoundException {
 		PriceList savedPriceList = priceListService.create(PriceListMapper.toPriceList(priceListDTO));
 		return new ResponseEntity<>(PriceListMapper.toDTO(savedPriceList), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PriceListDTO> updatePriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
+	public ResponseEntity<PriceListDTO> updatePriceList(@RequestBody PriceListDTO priceListDTO) throws ResourceNotFoundException {
 		PriceList updatedPriceList = priceListService.update(PriceListMapper.toPriceList(priceListDTO));
 		return new ResponseEntity<>(PriceListMapper.toDTO(updatedPriceList),HttpStatus.OK);
 	}
