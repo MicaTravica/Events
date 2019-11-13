@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,9 +24,14 @@ public class Seat {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@PositiveOrZero(message ="Number of row must be positive number or zero")
 	private int seatRow;
+	
+	@PositiveOrZero(message ="Number of row must be positive number or zero")
 	private int seatColumn;
 	
+	@NotNull(message = "Seat must be asociated with sector")
 	@ManyToOne
 	@JoinColumn(name="sector_id", referencedColumnName="id")
 	private Sector sector;

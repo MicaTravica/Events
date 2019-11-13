@@ -14,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,17 +34,27 @@ public class Event {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank(message = "Name can not be empty string")
 	private String name;
+
+	@NotBlank(message = "Description can not be empty string")
 	private String description;
+	
+	@Future(message="From date must be in future")
 	private Date fromDate;
+
+	@Future(message="To date must be in future")
 	private Date toDate;
 	
+	@NotNull(message="Event must have event state")
 	@Enumerated(EnumType.STRING)
 	private EventState eventState;
-	
+
+	@NotNull(message="Event must have event type")
 	@Enumerated(EnumType.STRING)
 	private EventType eventType;
 	
+	@NotNull(message="Event must have place")
 	@ManyToOne
 	@JoinColumn(name="place_id", referencedColumnName="id")
 	private Place place;
