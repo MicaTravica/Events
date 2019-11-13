@@ -1,10 +1,5 @@
 package com.app.events.controller;
 
-import com.app.events.dto.PriceListDTO;
-import com.app.events.mapper.PriceListMapper;
-import com.app.events.model.PriceList;
-import com.app.events.service.PriceListService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +12,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.events.dto.PriceListDTO;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.mapper.PriceListMapper;
+import com.app.events.model.PriceList;
+import com.app.events.service.PriceListService;
+
 @RestController
 public class PriceListController {
 
@@ -24,7 +25,7 @@ public class PriceListController {
 	private PriceListService priceListService;
 
 	@GetMapping(value = "/api/priceList/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PriceListDTO> getPriceList(@PathVariable("id") Long id) {
+	public ResponseEntity<PriceListDTO> getPriceList(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		PriceList priceList = priceListService.findOne(id);
 		return new ResponseEntity<>(PriceListMapper.toDTO(priceList), HttpStatus.OK);
 	}

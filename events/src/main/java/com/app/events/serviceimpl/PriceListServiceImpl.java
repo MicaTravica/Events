@@ -1,6 +1,10 @@
 package com.app.events.serviceimpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.app.events.exception.ResourceExistsException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Event;
 import com.app.events.model.PriceList;
 import com.app.events.model.Sector;
@@ -9,9 +13,6 @@ import com.app.events.service.EventService;
 import com.app.events.service.PriceListService;
 import com.app.events.service.SectorService;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.stereotype.Service;
 
 @Service
 public class PriceListServiceImpl implements PriceListService {
@@ -28,13 +29,13 @@ public class PriceListServiceImpl implements PriceListService {
     @Override
     public PriceList findOne(Long id) throws ResourceNotFoundException{
         return this.priceListRepository.findById(id)
-                    .orElseThrow(()-> new ResourceNotFoundException("PriceList not found"));
+                    .orElseThrow(()-> new ResourceNotFoundException("PriceList"));
     }
 
     @Override
     public PriceList create(PriceList priceList) throws Exception {
         if(priceList.getId() != null){
-            throw new ResourceExistsException("PriceList already exists and has ID.");
+            throw new ResourceExistsException("Price list");
         }
         Sector sector = sectorService.findOne(priceList.getSector().getId());
         priceList.setSector(sector);
@@ -44,7 +45,7 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public PriceList update(PriceList priceList) {
+    public PriceList update(PriceList priceList) throws Exception {
         PriceList priceListToUpdate = this.findOne(priceList.getId());
         priceListToUpdate.setPrice(priceList.getPrice());
         return this.priceListRepository.save(priceListToUpdate);

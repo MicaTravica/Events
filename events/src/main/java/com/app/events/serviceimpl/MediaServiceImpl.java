@@ -5,8 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.events.exception.EventNotFoundException;
-import com.app.events.exception.MediaNotFoundException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Media;
 import com.app.events.repository.EventRepository;
 import com.app.events.repository.MediaRepository;
@@ -22,8 +21,8 @@ public class MediaServiceImpl implements MediaService {
 	EventRepository eventRepository;
 
 	@Override
-	public Media findOne(Long id) throws MediaNotFoundException {
-		return mediaRepository.findById(id).orElseThrow(() -> new MediaNotFoundException(id));
+	public Media findOne(Long id) throws ResourceNotFoundException {
+		return mediaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Media"));
 	}
 
 	@Override
@@ -32,15 +31,15 @@ public class MediaServiceImpl implements MediaService {
 	}
 
 	@Override
-	public Media crate(Media media, Long eventId) throws EventNotFoundException {
-		media.setEvent(eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId)));
+	public Media create(Media media, Long eventId) throws Exception {
+		media.setEvent(eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event")));
 		media.setId(null);
 		return mediaRepository.save(media);
 	}	
 
 	@Override
-	public void delete(Long id) throws MediaNotFoundException  {
-		Media media = mediaRepository.findById(id).orElseThrow(() -> new MediaNotFoundException(id));
+	public void delete(Long id) throws ResourceNotFoundException  {
+		Media media = mediaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Media"));
 		media.setEvent(null);
 		mediaRepository.save(media);
 		mediaRepository.deleteById(id);;

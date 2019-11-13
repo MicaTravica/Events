@@ -1,8 +1,7 @@
 package com.app.events.service;
 
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.PriceList;
-
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 
 public interface PriceListService {
 
