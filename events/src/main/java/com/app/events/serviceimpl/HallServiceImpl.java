@@ -5,9 +5,13 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app.events.exception.ResourceExistsException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
+import com.app.events.model.Place;
 import com.app.events.repository.HallRepository;
 import com.app.events.service.HallService;
+import com.app.events.service.PlaceService;
 
 @Service
 public class HallServiceImpl implements HallService {
@@ -15,54 +19,46 @@ public class HallServiceImpl implements HallService {
 	@Autowired
     private HallRepository hallRepository;
 
+    @Autowired
+    private PlaceService placeService;
+
 	
 	@Override
 	public Collection<Hall> findAll(){
-		Collection<Hall> halls = this.hallRepository.findAll();
-		return halls;
+		return this.hallRepository.findAll();
 	}
 	
-	
     @Override
-    public Hall findOne(Long id) {
-        Hall hall = this.hallRepository.findById(id).get();
-
-        return hall;
+    public Hall findOne(Long id) throws ResourceNotFoundException {
+        return this.hallRepository.findById(id)
+                    .orElseThrow(
+                        ()-> new ResourceNotFoundException("Hall")
+                    ); 
     }
 
     @Override
-    public Hall create(Hall hall) {
+    public Hall create(Hall hall) throws Exception{
         if(hall.getId() != null){
-            throw new RuntimeException("Hall already exists and has ID.");
+            throw new ResourceExistsException("Hall");
         }
-        Hall savedHall = this.hallRepository.save(hall);
-        
-        return savedHall;
-       
+        Place place = placeService.findOne(hall.getPlace().getId());
+        hall.setPlace(place);
+        return this.hallRepository.save(hall);       
     }
 
     @Override
-    public Hall update(Hall hall) {
-        Hall hallToUpdate = this.hallRepository.findById(hall.getId()).get();
-	    if (hallToUpdate == null) { 
-	    	throw new RuntimeException("Not found hall with this ID."); 
-        }	    
-
+    public Hall update(Hall hall) throws Exception{
+        Hall hallToUpdate = this.findOne(hall.getId());
+        Place newPlace = placeService.findOne(hall.getPlace().getId());
+        hallToUpdate.setPlace(newPlace);
 	    hallToUpdate.setName(hall.getName());
-	    
-	    Hall updatedHall = this.hallRepository.save(hallToUpdate);
-	    
-	    return updatedHall;
-	    
-
+	    return this.hallRepository.save(hallToUpdate);
     }
 
     @Override
     public void delete(Long id) {
         this.hallRepository.deleteById(id);
     }
-
-
 
 }
 
