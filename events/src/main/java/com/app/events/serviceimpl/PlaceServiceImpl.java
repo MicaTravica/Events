@@ -1,10 +1,13 @@
 package com.app.events.serviceimpl;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app.events.exception.ResourceExistsException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Place;
 import com.app.events.repository.PlaceRepository;
 import com.app.events.service.PlaceService;
@@ -17,45 +20,32 @@ public class PlaceServiceImpl implements PlaceService{
 
 	@Override
 	public Collection<Place> findAll(){
-		Collection<Place> places = this.placeRepository.findAll();
-		return places;
+		return this.placeRepository.findAll();
 	}
 	
-	
     @Override
-    public Place findOne(Long id) {
-        Place place = this.placeRepository.findById(id).get();
-
-        return place;
+    public Place findOne(Long id) throws ResourceNotFoundException {
+        return this.placeRepository.findById(id)
+                    .orElseThrow(
+                        ()-> new ResourceNotFoundException("Place")
+                    ); 
     }
 
     @Override
-    public Place create(Place place) {
+    public Place create(Place place) throws Exception{
         if(place.getId() != null){
-            throw new RuntimeException("Place already exists and has ID.");
+            throw new ResourceExistsException("Place");
         }
-        Place savedPlace = this.placeRepository.save(place);
-        
-        return savedPlace;
-       
+        this.coordinatesCheckReserved(place);
+        return this.placeRepository.save(place);
     }
 
     @Override
-    public Place update(Place place) {
-        Place placeToUpdate = this.placeRepository.findById(place.getId()).get();
-	    if (placeToUpdate == null) { 
-	    	throw new RuntimeException("Not found place with this ID."); 
-        }	    
-
-	    placeToUpdate.setName(place.getName());
-	    placeToUpdate.setAddress(place.getAddress());
-	    placeToUpdate.setLatitude(place.getLatitude());
-	    placeToUpdate.setLongitude(place.getLongitude());
-	    
-	   Place updatedPlace = this.placeRepository.save(placeToUpdate);
-	   
-	   return updatedPlace;
-
+    public Place update(Place place) throws Exception{
+        Place placeToUpdate = this.findOne(place.getId());
+        this.setPlaceFields(placeToUpdate, place);
+        this.coordinatesCheckReserved(placeToUpdate);	    
+	    return this.placeRepository.save(placeToUpdate);
     }
 
     @Override
@@ -63,6 +53,22 @@ public class PlaceServiceImpl implements PlaceService{
         this.placeRepository.deleteById(id);
     }
 
+    public void coordinatesCheckReserved(Place place) throws ResourceExistsException
+    {
+        Optional<Place> optPlace = placeRepository.findByCoordinates(place.getLongitude(), place.getLatitude());
+        if(optPlace.isPresent() && optPlace.get().getId() != place.getId()){
+            throw new ResourceExistsException("Place");
+        }
+    }
+
+    public Place setPlaceFields(Place placeToUpdate, Place place)
+    {
+	    placeToUpdate.setName(place.getName());
+	    placeToUpdate.setAddress(place.getAddress());
+	    placeToUpdate.setLatitude(place.getLatitude());
+        placeToUpdate.setLongitude(place.getLongitude());
+        return placeToUpdate;
+    }
 
 
 }
