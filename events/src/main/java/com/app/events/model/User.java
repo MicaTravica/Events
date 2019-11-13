@@ -41,20 +41,19 @@ public class User {
 	@NotBlank(message = "Phone number can not be empty string")
 	private String phone;
 	
-	@Email(message="Email must be correct")
-	@NotBlank(message = "Email can not be empty string")
+	@Email(message="Email should be valid")
 	@Column(unique=true, length=100)
 	private String email;
 	
 	private boolean verified;
 	
-	@NotBlank(message = "name can not be empty string")
+	@NotBlank(message = "Username can not be empty string")
 	@Column(unique=true, length=100)
 	private String username;
 	
 	@Min(value = 8, message = "Password must be at least {value}")
 	private String password;
-	
+
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;
 	

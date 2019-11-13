@@ -35,10 +35,12 @@ public class Place {
 	@NotBlank(message = "Address can not be empty string")
 	private String address;
 	
-	@DecimalMax("180.0") @DecimalMin("-180.0")
+	@DecimalMax(value="180.0", message = "Latitude must not be higher than ${value}") 
+	@DecimalMin(value="-180.0", message = "Latitude must not be lower than ${value}")
 	private double latitude;
 	
-	@DecimalMax("180.0") @DecimalMin("-180.0")
+	@DecimalMax(value="180.0", message = "Longitude must not be higher than ${value}") 
+	@DecimalMin(value="-180.0", message = "Longitude must not be lower than ${value}")
 	private double longitude;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

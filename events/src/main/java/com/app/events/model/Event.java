@@ -36,7 +36,8 @@ public class Event {
 	
 	@NotBlank(message = "Name can not be empty string")
 	private String name;
-	
+
+	@NotBlank(message = "Description can not be empty string")
 	private String description;
 	
 	@Future(message="From date must be in future")
