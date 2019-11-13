@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
@@ -43,6 +44,9 @@ public class Hall {
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Sector> sectors;
+	
+	@ManyToMany(mappedBy = "halls")
+	private Set<Event> events;
 	
 	public Hall(HallDTO hall) {
 	    this.id = hall.getId();
