@@ -42,6 +42,24 @@ public class TicketController {
 		}
 	}
 
+	@PutMapping(value = "/api/reserveTicket/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TicketDTO> reserveTicket(@PathVariable("id") Long id) throws Exception {
+		TicketDTO updatedTicket = ticketService.reserveTicket(id);
+		if (updatedTicket == null) {
+			return new ResponseEntity<TicketDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<TicketDTO>(updatedTicket, HttpStatus.OK);
+	}
+
+	@PutMapping(value = "/api/buyTicket/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<TicketDTO> buyTicket(@PathVariable("id") Long id) throws Exception {
+		TicketDTO updatedTicket = ticketService.buyTicket(id);
+		if (updatedTicket == null) {
+			return new ResponseEntity<TicketDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<TicketDTO>(updatedTicket, HttpStatus.OK);
+	}
+
 	@PutMapping(value = "/api/tickets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TicketDTO> updateTicket(Ticket ticket) throws Exception {
 		TicketDTO updatedTicket = ticketService.update(ticket);

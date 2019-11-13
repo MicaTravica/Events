@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.events.dto.TicketDTO;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.TicketMapper;
 import com.app.events.model.Ticket;
+import com.app.events.model.TicketState;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.TicketService;
 
@@ -31,6 +33,36 @@ public class TicketServiceImpl implements TicketService {
 		TicketDTO newTicketDTO = TicketMapper.toDTO(newTicket);
 
 		return newTicketDTO;
+	}
+
+	@Override
+	public TicketDTO reserveTicket(Long id) throws ResourceNotFoundException {
+		Ticket ticketToUpdate = ticketRepository.findById(id).get();
+		if (ticketToUpdate == null) {
+			throw new ResourceNotFoundException("Ticket");
+		}
+
+		ticketToUpdate.setTicketState(TicketState.RESERVED);
+
+		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
+		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
+
+		return updatedTicketDTO;
+	}
+
+	@Override
+	public TicketDTO buyTicket(Long id) throws ResourceNotFoundException {
+		Ticket ticketToUpdate = ticketRepository.findById(id).get();
+		if (ticketToUpdate == null) {
+			throw new ResourceNotFoundException("Ticket");
+		}
+
+		ticketToUpdate.setTicketState(TicketState.BOUGHT);
+
+		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
+		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
+
+		return updatedTicketDTO;
 	}
 
 	@Override
