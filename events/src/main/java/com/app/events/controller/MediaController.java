@@ -37,7 +37,7 @@ public class MediaController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<MediaDTO>> getMediaForEvent(@PathVariable("id") Long id) {
 		return new ResponseEntity<>(mediaService.findAllForEvent(id).stream()
-									.map(media -> MediaMapper.toDTO(media))
+									.map(MediaMapper::toDTO)
 									.collect(Collectors.toList()),HttpStatus.OK);
 	}
 
