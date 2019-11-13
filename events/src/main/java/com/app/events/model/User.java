@@ -60,4 +60,8 @@ public class User {
 		this.email = email;
 		this.verified = false;
 	}
+
+	public User(Long userId) {
+		this.id = userId;
+	}
 }

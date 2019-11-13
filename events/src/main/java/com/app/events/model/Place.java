@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.app.events.dto.PlaceDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,19 +37,7 @@ public class Place {
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Hall> halls;
 	
-	public Place(PlaceDTO place) {
-	    this.id = place.getId();
-	    this.name = place.getName();
-	    this.address = place.getAddress();
-	    this.latitude = place.getLatitude();
-	    this.longitude = place.getLongitude();    
-	}
-
-	public Place(Long id, String name, String address, double latitude, double longitude) {
+	public Place(Long id){
 		this.id = id;
-		this.name = name;
-		this.address = address;
-		this.latitude = latitude;
-		this.longitude = longitude;
 	}
 }
