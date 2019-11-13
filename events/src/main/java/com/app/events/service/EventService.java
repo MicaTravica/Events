@@ -1,18 +1,18 @@
 package com.app.events.service;
 
-import java.util.Collection;
 
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Event;
 
 public interface EventService {
-
-	public Collection<Event> findAll();
 	
-	public Event findOne(Long id);
+	public Event findOne(Long id) throws ResourceNotFoundException;
 
-	public Event create(Event event);
+	public Event create(Event event) throws Exception;
 
-	public Event update(Event event);
+	public Event update(Event event) throws Exception;
+	
+	public Event prepareEventFields(Event toUpdate, Event newEvent);
 
 	public void delete(Long id);
 }

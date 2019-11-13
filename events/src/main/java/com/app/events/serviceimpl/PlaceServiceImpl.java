@@ -1,6 +1,5 @@
 package com.app.events.serviceimpl;
 
-import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +17,7 @@ public class PlaceServiceImpl implements PlaceService{
 	@Autowired
     private PlaceRepository placeRepository;
 
-	@Override
-	public Collection<Place> findAll(){
-		return this.placeRepository.findAll();
-	}
-	
+
     @Override
     public Place findOne(Long id) throws ResourceNotFoundException {
         return this.placeRepository.findById(id)

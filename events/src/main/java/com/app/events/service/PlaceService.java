@@ -1,14 +1,11 @@
 package com.app.events.service;
 
-import java.util.Collection;
 
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Place;
 
 public interface PlaceService {
-
-	public Collection<Place> findAll();
 	
 	public Place findOne(Long id) throws ResourceNotFoundException;
 
