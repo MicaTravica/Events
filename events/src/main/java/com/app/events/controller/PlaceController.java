@@ -1,7 +1,5 @@
 package com.app.events.controller;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,22 +20,16 @@ import com.app.events.model.Place;
 import com.app.events.service.PlaceService;
 
 @RestController
-public class PlaceController {
+public class PlaceController extends BaseController {
 
 	@Autowired
 	private PlaceService placeService;
 
-	@GetMapping(value = "/api/places", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<PlaceDTO>> getPlaces() {
-		Collection<Place> places = placeService.findAll();
-		return new ResponseEntity<>(
-			places.stream().map(place -> PlaceMapper.toDTO(place)).collect(Collectors.toList()),
-			HttpStatus.OK);
-	}
 
 	@GetMapping(value = "/api/place/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlaceDTO> getPlace(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		return new ResponseEntity<PlaceDTO>(PlaceMapper.toDTO(placeService.findOne(id)), HttpStatus.OK);
+		Place place = placeService.findOne(id);
+		return new ResponseEntity<>(PlaceMapper.toDTO(place), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,7 +1,5 @@
 package com.app.events.controller;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,18 +20,11 @@ import com.app.events.model.Hall;
 import com.app.events.service.HallService;
 
 @RestController
-public class HallController {
+public class HallController extends BaseController {
 
 	@Autowired
 	private HallService hallService;
 
-	@GetMapping(value = "/api/halls", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Collection<HallDTO>> getHalls() {
-		Collection<Hall> halls = hallService.findAll();
-		return new ResponseEntity<>(
-			halls.stream().map(hall -> HallMapper.toDTO(hall)).collect(Collectors.toList()),
-			HttpStatus.OK);
-	}
 
 	@GetMapping(value = "/api/hall/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HallDTO> getHall(@PathVariable("id") Long id) throws ResourceNotFoundException {

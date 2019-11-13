@@ -1,6 +1,5 @@
 package com.app.events.serviceimpl;
 
-import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,6 @@ public class HallServiceImpl implements HallService {
     @Autowired
     private PlaceService placeService;
 
-	
-	@Override
-	public Collection<Hall> findAll(){
-		return this.hallRepository.findAll();
-	}
 	
     @Override
     public Hall findOne(Long id) throws ResourceNotFoundException {
@@ -54,6 +48,7 @@ public class HallServiceImpl implements HallService {
 	    hallToUpdate.setName(hall.getName());
 	    return this.hallRepository.save(hallToUpdate);
     }
+
 
     @Override
     public void delete(Long id) {
