@@ -1,5 +1,9 @@
 package com.app.events.controller;
 
+import com.app.events.dto.SeatDTO;
+import com.app.events.model.Seat;
+import com.app.events.service.SeatService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -8,12 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.app.events.dto.SeatDTO;
-import com.app.events.model.Seat;
-import com.app.events.service.SeatService;
 
 @RestController
 public class SeatController {
@@ -40,15 +39,6 @@ public class SeatController {
 		} catch (Exception e) {
 			return new ResponseEntity<SeatDTO>(HttpStatus.BAD_REQUEST);
 		}
-	}
-
-	@PutMapping(value = "/api/seats", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SeatDTO> updateSeat(Seat seat) throws Exception {
-		SeatDTO updatedSeat = seatService.update(seat);
-		if (updatedSeat == null) {
-			return new ResponseEntity<SeatDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<SeatDTO>(updatedSeat, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/seats/{id}")

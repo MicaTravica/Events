@@ -13,8 +13,6 @@ public interface TicketService {
 	public TicketDTO reserveTicket(Long id) throws ResourceNotFoundException;
 	public TicketDTO buyTicket(Long id) throws ResourceNotFoundException;
 
-	public TicketDTO update(Ticket ticket);
-
 	public void delete(Long id);
 
 }
