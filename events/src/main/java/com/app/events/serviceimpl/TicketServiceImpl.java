@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.events.dto.TicketDTO;
+import com.app.events.mapper.TicketMapper;
 import com.app.events.model.Ticket;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.TicketService;
@@ -17,8 +18,8 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public TicketDTO findOne(Long id) {
 
-		Ticket Ticket = ticketRepository.findById(id).get();
-		TicketDTO TicketDTO = new TicketDTO(Ticket);
+		Ticket ticket = ticketRepository.findById(id).get();
+		TicketDTO TicketDTO = TicketMapper.toDTO(ticket);
 
 		return TicketDTO;
 	}
@@ -27,7 +28,7 @@ public class TicketServiceImpl implements TicketService {
 	public TicketDTO create(Ticket ticket) {
 
 		Ticket newTicket = ticketRepository.save(ticket);
-		TicketDTO newTicketDTO = new TicketDTO(newTicket);
+		TicketDTO newTicketDTO = TicketMapper.toDTO(newTicket);
 
 		return newTicketDTO;
 	}
@@ -47,7 +48,7 @@ public class TicketServiceImpl implements TicketService {
 		ticketToUpdate.setSectorCapacity(ticket.getSectorCapacity());
 
 		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
-		TicketDTO updatedTicketDTO = new TicketDTO(updatedTicket);
+		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
 
 		return updatedTicketDTO;
 	}

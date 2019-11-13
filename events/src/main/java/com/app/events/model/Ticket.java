@@ -46,62 +46,10 @@ public class Ticket {
 	@JoinColumn(name="sector_capacity_id", referencedColumnName="id")
 	private SectorCapacity sectorCapacity;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
+	public Ticket(Long id, TicketState ticketState, User user) {
 		this.id = id;
-	}
-
-	public String getBarCode() {
-		return barCode;
-	}
-
-	public void setBarCode(String barCode) {
-		this.barCode = barCode;
-	}
-
-	public TicketState getTicketState() {
-		return ticketState;
-	}
-
-	public void setTicketState(TicketState ticketState) {
 		this.ticketState = ticketState;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
 		this.user = user;
 	}
-
-	public Event getEvent() {
-		return event;
-	}
-
-	public void setEvent(Event event) {
-		this.event = event;
-	}
-
-	public Seat getSeat() {
-		return seat;
-	}
-
-	public void setSeat(Seat seat) {
-		this.seat = seat;
-	}
-
-	public SectorCapacity getSectorCapacity() {
-		return sectorCapacity;
-	}
-
-	public void setSectorCapacity(SectorCapacity sectorCapacity) {
-		this.sectorCapacity = sectorCapacity;
-	}
-	
-	
 	
 }

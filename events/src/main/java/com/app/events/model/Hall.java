@@ -40,8 +40,7 @@ public class Hall {
 	
 	public Hall(HallDTO hall) {
 	    this.id = hall.getId();
-	    this.name = hall.getName();
-	  
+	    this.name = hall.getName(); 
 	}
 
 	public Hall(Long id, String name) {

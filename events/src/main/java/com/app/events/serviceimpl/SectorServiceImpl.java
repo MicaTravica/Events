@@ -52,7 +52,7 @@ public class SectorServiceImpl implements SectorService {
     }
 
     @Override
-    public void delete(Long id) throws IllegalArgumentException{
+    public void delete(Long id){
         this.sectorRepository.deleteById(id);
     }
 

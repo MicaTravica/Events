@@ -68,4 +68,8 @@ public class Sector {
 		this.sectorColumns = sectorColumns;
 		this.priceLists = new HashSet<PriceList>();
 	}
+
+	public Sector(Long sectorId) {
+		this.id = sectorId;
+	}
 }
