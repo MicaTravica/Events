@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.app.events.dto.HallDTO;
 
@@ -29,8 +31,12 @@ public class Hall {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+
+	@NotBlank(message = "Name can not be empty string")
 	private String name;
 	
+	@NotNull(message = "Hall must be asociated with place")
 	@ManyToOne
 	@JoinColumn(name="place_id", referencedColumnName="id")
 	private Place place;
