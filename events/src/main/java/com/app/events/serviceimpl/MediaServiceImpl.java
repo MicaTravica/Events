@@ -31,7 +31,7 @@ public class MediaServiceImpl implements MediaService {
 	}
 
 	@Override
-	public Media crate(Media media, Long eventId) throws ResourceNotFoundException {
+	public Media create(Media media, Long eventId) throws Exception {
 		media.setEvent(eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event")));
 		media.setId(null);
 		return mediaRepository.save(media);

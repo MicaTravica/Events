@@ -4,8 +4,6 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import javax.mail.MessagingException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -27,11 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.events.dto.LoginDTO;
 import com.app.events.dto.PasswordChangeDTO;
 import com.app.events.dto.UserDTO;
-import com.app.events.exception.PasswordShortException;
-import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.UserNotFoundByUsernameException;
-import com.app.events.exception.WrongPasswordException;
 import com.app.events.mapper.UserMapper;
 import com.app.events.security.TokenUtils;
 import com.app.events.service.UserService;
@@ -68,7 +63,7 @@ public class UserController extends BaseController {
 	@PostMapping(value="/registration", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
 				 produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws MessagingException, PasswordShortException, ResourceExistsException {
+	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws Exception {
 		userService.registration(UserMapper.toUser(userDTO));
 		return new ResponseEntity<>("You are registred, now you need to verify your email", HttpStatus.OK);
 	}
@@ -106,14 +101,14 @@ public class UserController extends BaseController {
 	@PutMapping(value = "/user", 
 				consumes = MediaType.APPLICATION_JSON_VALUE, 
 				produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) throws ResourceNotFoundException, ResourceExistsException {
+	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) throws Exception {
 		return new ResponseEntity<>(UserMapper.toDTO(userService.update(UserMapper.toUser(userDto))), HttpStatus.OK);
 	}
 	
 	@PutMapping(value= "/user/password", 
 				consumes= MediaType.APPLICATION_JSON_VALUE, 
 				produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTO pcDto) throws WrongPasswordException, UserNotFoundByUsernameException, PasswordShortException
+	public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTO pcDto) throws Exception
 	{
 		userService.changeUserPassword(pcDto, SecurityContextHolder.getContext().getAuthentication().getName());
 	    return new ResponseEntity<>("Password changed", HttpStatus.OK);

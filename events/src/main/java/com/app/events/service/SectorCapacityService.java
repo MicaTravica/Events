@@ -9,7 +9,7 @@ public interface SectorCapacityService {
 
 	public SectorCapacity create(SectorCapacity sector) throws Exception;
 
-	public SectorCapacity update(SectorCapacity sector) throws ResourceNotFoundException;
+	public SectorCapacity update(SectorCapacity sector) throws Exception;
 
 	public void delete(Long id);
 

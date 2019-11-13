@@ -2,19 +2,14 @@ package com.app.events.service;
 
 import java.util.Collection;
 
-import javax.mail.MessagingException;
-
 import com.app.events.dto.PasswordChangeDTO;
-import com.app.events.exception.PasswordShortException;
-import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.UserNotFoundByUsernameException;
-import com.app.events.exception.WrongPasswordException;
 import com.app.events.model.User;
 
 public interface UserService {
 
-	User registration(User user) throws MessagingException, PasswordShortException, ResourceExistsException;
+	User registration(User user) throws Exception;
 
 	Collection<User> findAll();
 
@@ -22,9 +17,9 @@ public interface UserService {
 
 	User findOne(Long id) throws ResourceNotFoundException;
 
-	User update(User user) throws ResourceNotFoundException, ResourceExistsException;
+	User update(User user) throws Exception;
 
-	void changeUserPassword(PasswordChangeDTO pcDto, String username) throws WrongPasswordException, UserNotFoundByUsernameException, PasswordShortException;
+	void changeUserPassword(PasswordChangeDTO pcDto, String username) throws Exception;
 
 	User findOneByUsername(String name) throws UserNotFoundByUsernameException;
 

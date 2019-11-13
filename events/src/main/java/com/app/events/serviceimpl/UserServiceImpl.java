@@ -4,8 +4,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.UUID;
 
-import javax.mail.MessagingException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -37,7 +35,7 @@ public class UserServiceImpl implements UserService {
 	private MailService mailService;
 	
 	@Override
-	public User registration(User user) throws MessagingException, PasswordShortException, ResourceExistsException {
+	public User registration(User user) throws Exception {
 		if(userRepository.findByUsername(user.getUsername()).isPresent()) {
 			throw new ResourceExistsException("Username");
 		} else if(userRepository.findByEmail(user.getEmail()).isPresent()) {
@@ -70,7 +68,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(User user) throws ResourceNotFoundException, ResourceExistsException {
+	public User update(User user) throws Exception {
 		User userToUpdate = userRepository.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("User"));
 		if(!user.getUsername().equals(userToUpdate.getUsername()) && userRepository.findByUsername(user.getUsername()).isPresent()) {
 			throw new ResourceExistsException("Username");
@@ -80,7 +78,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void changeUserPassword(PasswordChangeDTO pcDto, String username) throws WrongPasswordException, UserNotFoundByUsernameException, PasswordShortException {
+	public void changeUserPassword(PasswordChangeDTO pcDto, String username) throws Exception {
 		User user = userRepository.findByUsername(username).orElseThrow(() ->  new UserNotFoundByUsernameException(username));
 		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 		if(bcpe.matches(pcDto.getOldPassword(), user.getPassword())) {

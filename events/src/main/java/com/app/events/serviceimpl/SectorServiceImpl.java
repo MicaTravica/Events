@@ -29,7 +29,7 @@ public class SectorServiceImpl implements SectorService {
     }
 
     @Override
-    public Sector create(Sector sector) throws ResourceExistsException, ResourceNotFoundException{
+    public Sector create(Sector sector) throws Exception {
         if(sector.getId() != null){
             throw new ResourceExistsException("Sector");
         }
@@ -39,7 +39,7 @@ public class SectorServiceImpl implements SectorService {
     }
 
     @Override
-    public Sector update(Sector sector) throws ResourceNotFoundException {
+    public Sector update(Sector sector) throws Exception {
         Sector sectorToUpdate = this.findOne(sector.getId());
         sectorToUpdate = this.prepareSectorFields(sectorToUpdate, sector);
         return this.sectorRepository.save(sectorToUpdate);

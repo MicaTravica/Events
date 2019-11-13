@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.SectorDTO;
-import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.Sector;
@@ -33,13 +32,13 @@ public class SectorController extends BaseController{
 	}
 
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sectorDTO) throws ResourceExistsException, ResourceNotFoundException {
+	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sectorDTO) throws Exception {
 			Sector savedSector = sectorService.create(SectorMapper.toSector(sectorDTO));
 			return new ResponseEntity<>(SectorMapper.toDTO(savedSector), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO) throws ResourceNotFoundException {
+	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO) throws Exception {
 		Sector updatedSector = sectorService.update(SectorMapper.toSector(sectorDTO));
 		return new ResponseEntity<>(SectorMapper.toDTO(updatedSector), HttpStatus.OK);
 	}

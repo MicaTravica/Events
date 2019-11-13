@@ -33,7 +33,7 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public PriceList create(PriceList priceList) throws ResourceExistsException, ResourceNotFoundException {
+    public PriceList create(PriceList priceList) throws Exception {
         if(priceList.getId() != null){
             throw new ResourceExistsException("Price list");
         }
@@ -45,7 +45,7 @@ public class PriceListServiceImpl implements PriceListService {
     }
 
     @Override
-    public PriceList update(PriceList priceList) throws ResourceNotFoundException {
+    public PriceList update(PriceList priceList) throws Exception {
         PriceList priceListToUpdate = this.findOne(priceList.getId());
         priceListToUpdate.setPrice(priceList.getPrice());
         return this.priceListRepository.save(priceListToUpdate);

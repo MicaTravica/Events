@@ -1,12 +1,5 @@
 package com.app.events.controller;
 
-import com.app.events.dto.PriceListDTO;
-import com.app.events.exception.ResourceExistsException;
-import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.mapper.PriceListMapper;
-import com.app.events.model.PriceList;
-import com.app.events.service.PriceListService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +11,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.app.events.dto.PriceListDTO;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.mapper.PriceListMapper;
+import com.app.events.model.PriceList;
+import com.app.events.service.PriceListService;
 
 @RestController
 public class PriceListController {
@@ -32,13 +31,13 @@ public class PriceListController {
 	}
 
 	@PostMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PriceListDTO> createPriceList(@RequestBody PriceListDTO priceListDTO) throws ResourceExistsException, ResourceNotFoundException {
+	public ResponseEntity<PriceListDTO> createPriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
 		PriceList savedPriceList = priceListService.create(PriceListMapper.toPriceList(priceListDTO));
 		return new ResponseEntity<>(PriceListMapper.toDTO(savedPriceList), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<PriceListDTO> updatePriceList(@RequestBody PriceListDTO priceListDTO) throws ResourceNotFoundException {
+	public ResponseEntity<PriceListDTO> updatePriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
 		PriceList updatedPriceList = priceListService.update(PriceListMapper.toPriceList(priceListDTO));
 		return new ResponseEntity<>(PriceListMapper.toDTO(updatedPriceList),HttpStatus.OK);
 	}

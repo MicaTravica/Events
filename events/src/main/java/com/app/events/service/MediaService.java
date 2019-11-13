@@ -11,7 +11,7 @@ public interface MediaService {
 
 	Collection<Media> findAllForEvent(Long id);
 
-	Media crate(Media media, Long eventId) throws ResourceNotFoundException;
+	Media create(Media media, Long eventId) throws Exception;
 
 	void delete(Long id) throws ResourceNotFoundException;
 

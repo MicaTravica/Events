@@ -39,7 +39,7 @@ public class SectorCapacityServiceImpl implements SectorCapacityService {
     }
 
     @Override
-    public SectorCapacity update(SectorCapacity sectorCapacity) throws ResourceNotFoundException {
+    public SectorCapacity update(SectorCapacity sectorCapacity) throws Exception {
         SectorCapacity sectorCapacityToUpdate = this.findOne(sectorCapacity.getId());
         sectorCapacityToUpdate.setFree(sectorCapacity.getFree());
         sectorCapacityToUpdate.setCapacity(sectorCapacity.getCapacity());

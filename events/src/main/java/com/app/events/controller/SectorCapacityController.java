@@ -48,7 +48,7 @@ public class SectorCapacityController {
 	}
 
 	@PutMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorCapacityDTO> updateSectorCapacity(@RequestBody SectorCapacityDTO param) throws ResourceNotFoundException {
+	public ResponseEntity<SectorCapacityDTO> updateSectorCapacity(@RequestBody SectorCapacityDTO param) throws Exception {
 		SectorCapacity updatedSector = sectorCapacityService.update(SectorCapacityMapper.toSectorCapacity(param));
 		return new ResponseEntity<SectorCapacityDTO>
 		(

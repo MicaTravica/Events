@@ -44,8 +44,8 @@ public class MediaController extends BaseController {
 	@PostMapping(value = "/media", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE, 
 				 produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDto) throws ResourceNotFoundException {
-		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.crate(MediaMapper.toMedia(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
+	public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDto) throws Exception {
+		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.create(MediaMapper.toMedia(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
 	}
 
 
