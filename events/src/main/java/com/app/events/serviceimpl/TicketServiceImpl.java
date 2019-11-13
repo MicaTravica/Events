@@ -1,13 +1,17 @@
 package com.app.events.serviceimpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.app.events.dto.TicketDTO;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.TicketMapper;
 import com.app.events.model.Ticket;
+import com.app.events.model.TicketState;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.TicketService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -34,18 +38,31 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public TicketDTO update(Ticket ticket) throws RuntimeException {
-		Ticket ticketToUpdate = ticketRepository.findById(ticket.getId()).get();
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public TicketDTO reserveTicket(Long id) throws ResourceNotFoundException {
+		Ticket ticketToUpdate = ticketRepository.findById(id).get();
 		if (ticketToUpdate == null) {
-			throw new RuntimeException("Not found."); // custom exception here!
+			throw new ResourceNotFoundException("Ticket");
 		}
 
-		ticketToUpdate.setBarCode(ticket.getBarCode());
-		ticketToUpdate.setTicketState(ticket.getTicketState());
-		ticketToUpdate.setUser(ticket.getUser());
-		ticketToUpdate.setEvent(ticket.getEvent());
-		ticketToUpdate.setSeat(ticket.getSeat());
-		ticketToUpdate.setSectorCapacity(ticket.getSectorCapacity());
+		ticketToUpdate.setTicketState(TicketState.RESERVED);
+		//ticketToUpdate.setUser(user);
+
+		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
+		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
+
+		return updatedTicketDTO;
+	}
+
+	@Override
+	public TicketDTO buyTicket(Long id) throws ResourceNotFoundException {
+		Ticket ticketToUpdate = ticketRepository.findById(id).get();
+		if (ticketToUpdate == null) {
+			throw new ResourceNotFoundException("Ticket");
+		}
+
+		ticketToUpdate.setTicketState(TicketState.BOUGHT);
+		//ticketToUpdate.setUser(user);
 
 		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
 		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);

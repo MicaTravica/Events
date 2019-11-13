@@ -1,6 +1,7 @@
 package com.app.events.service;
 
 import com.app.events.dto.TicketDTO;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Ticket;
 
 public interface TicketService {
@@ -9,7 +10,8 @@ public interface TicketService {
 
 	public TicketDTO create(Ticket ticket);
 
-	public TicketDTO update(Ticket ticket);
+	public TicketDTO reserveTicket(Long id) throws ResourceNotFoundException;
+	public TicketDTO buyTicket(Long id) throws ResourceNotFoundException;
 
 	public void delete(Long id);
 
