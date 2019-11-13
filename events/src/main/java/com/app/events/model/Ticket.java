@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,6 +28,8 @@ public class Ticket {
 	private Long id;
 	private String barCode;
 	
+
+	@NotNull(message="Ticket must have ticket state")
 	@Enumerated(EnumType.STRING)
 	private TicketState ticketState;
 	
@@ -34,6 +37,7 @@ public class Ticket {
 	@JoinColumn(name="user_id", referencedColumnName="id")
 	private User user;
 	
+	@NotNull(message = "Ticket must be asociated with event")
 	@ManyToOne
 	@JoinColumn(name="event_id", referencedColumnName="id")
 	private Event event;

@@ -15,7 +15,7 @@ public class SeatMapper {
         );
     }
     
-    public static Seat toPriceList(SeatDTO seatDTO) {
+    public static Seat toSeat(SeatDTO seatDTO) {
         return new Seat(seatDTO.getId(), seatDTO.getSeatRow(),
                         seatDTO.getSeatColumn(), new Sector(seatDTO.getSector().getId())
                     );

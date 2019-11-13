@@ -16,7 +16,6 @@ public class PlaceMapper {
                 placeDTO.getAddress(),
                 placeDTO.getLatitude(),
                 placeDTO.getLongitude(),
-                new HashSet<>(),
                 new HashSet<>()
             );    
     }

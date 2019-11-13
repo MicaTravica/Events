@@ -3,11 +3,15 @@ package com.app.events.serviceimpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.events.dto.SeatDTO;
-import com.app.events.mapper.SeatMapper;
+import java.util.Optional;
+
+import com.app.events.exception.ResourceExistsException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Seat;
+import com.app.events.model.Sector;
 import com.app.events.repository.SeatRepository;
 import com.app.events.service.SeatService;
+import com.app.events.service.SectorService;
 
 @Service
 public class SeatServiceImpl implements SeatService {
@@ -15,39 +19,39 @@ public class SeatServiceImpl implements SeatService {
 	@Autowired
 	private SeatRepository seatRepository;
 
+	@Autowired
+	private SectorService sectorService;
+
 	@Override
-	public SeatDTO findOne(Long id) {
-
-		Seat seat = seatRepository.findById(id).get();
-		SeatDTO seatDTO = SeatMapper.toDTO(seat);
-
-		return seatDTO;
+	public Seat findOne(Long id) throws ResourceNotFoundException{
+		return this.seatRepository.findById(id)
+                    .orElseThrow(
+                        ()-> new ResourceNotFoundException("Seat")
+                    ); 
 	}
 
 	@Override
-	public SeatDTO create(Seat seat) {
-
-		Seat newSeat = seatRepository.save(seat);
-		SeatDTO newSeatDTO = SeatMapper.toDTO(newSeat);
-
-		return newSeatDTO;
+	public Seat create(Seat seat) throws Exception{
+		if(seat.getId() != null)
+		{
+			throw new ResourceExistsException("Seat");
+		}
+		Sector sector = sectorService.findOne(seat.getSector().getId());
+		seat.setSector(sector);
+		return seatRepository.save(seat);
 	}
 
 	@Override
-	public SeatDTO update(Seat seat) throws RuntimeException {
-		 Seat seatToUpdate = seatRepository.findById(seat.getId()).get();
-	     if (seatToUpdate == null) { 
-	    	 throw new RuntimeException("Not found."); // custom exception here!
-	     }
-	     
-	     seatToUpdate.setSeatColumn(seat.getSeatColumn());
-	     seatToUpdate.setSeatRow(seat.getSeatRow());
-	     seatToUpdate.setSector(seat.getSector());
-	     
-	     Seat updatedSeat = seatRepository.save(seatToUpdate);
-	     SeatDTO updatedSeatDTO = SeatMapper.toDTO(updatedSeat);
-	        
-	     return updatedSeatDTO;
+	public Seat update(Seat seat) throws Exception {
+		Seat seatToUpdate = this.findOne(seat.getId());
+		prepareSeatFields(seatToUpdate, seat);
+		if(checkSeatFieldsAvailability(seatToUpdate))
+		{
+			return seatRepository.save(seatToUpdate);
+		}
+		else{
+			throw new ResourceExistsException("Seat");
+		}
 	}
 
 	@Override
@@ -55,4 +59,19 @@ public class SeatServiceImpl implements SeatService {
 		seatRepository.deleteById(id);
 	}
 
+	public Seat prepareSeatFields(Seat toUpdate, Seat newSeat){
+		toUpdate.setSeatColumn(newSeat.getSeatColumn());
+		toUpdate.setSeatRow(newSeat.getSeatRow());
+		toUpdate.setSector(newSeat.getSector());
+		return toUpdate;
+	}
+
+	public boolean checkSeatFieldsAvailability(Seat seat){
+		Optional<Seat> optSeat = seatRepository.findSeatByAllParams
+							(seat.getSeatColumn(), seat.getSeatRow(), seat.getSector().getId());
+		if(optSeat.isPresent() && (seat.getId() != optSeat.get().getId())){
+			return false;
+		}
+		return true;
+	}
 }

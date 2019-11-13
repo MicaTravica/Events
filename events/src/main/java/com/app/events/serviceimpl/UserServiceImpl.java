@@ -9,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.app.events.dto.PasswordChangeDTO;
-import com.app.events.exception.PasswordShortException;
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.UserNotFoundByUsernameException;
@@ -40,8 +39,6 @@ public class UserServiceImpl implements UserService {
 			throw new ResourceExistsException("Username");
 		} else if(userRepository.findByEmail(user.getEmail()).isPresent()) {
 			throw new ResourceExistsException("Email");
-		} else if(user.getPassword().length() < 8) {
-			throw new PasswordShortException();
 		}
 		user.registration();
 		user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -82,9 +79,6 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByUsername(username).orElseThrow(() ->  new UserNotFoundByUsernameException(username));
 		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
 		if(bcpe.matches(pcDto.getOldPassword(), user.getPassword())) {
-			if(pcDto.getNewPassword().length() < 8) {
-				throw new PasswordShortException();
-			}
 			user.setPassword(bcpe.encode(pcDto.getNewPassword()));
 			userRepository.save(user);
 		}else {

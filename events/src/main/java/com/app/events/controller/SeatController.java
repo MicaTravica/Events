@@ -12,22 +12,25 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.events.dto.SeatDTO;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.mapper.SeatMapper;
+import com.app.events.model.Seat;
+import com.app.events.service.SeatService;
+
 @RestController
-public class SeatController {
+public class SeatController extends BaseController{
 
 	@Autowired
 	private SeatService seatService;
 
 	@GetMapping(value = "/api/seats/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SeatDTO> getSeat(@PathVariable("id") Long id) {
-		SeatDTO seat = seatService.findOne(id);
-		if (seat == null) {
-			return new ResponseEntity<SeatDTO>(HttpStatus.NOT_FOUND);
-		}
-		System.out.println(seat.toString());
-		return new ResponseEntity<SeatDTO>(seat, HttpStatus.OK);
+	public ResponseEntity<SeatDTO> getSeat(@PathVariable("id") Long id) throws ResourceNotFoundException {
+		Seat seat = seatService.findOne(id);
+		return new ResponseEntity<>(SeatMapper.toDTO(seat), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/seats", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -44,7 +47,7 @@ public class SeatController {
 	@DeleteMapping(value = "/api/seats/{id}")
 	public ResponseEntity<Seat> deleteSeat(@PathVariable("id") Long id) {
 		seatService.delete(id);
-		return new ResponseEntity<Seat>(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }

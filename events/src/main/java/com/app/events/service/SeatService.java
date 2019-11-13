@@ -1,15 +1,20 @@
 package com.app.events.service;
 
-import com.app.events.dto.SeatDTO;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Seat;
 
 public interface SeatService {
 
-	public SeatDTO findOne(Long id);
+	public Seat findOne(Long id) throws ResourceNotFoundException;
 
-	public SeatDTO create(Seat seat);
+	public Seat create(Seat seat) throws Exception;
 	
-	public SeatDTO update(Seat seat);
+	public Seat update(Seat seat) throws Exception;
 
 	public void delete(Long id);
+
+	public boolean checkSeatFieldsAvailability(Seat seat);
+
+	public Seat prepareSeatFields(Seat toUpdate, Seat newSeat);
+
 }

@@ -12,8 +12,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,20 +35,34 @@ public class Event {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank(message = "Name can not be empty string")
 	private String name;
+
+	@NotBlank(message = "Description can not be empty string")
 	private String description;
+	
+	@Future(message="From date must be in future")
 	private Date fromDate;
+
+	@Future(message="To date must be in future")
 	private Date toDate;
 	
+	@NotNull(message="Event must have event state")
 	@Enumerated(EnumType.STRING)
 	private EventState eventState;
-	
+
+	@NotNull(message="Event must have event type")
 	@Enumerated(EnumType.STRING)
 	private EventType eventType;
 	
-	@ManyToOne
-	@JoinColumn(name="place_id", referencedColumnName="id")
-	private Place place;
+	@NotNull(message="Event must have hall")
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Event_Hall", 
+        joinColumns = { @JoinColumn(name = "event_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "hall_id") }
+    )
+	private Set<Hall> halls;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PriceList> priceLists;

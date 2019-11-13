@@ -1,10 +1,10 @@
 package com.app.events.mapper;
 
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 import com.app.events.dto.EventDTO;
 import com.app.events.model.Event;
-import com.app.events.model.Place;
 
 public class EventMapper {
 
@@ -12,14 +12,15 @@ public class EventMapper {
         return new EventDTO( event.getId(),event.getName(),
                             event.getDescription(), event.getFromDate(),
                             event.getToDate(), event.getEventState(),
-                            event.getEventType(), PlaceMapper.toDTO(event.getPlace())
+                            event.getEventType(), 
+                            event.getHalls().stream().map(HallMapper::toDTO).collect(Collectors.toSet())
         );
     }
     
     public static Event toEvent(EventDTO eventDTO) {
         return new Event( eventDTO.getId(), eventDTO.getName(), eventDTO.getDescription(),
                         eventDTO.getFromDate(), eventDTO.getToDate(),eventDTO.getEventState(),
-                        eventDTO.getEventType(), new Place(eventDTO.getPlace().getId()),
+                        eventDTO.getEventType(), eventDTO.getHalls().stream().map(HallMapper::toHall).collect(Collectors.toSet()),
                         new HashSet<>(), new HashSet<>()
                     );
     }
