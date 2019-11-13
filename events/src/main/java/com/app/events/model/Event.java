@@ -12,7 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
@@ -54,10 +55,14 @@ public class Event {
 	@Enumerated(EnumType.STRING)
 	private EventType eventType;
 	
-	@NotNull(message="Event must have place")
-	@ManyToOne
-	@JoinColumn(name="place_id", referencedColumnName="id")
-	private Place place;
+	@NotNull(message="Event must have hall")
+	@ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+        name = "Event_Hall", 
+        joinColumns = { @JoinColumn(name = "event_id") }, 
+        inverseJoinColumns = { @JoinColumn(name = "hall_id") }
+    )
+	private Set<Hall> halls;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<PriceList> priceLists;

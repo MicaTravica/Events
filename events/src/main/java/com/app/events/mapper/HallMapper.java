@@ -22,6 +22,7 @@ public class HallMapper {
         return new Hall(hallDTO.getId(),
                         hallDTO.getName(), 
                         new Place(hallDTO.getPlace().getId()),
+                        new HashSet<>(),
                         new HashSet<>()
 					);
     }
