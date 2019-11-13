@@ -26,20 +26,17 @@ public class MediaController extends BaseController {
 	@Autowired
 	private MediaService mediaService;
 	
-	@Autowired
-	private MediaMapper mediaMapper;
-	
 	@GetMapping(value = "/media/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MediaDTO> getMedia(@PathVariable("id") Long id) throws Exception {
-		return new ResponseEntity<>(mediaMapper.toDTO(mediaService.findOne(id)),HttpStatus.OK);
+		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.findOne(id)),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/media/event/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<MediaDTO>> getMediaForEvent(@PathVariable("id") Long id) {
 		return new ResponseEntity<>(mediaService.findAllForEvent(id).stream()
-									.map(media -> mediaMapper.toDTO(media))
+									.map(media -> MediaMapper.toDTO(media))
 									.collect(Collectors.toList()),HttpStatus.OK);
 	}
 
@@ -47,7 +44,7 @@ public class MediaController extends BaseController {
 				 consumes = MediaType.APPLICATION_JSON_VALUE, 
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDto) throws Exception {
-		return new ResponseEntity<>(mediaMapper.toDTO(mediaService.crate(mediaMapper.toMedia(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
+		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.crate(MediaMapper.toMedia(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
 	}
 
 
