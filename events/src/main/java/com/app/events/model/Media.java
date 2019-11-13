@@ -7,8 +7,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.app.events.dto.MediaDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,10 +28,5 @@ public class Media {
 	@ManyToOne
 	@JoinColumn(name="event_id", referencedColumnName="id")
 	private Event event;
-
-	public Media(MediaDTO mediaDto) {
-		this.id = mediaDto.getId();
-		this.path = mediaDto.getPath();
-	}
 
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.MediaDTO;
-import com.app.events.model.Media;
+import com.app.events.mapper.MediaMapper;
 import com.app.events.service.MediaService;
 
 @RestController
@@ -24,19 +24,19 @@ import com.app.events.service.MediaService;
 public class MediaController extends BaseController {
 
 	@Autowired
-	MediaService mediaService;
+	private MediaService mediaService;
 	
 	@GetMapping(value = "/media/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MediaDTO> getMedia(@PathVariable("id") Long id) throws Exception {
-		return new ResponseEntity<>(new MediaDTO(mediaService.findOne(id)),HttpStatus.OK);
+		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.findOne(id)),HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/media/event/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<MediaDTO>> getMediaForEvent(@PathVariable("id") Long id) {
 		return new ResponseEntity<>(mediaService.findAllForEvent(id).stream()
-									.map(MediaDTO::new)
+									.map(media -> MediaMapper.toDTO(media))
 									.collect(Collectors.toList()),HttpStatus.OK);
 	}
 
@@ -44,7 +44,7 @@ public class MediaController extends BaseController {
 				 consumes = MediaType.APPLICATION_JSON_VALUE, 
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDto) throws Exception {
-		return new ResponseEntity<>(new MediaDTO(mediaService.crate(new Media(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
+		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.crate(MediaMapper.toMedia(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
 	}
 
 
