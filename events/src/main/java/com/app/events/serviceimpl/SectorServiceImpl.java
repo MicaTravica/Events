@@ -1,18 +1,15 @@
 package com.app.events.serviceimpl;
 
-import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import com.app.events.exception.HallDoesntExist;
-import com.app.events.exception.SectorDoesntExistException;
-import com.app.events.exception.SectorExistException;
+import com.app.events.exception.ResourceExistsException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 import com.app.events.repository.HallRepository;
 import com.app.events.repository.SectorRepository;
 import com.app.events.service.SectorService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class SectorServiceImpl implements SectorService {
@@ -24,28 +21,25 @@ public class SectorServiceImpl implements SectorService {
     private HallRepository hallRepository;
 
     @Override
-    public Sector findOne(Long id) throws SectorDoesntExistException{
+    public Sector findOne(Long id) throws ResourceNotFoundException{
         return this.sectorRepository.findById(id)
                     .orElseThrow(
-                        ()-> new SectorDoesntExistException("sector doesn't exist")
+                        ()-> new ResourceNotFoundException("Sector")
                     ); 
     }
 
     @Override
-    public Sector create(Sector sector) throws Exception{
+    public Sector create(Sector sector) throws Exception {
         if(sector.getId() != null){
-            throw new SectorExistException("Section with id: " + sector.getId() + "exists");
+            throw new ResourceExistsException("Sector");
         }
-        Optional<Hall> optHall = hallRepository.findById(sector.getHall().getId());
-        if(optHall.isPresent()){
-            sector.setHall(optHall.get());
-            return this.sectorRepository.save(sector);
-        }
-        throw new HallDoesntExist("Hall doesn't exists");
+        Hall hall = hallRepository.findById(sector.getHall().getId()).orElseThrow(() -> new ResourceNotFoundException("Hall"));
+        sector.setHall(hall);
+        return this.sectorRepository.save(sector);
     }
 
     @Override
-    public Sector update(Sector sector) throws Exception{
+    public Sector update(Sector sector) throws Exception {
         Sector sectorToUpdate = this.findOne(sector.getId());
         sectorToUpdate = this.prepareSectorFields(sectorToUpdate, sector);
         return this.sectorRepository.save(sectorToUpdate);

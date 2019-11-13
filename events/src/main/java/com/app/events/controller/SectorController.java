@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.SectorDTO;
-import com.app.events.exception.SectorDoesntExistException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.Sector;
 import com.app.events.service.SectorService;
@@ -25,7 +25,7 @@ public class SectorController extends BaseController{
 	private SectorService sectorService;
 
 	@GetMapping(value = "/api/sector/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> getSector(@PathVariable("id") Long id) throws SectorDoesntExistException{
+	public ResponseEntity<SectorDTO> getSector(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Sector sector = sectorService.findOne(id);
 		return new ResponseEntity<>(SectorMapper.toDTO(sector), HttpStatus.OK);
 		
@@ -38,7 +38,7 @@ public class SectorController extends BaseController{
 	}
 
 	@PutMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO) throws Exception{
+	public ResponseEntity<SectorDTO> updateSector(@RequestBody SectorDTO sectorDTO) throws Exception {
 		Sector updatedSector = sectorService.update(SectorMapper.toSector(sectorDTO));
 		return new ResponseEntity<>(SectorMapper.toDTO(updatedSector), HttpStatus.OK);
 	}

@@ -1,11 +1,11 @@
 package com.app.events.service;
 
-import com.app.events.exception.SectorDoesntExistException;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Sector;
 
 public interface SectorService {
 
-	public Sector findOne(Long id) throws SectorDoesntExistException;
+	public Sector findOne(Long id) throws ResourceNotFoundException;
 
 	public Sector create(Sector sector) throws Exception;
 

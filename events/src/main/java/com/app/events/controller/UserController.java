@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.events.dto.LoginDTO;
 import com.app.events.dto.PasswordChangeDTO;
 import com.app.events.dto.UserDTO;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.UserNotFoundByUsernameException;
 import com.app.events.mapper.UserMapper;
 import com.app.events.security.TokenUtils;
 import com.app.events.service.UserService;
@@ -51,7 +53,7 @@ public class UserController extends BaseController {
 	@PostMapping(value="/login",
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
 				 produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO){
+	public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
 		authenticationManager.authenticate(token);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getUsername());
@@ -61,7 +63,7 @@ public class UserController extends BaseController {
 	@PostMapping(value="/registration", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
 				 produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws Exception{
+	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws Exception {
 		userService.registration(UserMapper.toUser(userDTO));
 		return new ResponseEntity<>("You are registred, now you need to verify your email", HttpStatus.OK);
 	}
@@ -85,13 +87,13 @@ public class UserController extends BaseController {
 	
 	@GetMapping(value = "/user/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) throws Exception {
+	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		return new ResponseEntity<>(UserMapper.toDTO(userService.findOne(id)), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/userme", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UserDTO> getMyData(Principal user) throws Exception {
+	public ResponseEntity<UserDTO> getMyData(Principal user) throws UserNotFoundByUsernameException {
 		return new ResponseEntity<>(UserMapper.toDTO(userService.findOneByUsername(user.getName())), HttpStatus.OK);
 	}
 
@@ -114,7 +116,7 @@ public class UserController extends BaseController {
 	
 	@GetMapping(value= "/user/verify/{token}",  
 			produces=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> verifiedEmail(@PathVariable("token") String token) throws Exception
+	public ResponseEntity<String> verifiedEmail(@PathVariable("token") String token) throws ResourceNotFoundException
 	{
 		userService.verifiedUserEmail(token);
 	    return new ResponseEntity<>("Email verified", HttpStatus.OK);
