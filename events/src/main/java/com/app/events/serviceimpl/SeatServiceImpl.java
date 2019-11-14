@@ -1,13 +1,14 @@
 package com.app.events.serviceimpl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.app.events.dto.SeatDTO;
+import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.SeatMapper;
 import com.app.events.model.Seat;
 import com.app.events.repository.SeatRepository;
 import com.app.events.service.SeatService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class SeatServiceImpl implements SeatService {
@@ -25,16 +26,18 @@ public class SeatServiceImpl implements SeatService {
 	}
 
 	@Override
-	public SeatDTO create(Seat seat) {
+	public Seat create(Seat seat) throws ResourceNotFoundException {
+
+		if(seat.getId() != null){
+            throw new ResourceNotFoundException("Seat");
+        }
 
 		Seat newSeat = seatRepository.save(seat);
-		SeatDTO newSeatDTO = SeatMapper.toDTO(newSeat);
-
-		return newSeatDTO;
+		return newSeat;
 	}
 
 	@Override
-	public SeatDTO update(Seat seat) throws RuntimeException {
+	public Seat update(Seat seat) throws RuntimeException {
 		 Seat seatToUpdate = seatRepository.findById(seat.getId()).get();
 	     if (seatToUpdate == null) { 
 	    	 throw new RuntimeException("Not found."); // custom exception here!
@@ -45,9 +48,8 @@ public class SeatServiceImpl implements SeatService {
 	     seatToUpdate.setSector(seat.getSector());
 	     
 	     Seat updatedSeat = seatRepository.save(seatToUpdate);
-	     SeatDTO updatedSeatDTO = SeatMapper.toDTO(updatedSeat);
 	        
-	     return updatedSeatDTO;
+	     return updatedSeat;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.app.events.controller;
 
 import com.app.events.dto.SeatDTO;
+import com.app.events.mapper.SeatMapper;
 import com.app.events.model.Seat;
 import com.app.events.service.SeatService;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,14 +33,9 @@ public class SeatController {
 	}
 
 	@PostMapping(value = "/api/seats", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SeatDTO> createSeat(Seat seat) throws Exception {
-
-		try {
-			SeatDTO savedSeat = seatService.create(seat);
-			return new ResponseEntity<SeatDTO>(savedSeat, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<SeatDTO>(HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<SeatDTO> createSeat(@RequestBody SeatDTO seatDTO) throws Exception {
+		Seat savedSeat = seatService.create(SeatMapper.toPriceList(seatDTO));
+		return new ResponseEntity<>(SeatMapper.toDTO(savedSeat), HttpStatus.CREATED);
 	}
 
 	@DeleteMapping(value = "/api/seats/{id}")

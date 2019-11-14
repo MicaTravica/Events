@@ -1,8 +1,6 @@
 package com.app.events.serviceimpl;
 
-import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.mapper.TicketMapper;
 import com.app.events.model.Ticket;
 import com.app.events.model.TicketState;
 import com.app.events.repository.TicketRepository;
@@ -20,26 +18,22 @@ public class TicketServiceImpl implements TicketService {
 	private TicketRepository ticketRepository;
 
 	@Override
-	public TicketDTO findOne(Long id) {
+	public Ticket findOne(Long id) {
 
 		Ticket ticket = ticketRepository.findById(id).get();
-		TicketDTO TicketDTO = TicketMapper.toDTO(ticket);
-
-		return TicketDTO;
+		return ticket;
 	}
 
 	@Override
-	public TicketDTO create(Ticket ticket) {
+	public Ticket create(Ticket ticket) {
 
 		Ticket newTicket = ticketRepository.save(ticket);
-		TicketDTO newTicketDTO = TicketMapper.toDTO(newTicket);
-
-		return newTicketDTO;
+		return newTicket;
 	}
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public TicketDTO reserveTicket(Long id) throws ResourceNotFoundException {
+	public Ticket reserveTicket(Long id) throws ResourceNotFoundException {
 		Ticket ticketToUpdate = ticketRepository.findById(id).get();
 		if (ticketToUpdate == null) {
 			throw new ResourceNotFoundException("Ticket");
@@ -49,13 +43,12 @@ public class TicketServiceImpl implements TicketService {
 		//ticketToUpdate.setUser(user);
 
 		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
-		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
 
-		return updatedTicketDTO;
+		return updatedTicket;
 	}
 
 	@Override
-	public TicketDTO buyTicket(Long id) throws ResourceNotFoundException {
+	public Ticket buyTicket(Long id) throws ResourceNotFoundException {
 		Ticket ticketToUpdate = ticketRepository.findById(id).get();
 		if (ticketToUpdate == null) {
 			throw new ResourceNotFoundException("Ticket");
@@ -65,9 +58,8 @@ public class TicketServiceImpl implements TicketService {
 		//ticketToUpdate.setUser(user);
 
 		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
-		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
 
-		return updatedTicketDTO;
+		return updatedTicket;
 	}
 
 	@Override
