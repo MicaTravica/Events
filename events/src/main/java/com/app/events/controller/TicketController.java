@@ -42,7 +42,7 @@ public class TicketController {
 
 	@PutMapping(value = "/api/reserveTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TicketDTO> reserveTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Ticket updatedTicket = ticketService.reserveTicket(ticketDTO.getId(), ticketDTO.getUserId());
+		Ticket updatedTicket = ticketService.reserveTicket(ticketDTO.getId(), ticketDTO.getUserId(), ticketDTO.getVersion());
 		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
 	}
 

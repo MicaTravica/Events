@@ -1,6 +1,7 @@
 package com.app.events.serviceimpl;
 
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.TicketReservationException;
 import com.app.events.model.Ticket;
 import com.app.events.model.TicketState;
 import com.app.events.model.User;
@@ -37,8 +38,13 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public Ticket reserveTicket(Long id, Long userId) throws Exception {
-		Ticket ticketToUpdate = findOne(id);
+	public Ticket reserveTicket(Long id, Long userId, Long ticketVersion) throws Exception {
+		Ticket ticketToUpdate = findOne(id);  
+		
+		if( !(ticketToUpdate.getVersion() == ticketVersion && ticketToUpdate.getUser() == null))
+		{
+			throw new TicketReservationException("Ticket already reserved");
+		}
 		User user = userService.findOne(userId);
 		ticketToUpdate.setTicketState(TicketState.RESERVED);
 		ticketToUpdate.setUser(user);

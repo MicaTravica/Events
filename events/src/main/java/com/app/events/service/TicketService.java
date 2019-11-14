@@ -9,7 +9,7 @@ public interface TicketService {
 
 	public Ticket create(Ticket ticket) throws Exception;
 
-	public Ticket reserveTicket(Long id, Long userId) throws Exception;
+	public Ticket reserveTicket(Long id, Long userId, Long ticketVersion) throws Exception;
 
 	public Ticket buyTicket(Long id, Long userId) throws Exception;
 
