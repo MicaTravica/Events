@@ -13,6 +13,7 @@ public class TicketMapper {
                 ticket.getId(), ticket.getBarCode(),
                 ticket.getTicketState(),
                 ticket.getUser() == null ? null: ticket.getUser().getId(),
+                ticket.getVersion(),
                 ticket.getSectorCapacity().getSector().getName(),
                 ticket.getSectorCapacity().getSector().getHall().getName(),
                 -1,
@@ -25,6 +26,7 @@ public class TicketMapper {
             ticket.getId(), ticket.getBarCode(),
             ticket.getTicketState(),
             ticket.getUser() == null ? null: ticket.getUser().getId(),
+            ticket.getVersion(),
             ticket.getSeat().getSector().getName(),
             ticket.getSeat().getSector().getHall().getName(),
             ticket.getSeat().getSeatRow(),
@@ -38,7 +40,8 @@ public class TicketMapper {
         return new Ticket(
             ticketDTO.getId(),
             ticketDTO.getTicketState(),
-            new User(ticketDTO.getUserId())
+            new User(ticketDTO.getUserId()),
+            ticketDTO.getVersion()
         );
     }
     

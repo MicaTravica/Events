@@ -18,6 +18,7 @@ public class TicketDTO {
 	private String barCode;
 	private TicketState ticketState;
 	private Long userId;
+	private Long version;
 
 	private String sectorName;
 	private String HallName;

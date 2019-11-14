@@ -1,12 +1,12 @@
 package com.app.events.serviceimpl;
 
-import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.mapper.TicketMapper;
 import com.app.events.model.Ticket;
 import com.app.events.model.TicketState;
+import com.app.events.model.User;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.TicketService;
+import com.app.events.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,55 +19,43 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private TicketRepository ticketRepository;
 
+	@Autowired
+	private UserService userService;
+
 	@Override
-	public TicketDTO findOne(Long id) {
-
-		Ticket ticket = ticketRepository.findById(id).get();
-		TicketDTO TicketDTO = TicketMapper.toDTO(ticket);
-
-		return TicketDTO;
+	public Ticket findOne(Long id) throws ResourceNotFoundException {
+		return ticketRepository.findById(id)
+                    .orElseThrow(
+                        ()-> new ResourceNotFoundException("Ticket")
+                    ); 
 	}
 
 	@Override
-	public TicketDTO create(Ticket ticket) {
-
-		Ticket newTicket = ticketRepository.save(ticket);
-		TicketDTO newTicketDTO = TicketMapper.toDTO(newTicket);
-
-		return newTicketDTO;
+	public Ticket create(Ticket ticket) {	
+		return ticketRepository.save(ticket);
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public TicketDTO reserveTicket(Long id) throws ResourceNotFoundException {
-		Ticket ticketToUpdate = ticketRepository.findById(id).get();
-		if (ticketToUpdate == null) {
-			throw new ResourceNotFoundException("Ticket");
-		}
-
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+	public Ticket reserveTicket(Long id, Long userId) throws Exception {
+		Ticket ticketToUpdate = findOne(id);
+		User user = userService.findOne(userId);
 		ticketToUpdate.setTicketState(TicketState.RESERVED);
-		//ticketToUpdate.setUser(user);
-
-		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
-		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
-
-		return updatedTicketDTO;
+		ticketToUpdate.setUser(user);
+		return ticketRepository.save(ticketToUpdate);
 	}
 
 	@Override
-	public TicketDTO buyTicket(Long id) throws ResourceNotFoundException {
-		Ticket ticketToUpdate = ticketRepository.findById(id).get();
-		if (ticketToUpdate == null) {
-			throw new ResourceNotFoundException("Ticket");
-		}
-
+	public Ticket buyTicket(Long id, Long userId) throws Exception {
+		Ticket ticketToUpdate = findOne(id);
 		ticketToUpdate.setTicketState(TicketState.BOUGHT);
-		//ticketToUpdate.setUser(user);
-
-		Ticket updatedTicket = ticketRepository.save(ticketToUpdate);
-		TicketDTO updatedTicketDTO = TicketMapper.toDTO(updatedTicket);
-
-		return updatedTicketDTO;
+		if(ticketToUpdate.getUser().getId() == userId)
+		{
+			return ticketRepository.save(ticketToUpdate);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override

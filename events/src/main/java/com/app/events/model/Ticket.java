@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -50,10 +51,14 @@ public class Ticket {
 	@JoinColumn(name="sector_capacity_id", referencedColumnName="id")
 	private SectorCapacity sectorCapacity;
 
-	public Ticket(Long id, TicketState ticketState, User user) {
+	@Version
+	private Long version;
+
+	public Ticket(Long id, TicketState ticketState, User user, Long version) {
 		this.id = id;
 		this.ticketState = ticketState;
 		this.user = user;
+		this.version = version;
 	}
 	
 }
