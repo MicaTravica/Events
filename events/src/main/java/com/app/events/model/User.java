@@ -12,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,16 +31,29 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@NotBlank(message = "Name can not be empty string")
 	private String name;
+	
+	@NotBlank(message = "Surname can not be empty string")
 	private String surname;
+	
+	@NotBlank(message = "Phone number can not be empty string")
 	private String phone;
+	
+	@Email(message="Email should be valid")
 	@Column(unique=true, length=100)
 	private String email;
+	
 	private boolean verified;
+	
+	@NotBlank(message = "Username can not be empty string")
 	@Column(unique=true, length=100)
 	private String username;
-	private String password;
 	
+	@Min(value = 8, message = "Password must be at least {value}")
+	private String password;
+
 	@Enumerated(EnumType.STRING)
 	private UserRole userRole;
 	

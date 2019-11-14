@@ -1,6 +1,7 @@
 package com.app.events.dto;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.app.events.model.EventState;
 import com.app.events.model.EventType;
@@ -23,6 +24,6 @@ public class EventDTO {
 	private Date toDate;
 	private EventState eventState;
 	private EventType eventType;
-	private PlaceDTO place;
+	private Set<HallDTO> halls;
 	
 }

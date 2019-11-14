@@ -73,7 +73,7 @@ public class UserController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<UserDTO>> getUsers() {
 		return new ResponseEntity<>(userService.findAll().stream()
-											.map(user -> UserMapper.toDTO(user))
+											.map(UserMapper::toDTO)
 											.collect(Collectors.toList()), HttpStatus.OK);
 	}
 	
@@ -81,7 +81,7 @@ public class UserController extends BaseController {
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<UserDTO>> getRegularUsers() {
 		return new ResponseEntity<>(userService.findAllRegular().stream()
-									.map(user -> UserMapper.toDTO(user))
+									.map(UserMapper::toDTO)
 									.collect(Collectors.toList()), HttpStatus.OK);
 	}
 	
