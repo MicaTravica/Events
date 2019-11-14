@@ -1,5 +1,9 @@
 package com.app.events.controller;
 
+import com.app.events.dto.SeatDTO;
+import com.app.events.model.Seat;
+import com.app.events.service.SeatService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,11 +14,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.events.dto.SeatDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.SeatMapper;
-import com.app.events.model.Seat;
-import com.app.events.service.SeatService;
 
 @RestController
 public class SeatController extends BaseController{
