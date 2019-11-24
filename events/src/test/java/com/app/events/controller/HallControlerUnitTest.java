@@ -1,13 +1,17 @@
 package com.app.events.controller;
 
+import com.app.events.dto.HallDTO;
+import com.app.events.mapper.HallMapper;
 import com.app.events.model.Hall;
 import com.app.events.model.Place;
+import com.app.events.security.TokenUtils;
 import com.app.events.service.HallService;
-import com.app.events.dto.HallDTO;
-import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.mapper.HallMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyObject;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,51 +22,36 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.client.ResourceAccessException;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 /*
     how to mock HallMapper ---> it is static method..
 */ 
 
-
-
-
-@Import(authConfig.class)
+@Import({authConfig.class, TokenUtils.class})
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-
-// @WebMvcTest(controllers = HallController.class)
-//  ima problem nece da ucita userDetailsService za auth...
-
-// @ActiveProfiles("test")
-// @TestPropertySource(locations = "classpath:application-test.properties")
-
-
+@WebMvcTest(controllers = HallController.class)
 public class HallControlerUnitTest {
 
     public static long HALL_FIND_ID = 1L;
     public static long INVALID_HALL_ID = -1L;
-    
     public static long PLACE_ID = 1L;
 
-    // @Autowired
-	// private MockMvc mockMvc;
+    public static ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    private TestRestTemplate restTemplate;
-    
+	private MockMvc mockMvc;
+
     @MockBean
     private HallService hallService;
 
@@ -77,39 +66,51 @@ public class HallControlerUnitTest {
 
 
     @Test
-    @WithMockUser(username = "dusan", password = "cao", roles = {"REGULAR"})
+    @WithMockUser(username = "dusan", password = "bucan", roles = {"REGULAR"})
     public void whenValidId_thenFoundHall() throws Exception{
-
-
-        // mockMvc.perform(get("/api/hall/1")).andExpect(status().isOk())
-		// 		.andExpect(jsonPath("$.id").value(1l)).andExpect(jsonPath("$.name").value("Alex"));
-
-        ResponseEntity<HallDTO> responseEntity =
-	        restTemplate.getForEntity("/api/hall/"+ HALL_FIND_ID, HallDTO.class);
-        Hall hall = HallMapper.toHall(responseEntity.getBody());
-
-		assertEquals(hall.getId(), HALL_FIND_ID);
+        mockMvc.perform(get("/api/hall/"+ HALL_FIND_ID))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(HALL_FIND_ID))
+                .andExpect(jsonPath("$.name").value("findHall"));
     }
 
-    @Test(expected = ResourceNotFoundException.class)
-    @WithMockUser(username = "user1", password = "pwd", roles = {"REGULAR"})
+    @Test
+    @WithMockUser(username = "milovica", password = "cao", roles = {"ADMIN"})
     public void whenInvalidId_thenThowException() throws Exception{
         
-        
-        // mockMvc.perform(get("/api/hall/1")).andExpect(status().isOk())
-		// 		.andExpect(jsonPath("$.id").value(1l)).andExpect(jsonPath("$.name").value("Alex"));
+        MvcResult result =  mockMvc.perform(get("/api/hall/"+ INVALID_HALL_ID))
+                .andExpect(status().is4xxClientError())
+                .andReturn();
+                
+        // Optional<ResourceNotFoundException> someException =
+        //     Optional.ofNullable((ResourceNotFoundException) result.getResolvedException());
 
-        
-        
-        ResponseEntity<HallDTO> responseEntity =
-            restTemplate.getForEntity("/api/hall/" + INVALID_HALL_ID, HallDTO.class);
-            
-
-        
-        Hall hall = HallMapper.toHall(responseEntity.getBody());
-
-		assertEquals(hall.getId(), HALL_FIND_ID);
+        // someException.ifPresent( (se) -> assertNotNull(se));
     }
+
+    @Ignore
+    @Test
+    public void whenAddValidHall_thenHallShouldBeAdded() throws Exception
+    {
+        Hall hall = new Hall(
+            HALL_FIND_ID, "findHall",
+            new Place(PLACE_ID),
+            new HashSet<>(), new HashSet<>());
+        
+        HallDTO content = HallMapper.toDTO(hall);
+        
+        Mockito.when(hallService.create(hall)).thenReturn(hall);
+
+        MvcResult result = mockMvc.perform(post("/api/hall")
+                                        .contentType(MediaType.APPLICATION_JSON)
+                                        .content(mapper.writeValueAsString(content)))
+                                .andReturn();
+        System.out.println( result.getResponse().getStatus());
+
+        // Mockito.verify(hallService.create(hall), 1);
+    }
+
+
 
 
 
