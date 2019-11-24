@@ -98,12 +98,16 @@ public class HallControlerUnitTest {
             new HashSet<>(), new HashSet<>());
         
         HallDTO content = HallMapper.toDTO(hall);
-        
+
+        System.out.println(mapper.writeValueAsString(content));
+        System.out.println("---------------------------------");
+
         Mockito.when(hallService.create(hall)).thenReturn(hall);
 
         MvcResult result = mockMvc.perform(post("/api/hall")
                                         .contentType(MediaType.APPLICATION_JSON)
                                         .content(mapper.writeValueAsString(content)))
+                                .andExpect(status().isCreated())
                                 .andReturn();
         System.out.println( result.getResponse().getStatus());
 
