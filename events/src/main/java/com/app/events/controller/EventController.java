@@ -18,6 +18,8 @@ import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.EventMapper;
 import com.app.events.model.Event;
 import com.app.events.service.EventService;
+import com.app.events.service.MediaService;
+import com.app.events.service.TicketService;
 
 @RestController
 public class EventController extends BaseController{
@@ -25,7 +27,11 @@ public class EventController extends BaseController{
 	@Autowired
 	private EventService eventService;
 
-
+	@Autowired
+	private MediaService mediaService;
+	
+	@Autowired
+	private TicketService ticketService;
 	
 	@GetMapping(value = "/api/event/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) throws ResourceNotFoundException{
@@ -37,9 +43,12 @@ public class EventController extends BaseController{
 	
 	@PostMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) throws Exception {
-		Event savedEvent = eventService.create(EventMapper.toEvent(eventDTO));
+		Event event = EventMapper.toEvent(eventDTO);
+		Event savedEvent = eventService.create(event);
+		mediaService.createMedias(event.getMediaList(), savedEvent.getId());
+		ticketService.createTickets(event, savedEvent.getId());
 		return new ResponseEntity<>(EventMapper.toDTO(savedEvent), HttpStatus.CREATED);
-}
+	}
 
 
 	@PutMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

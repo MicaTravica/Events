@@ -32,9 +32,10 @@ public class EventServiceImpl implements EventService {
 	
 	@Override
 	public Event create(Event event) throws Exception {
-		if(event.getId() != null){
-			throw new ResourceExistsException("Event");
-		}
+//		if(event.getId() != null){
+//			throw new ResourceExistsException("Event");
+//		}
+		event.setId(null);
 		if(event.getFromDate().after(event.getToDate())) {
 			throw new DateException("ToDate must be after FromDate");
 		}

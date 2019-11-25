@@ -22,7 +22,7 @@ public class HallMapper {
         return new Hall(hallDTO.getId(),
                         hallDTO.getName(), 
                         new Place(hallDTO.getPlace().getId()),
-                        new HashSet<>(),
+                        hallDTO.getSectors().stream().map(SectorMapper::toSector).collect(Collectors.toSet()),
                         new HashSet<>()
 					);
     }

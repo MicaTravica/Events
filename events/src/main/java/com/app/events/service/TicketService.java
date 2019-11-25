@@ -1,6 +1,7 @@
 package com.app.events.service;
 
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.model.Event;
 import com.app.events.model.Ticket;
 
 public interface TicketService {
@@ -14,5 +15,7 @@ public interface TicketService {
 	public Ticket buyTicket(Long id, Long userId) throws Exception;
 
 	public void delete(Long id);
+
+	public void createTickets(Event event, Long eventId) throws ResourceNotFoundException, Exception;
 
 }

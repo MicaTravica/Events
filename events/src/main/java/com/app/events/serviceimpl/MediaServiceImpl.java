@@ -1,6 +1,7 @@
 package com.app.events.serviceimpl;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,16 @@ public class MediaServiceImpl implements MediaService {
 		return mediaRepository.save(media);
 	}	
 
+	@Override
+	public Collection<Media> createMedias(Collection<Media> mediaList, Long eventId) throws ResourceNotFoundException{
+		Collection<Media> createdMediaList = new HashSet<>();
+		for(Media m : mediaList) {
+			m.setEvent(eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event")));
+			m.setId(null);
+			createdMediaList.add(mediaRepository.save(m));
+		}
+		return createdMediaList;
+	}
 	@Override
 	public void delete(Long id) throws ResourceNotFoundException  {
 		Media media = mediaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Media"));
