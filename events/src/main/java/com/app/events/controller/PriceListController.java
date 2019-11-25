@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,18 +32,21 @@ public class PriceListController {
 	}
 
 	@PostMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<PriceListDTO> createPriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
 		PriceList savedPriceList = priceListService.create(PriceListMapper.toPriceList(priceListDTO));
 		return new ResponseEntity<>(PriceListMapper.toDTO(savedPriceList), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/priceList", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<PriceListDTO> updatePriceList(@RequestBody PriceListDTO priceListDTO) throws Exception {
 		PriceList updatedPriceList = priceListService.update(PriceListMapper.toPriceList(priceListDTO));
 		return new ResponseEntity<>(PriceListMapper.toDTO(updatedPriceList),HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/priceList/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<PriceListDTO> deletePriceList(@PathVariable("id") Long id) {
 		priceListService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

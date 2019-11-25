@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -55,17 +57,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 			.authorizeRequests()
-				.antMatchers("/index.html", "/api/login", "/api/registration", "/api/user/verify/**").permitAll() 
-				.antMatchers(HttpMethod.POST, "/api/**")
-					.hasAuthority("ADMIN") //only administrator can add and edit data
-				.antMatchers(HttpMethod.GET, "/api/users", "/api/regularusers", "/api/user/**", "/api/media")
-					.hasAuthority("ADMIN")
-				.antMatchers(HttpMethod.DELETE, "/api/meida/**")
-					.hasAuthority("ADMIN")
-				.antMatchers(HttpMethod.GET, "/api/userme", "/media/**", "/media/event/**")
-					.hasAnyAuthority("ADMIN","REGULAR")
-				.antMatchers(HttpMethod.PUT, "/api/user", "/api/user/password")
-					.hasAnyAuthority("ADMIN","REGULAR")
+				.antMatchers( "/", "/index.html", "/api/login", "/api/registration", "/api/user/verify/**").permitAll() 
+				.antMatchers(HttpMethod.GET, "/api/event/**", "/api/hall/**", "/api/media/**", "/api/media/event/**", "/api/place/**", "/api/priceList/**", "/api/seats/**", "/api/sectorCapacity/**", "/api/sector/**").permitAll()
 				.anyRequest().authenticated();
 				 
 		

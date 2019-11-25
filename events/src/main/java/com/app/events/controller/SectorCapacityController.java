@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,6 +38,7 @@ public class SectorCapacityController {
 	}
 
 	@PostMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<SectorCapacityDTO> createSectorCapacity(@RequestBody SectorCapacityDTO sectorCapacityDTO) throws Exception {
 
 		SectorCapacity savedSector = sectorCapacityService.create(SectorCapacityMapper.toSectorCapacity(sectorCapacityDTO));
@@ -48,6 +50,7 @@ public class SectorCapacityController {
 	}
 
 	@PutMapping(value = "/api/sectorCapacity", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<SectorCapacityDTO> updateSectorCapacity(@RequestBody SectorCapacityDTO param) throws Exception {
 		SectorCapacity updatedSector = sectorCapacityService.update(SectorCapacityMapper.toSectorCapacity(param));
 		return new ResponseEntity<SectorCapacityDTO>
@@ -58,6 +61,7 @@ public class SectorCapacityController {
 	}
 
 	@DeleteMapping(value = "/api/sectorCapacity/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<SectorCapacityDTO> deleteSectorCapacity(@PathVariable("id") Long id) {
 		sectorCapacityService.delete(id);
 		return new ResponseEntity<SectorCapacityDTO>(HttpStatus.NO_CONTENT);

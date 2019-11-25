@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,12 +45,14 @@ public class MediaController extends BaseController {
 	@PostMapping(value = "/media", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE, 
 				 produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<MediaDTO> createMedia(@RequestBody MediaDTO mediaDto) throws Exception {
 		return new ResponseEntity<>(MediaMapper.toDTO(mediaService.create(MediaMapper.toMedia(mediaDto), mediaDto.getEventId())), HttpStatus.OK);
 	}
 
 
 	@DeleteMapping(value = "/media/{id}}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<String> deleteMedia(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		mediaService.delete(id);
 		return new ResponseEntity<>("Media is deleted", HttpStatus.NO_CONTENT);
