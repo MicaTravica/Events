@@ -1,7 +1,7 @@
 package com.app.events.model;
 
 public enum UserRole {
-	ADMIN ("ADMIN"), REGULAR("REGULAR");
+	ROLE_ADMIN ("ROLE_ADMIN"), ROLE_REGULAR("ROLE_REGULAR");
 
     private final String name;       
 
