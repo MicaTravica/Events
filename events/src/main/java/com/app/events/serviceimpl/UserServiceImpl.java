@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Collection<User> findAllRegular() {
-		return userRepository.findAllByUserRole(UserRole.REGULAR);
+		return userRepository.findAllByUserRole(UserRole.ROLE_REGULAR);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -71,6 +72,7 @@ public class UserController extends BaseController {
 	
 	@GetMapping(value = "/users", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Collection<UserDTO>> getUsers() {
 		return new ResponseEntity<>(userService.findAll().stream()
 											.map(UserMapper::toDTO)
@@ -79,6 +81,7 @@ public class UserController extends BaseController {
 	
 	@GetMapping(value = "/regularusers", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Collection<UserDTO>> getRegularUsers() {
 		return new ResponseEntity<>(userService.findAllRegular().stream()
 									.map(UserMapper::toDTO)
@@ -87,12 +90,14 @@ public class UserController extends BaseController {
 	
 	@GetMapping(value = "/user/{id}", 
 				produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		return new ResponseEntity<>(UserMapper.toDTO(userService.findOne(id)), HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/userme", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
 	public ResponseEntity<UserDTO> getMyData(Principal user) throws UserNotFoundByUsernameException {
 		return new ResponseEntity<>(UserMapper.toDTO(userService.findOneByUsername(user.getName())), HttpStatus.OK);
 	}
@@ -101,6 +106,7 @@ public class UserController extends BaseController {
 	@PutMapping(value = "/user", 
 				consumes = MediaType.APPLICATION_JSON_VALUE, 
 				produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
 	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) throws Exception {
 		return new ResponseEntity<>(UserMapper.toDTO(userService.update(UserMapper.toUser(userDto))), HttpStatus.OK);
 	}
@@ -108,6 +114,7 @@ public class UserController extends BaseController {
 	@PutMapping(value= "/user/password", 
 				consumes= MediaType.APPLICATION_JSON_VALUE, 
 				produces=MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
 	public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTO pcDto) throws Exception
 	{
 		userService.changeUserPassword(pcDto, SecurityContextHolder.getContext().getAuthentication().getName());

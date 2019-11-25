@@ -68,7 +68,7 @@ public class User {
 	}
 
 	public void registration() {
-		this.userRole = UserRole.REGULAR;
+		this.userRole = UserRole.ROLE_REGULAR;
 		this.verified = false;
 	}
 	
