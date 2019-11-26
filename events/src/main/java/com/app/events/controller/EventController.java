@@ -1,6 +1,8 @@
 package com.app.events.controller;
 
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +20,8 @@ import com.app.events.dto.EventDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.EventMapper;
 import com.app.events.model.Event;
+import com.app.events.model.Hall;
+import com.app.events.model.Media;
 import com.app.events.service.EventService;
 import com.app.events.service.MediaService;
 import com.app.events.service.TicketService;
@@ -44,9 +48,11 @@ public class EventController extends BaseController{
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) throws Exception {
 		Event event = EventMapper.toEvent(eventDTO);
+		Set<Media> mediaList = event.getMediaList();
+		Set<Hall> halls = event.getHalls();
 		Event savedEvent = eventService.create(event);
-		mediaService.createMedias(event.getMediaList(), savedEvent.getId());
-		ticketService.createTickets(event, savedEvent.getId());
+		mediaService.createMedias(mediaList, savedEvent.getId());
+		ticketService.createTickets(halls, savedEvent.getId());
 		return new ResponseEntity<>(EventMapper.toDTO(savedEvent), HttpStatus.CREATED);
 	}
 

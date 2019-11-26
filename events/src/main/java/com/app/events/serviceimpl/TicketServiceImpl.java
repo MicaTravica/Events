@@ -2,6 +2,7 @@ package com.app.events.serviceimpl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,9 @@ import com.app.events.model.TicketState;
 import com.app.events.model.User;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.EventService;
+import com.app.events.service.SeatService;
 import com.app.events.service.SectorCapacityService;
+import com.app.events.service.SectorService;
 import com.app.events.service.TicketService;
 import com.app.events.service.UserService;
 
@@ -35,6 +38,12 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private SectorService sectorService;
+	
+	@Autowired
+	private SeatService seatService;
 	
 	@Autowired
 	private SectorCapacityService sectorCapacityService;
@@ -86,13 +95,14 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void createTickets(Event event, Long eventId) throws Exception {
+	public void createTickets(Set<Hall> halls, Long eventId) throws Exception {
 		Event savedEvent = eventService.findOne(eventId);
 		ArrayList<Ticket> tickets = new ArrayList<>();
-		for(Hall h : event.getHalls()) {
+		for(Hall h : halls) {
 			for(Sector s: h.getSectors()) {
-				if(s.getSeats().size() > 0) {
-					for(Seat seat: s.getSeats()) {
+				Sector sector  = sectorService.findOne(s.getId());
+				if(sector.getSeats().size() > 0) {
+					for(Seat seat: seatService.findSeatFromSector(sector.getId())) {
 						tickets.add(new Ticket(null, null, TicketState.AVAILABLE, null, savedEvent, seat, null, new Long(0)));
 					}
 				} else {

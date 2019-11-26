@@ -1,5 +1,7 @@
 package com.app.events.service;
 
+import java.util.Collection;
+
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Seat;
 
@@ -16,5 +18,7 @@ public interface SeatService {
 	public boolean checkSeatFieldsAvailability(Seat seat);
 
 	public Seat prepareSeatFields(Seat toUpdate, Seat newSeat);
+
+	Collection<Seat> findSeatFromSector(Long id);
 
 }
