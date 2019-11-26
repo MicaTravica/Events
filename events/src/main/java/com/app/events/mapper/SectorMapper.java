@@ -5,13 +5,14 @@ import java.util.HashSet;
 import com.app.events.dto.SectorDTO;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
+import com.app.events.model.SectorCapacity;
 
 public class SectorMapper {
 
     public static SectorDTO toDTO(Sector sector) {
         return new SectorDTO(sector.getId(), sector.getName(), 
                             sector.getSectorRows(), sector.getSectorRows(),
-                            sector.getHall().getId()  
+                            0, sector.getHall().getId()  
                         );
     }
     
@@ -22,7 +23,9 @@ public class SectorMapper {
                         sectorDTO.getSectorColumns(),
                         new Hall(sectorDTO.getHallId()),
                         new HashSet<>(),
-                        new HashSet<>(),
+                        new HashSet<SectorCapacity>() {{
+                        	add(new SectorCapacity(null, new HashSet<>(), null, sectorDTO.getSectorCapacity(), sectorDTO.getSectorCapacity()));
+                        }},
                         new HashSet<>()
                     );
     }

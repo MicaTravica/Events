@@ -1,6 +1,8 @@
 package com.app.events.controller;
 
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +20,11 @@ import com.app.events.dto.EventDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.EventMapper;
 import com.app.events.model.Event;
+import com.app.events.model.Hall;
+import com.app.events.model.Media;
 import com.app.events.service.EventService;
+import com.app.events.service.MediaService;
+import com.app.events.service.TicketService;
 
 @RestController
 public class EventController extends BaseController{
@@ -26,7 +32,12 @@ public class EventController extends BaseController{
 	@Autowired
 	private EventService eventService;
 
-
+	@Autowired
+	private MediaService mediaService;
+	
+	@Autowired
+	private TicketService ticketService;
+	
 	@GetMapping(value = "/api/event/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) throws ResourceNotFoundException{
 		Event event = eventService.findOne(id);
@@ -36,9 +47,14 @@ public class EventController extends BaseController{
 	@PostMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) throws Exception {
-		Event savedEvent = eventService.create(EventMapper.toEvent(eventDTO));
+		Event event = EventMapper.toEvent(eventDTO);
+		Set<Media> mediaList = event.getMediaList();
+		Set<Hall> halls = event.getHalls();
+		Event savedEvent = eventService.create(event);
+		mediaService.createMedias(mediaList, savedEvent.getId());
+		ticketService.createTickets(halls, savedEvent.getId());
 		return new ResponseEntity<>(EventMapper.toDTO(savedEvent), HttpStatus.CREATED);
-}
+	}
 
 
 	@PutMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

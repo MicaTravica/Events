@@ -16,6 +16,7 @@ public class SectorDTO {
 
 	private int sectorRows;
 	private int sectorColumns;
+	private int sectorCapacity;
 	private Long hallId;
 
 

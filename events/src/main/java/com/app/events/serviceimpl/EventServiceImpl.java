@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.events.exception.DateException;
-import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Event;
 import com.app.events.model.Hall;
@@ -32,16 +31,14 @@ public class EventServiceImpl implements EventService {
 	
 	@Override
 	public Event create(Event event) throws Exception {
-		if(event.getId() != null){
-			throw new ResourceExistsException("Event");
-		}
-		if(event.getFromDate().after(event.getToDate())) {
-			throw new DateException("ToDate must be after FromDate");
+		event.setId(null);
+		if(event.getFromDate() == null || event.getToDate() == null || event.getFromDate().after(event.getToDate())) {
+			throw new DateException("Dates can not be null and to date must be after from date");
 		}
 		Set<Hall> halls = new HashSet<>();
 		for(Hall h : event.getHalls()) {
 			Hall ha = hallService.findOne(h.getId());
-			if(eventRepository.hallHaveEvent(h.getId(), event.getFromDate(), event.getToDate())) {
+			if(eventRepository.hallHaveEvent(ha.getId(), event.getFromDate(), event.getToDate())) {
 				throw new DateException("Hall is not available in desired period");
 			}
 			halls.add(ha);
@@ -53,8 +50,8 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Event update(Event event) throws Exception {
 		Event eventToUpdate = this.findOne(event.getId());
-		if(event.getFromDate().after(event.getToDate())) {
-			throw new DateException("ToDate must be after FromDate");
+		if(event.getFromDate() == null || event.getToDate() == null || event.getFromDate().after(event.getToDate())) {
+			throw new DateException("Dates can not be null and to date must be after from date");
 		}
 		Set<Hall> halls = new HashSet<>();
 		for(Hall h : event.getHalls()) {
