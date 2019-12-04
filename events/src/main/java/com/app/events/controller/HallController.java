@@ -33,18 +33,21 @@ public class HallController extends BaseController {
 	}
 
 	@PostMapping(value = "/api/hall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<HallDTO> createHall(@RequestBody HallDTO hallDTO) throws Exception {
 		Hall savedHall = hallService.create(HallMapper.toHall(hallDTO));
 		return new ResponseEntity<>(HallMapper.toDTO(savedHall), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/hall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<HallDTO> updateHall(@RequestBody HallDTO hallDTO) throws Exception {
 		Hall updatedHall = hallService.update(HallMapper.toHall(hallDTO));
 		return new ResponseEntity<>(HallMapper.toDTO(updatedHall), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/hall/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<HallDTO> deleteHall(@PathVariable("id") Long id) {
 		hallService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

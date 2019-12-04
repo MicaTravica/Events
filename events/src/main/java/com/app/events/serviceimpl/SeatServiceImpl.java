@@ -1,9 +1,10 @@
 package com.app.events.serviceimpl;
 
+import java.util.Collection;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
@@ -30,6 +31,10 @@ public class SeatServiceImpl implements SeatService {
                     ); 
 	}
 
+	@Override
+	public Collection<Seat> findSeatFromSector(Long id){
+		return seatRepository.findSeatBySectorId(id);
+	}
 	@Override
 	public Seat create(Seat seat) throws Exception{
 		if(seat.getId() != null)

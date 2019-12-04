@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ public class TicketController {
 	@Autowired
 	private TicketService ticketService;
 
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
 	@GetMapping(value = "/api/tickets/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<TicketDTO> getTicket(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Ticket ticket = ticketService.findOne(id);
@@ -40,19 +42,23 @@ public class TicketController {
 	// 	}
 	// }
 
+
 	@PutMapping(value = "/api/reserveTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_REGULAR')")
 	public ResponseEntity<TicketDTO> reserveTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
 		Ticket updatedTicket = ticketService.reserveTicket(ticketDTO.getId(), ticketDTO.getUserId(), ticketDTO.getVersion());
 		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
 	}
 
 	@PutMapping(value = "/api/buyTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_REGULAR')")
 	public ResponseEntity<TicketDTO> buyTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
 		Ticket updatedTicket = ticketService.buyTicket(ticketDTO.getId(), ticketDTO.getUserId());
 		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/tickets/{id}")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Ticket> deleteTicket(@PathVariable("id") Long id) {
 		ticketService.delete(id);
 		return new ResponseEntity<Ticket>(HttpStatus.NO_CONTENT);

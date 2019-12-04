@@ -15,4 +15,6 @@ public interface MediaService {
 
 	void delete(Long id) throws ResourceNotFoundException;
 
+	Collection<Media> createMedias(Collection<Media> mediaList, Long eventId) throws ResourceNotFoundException;
+
 }
