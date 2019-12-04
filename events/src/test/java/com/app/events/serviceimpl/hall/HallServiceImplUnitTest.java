@@ -1,10 +1,11 @@
-package com.app.events.serviceImpl;
+package com.app.events.serviceimpl.hall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Optional;
 
+import com.app.events.constants.PlaceConstants;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
 import com.app.events.model.Place;
@@ -54,8 +55,8 @@ public class HallServiceImplUnitTest {
     @Before
 	public void setUp() throws Exception{
 
-        PLACE = new Place(PLACE_ID);
-        INVALID_PLACE = new Place(INVALID_PLACE_ID);
+        PLACE = new Place(PlaceConstants.PLACE_ID);
+        INVALID_PLACE = new Place(PlaceConstants.INVALID_PLACE_ID);
 
         HALL_NEW = new Hall(null, "newHall", null,new HashSet<>(), new HashSet<>());
         HALL_UPDATE = new Hall(HALL_UPDATE_ID, "updateHall", PLACE, new HashSet<>(), new HashSet<>());
@@ -68,11 +69,10 @@ public class HallServiceImplUnitTest {
         Mockito.when(hallRepositoryMocked.save(HALL_NEW)).thenReturn(HALL_NEW);
         Mockito.when(hallRepositoryMocked.save(HALL_UPDATE)).thenReturn(HALL_UPDATE);
 
-        Mockito.when(placeSerivce.findOne(PLACE_ID)).thenReturn(PLACE);
-        Mockito.when(placeSerivce.findOne(INVALID_PLACE_ID))
+        Mockito.when(placeSerivce.findOne(PlaceConstants.PLACE_ID)).thenReturn(PLACE);
+        Mockito.when(placeSerivce.findOne(PlaceConstants.INVALID_PLACE_ID))
             .thenThrow(new ResourceNotFoundException("place not found"));
 
-        //Mockito.doNothing().when(hallRepositoryMocked.deleteById(HALL_ID));
     }    
     @Test
     public void whenValidId_thenHallShouldBeFound() throws Exception {

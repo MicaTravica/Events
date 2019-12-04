@@ -25,7 +25,7 @@ public class HallController extends BaseController {
 	@Autowired
 	private HallService hallService;
 
-	// @PreAuthorize("hasRole('REGULAR')")
+	@PreAuthorize("hasRole('ROLE_REGULAR') or hasRole('ROLE_ADMIN')")
 	@GetMapping(value = "/api/hall/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HallDTO> getHall(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Hall hall = hallService.findOne(id);
