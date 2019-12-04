@@ -100,18 +100,7 @@
 			<version>2.2.6</version>
 		</dependency>
 		<!--end for entity validation -->
-	
-		<!-- spring boot test security -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
-			<version>4.2.2.RELEASE</version>
-			<scope>test</scope>
-		</dependency>
-		<!-- end spring boot test security -->
-		
-
- </dependencies>
+	</dependencies>
 	<build>
 		<plugins>
 			<plugin>

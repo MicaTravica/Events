@@ -36,7 +36,8 @@ public class MediaServiceImpl implements MediaService {
 	public Media create(Media media, Long eventId) throws Exception {
 		media.setEvent(eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event")));
 		media.setId(null);
-		return mediaRepository.save(media);
+		Media m =  mediaRepository.save(media);
+		return m;
 	}	
 
 	@Override
@@ -55,7 +56,7 @@ public class MediaServiceImpl implements MediaService {
 		Media media = mediaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Media"));
 		media.setEvent(null);
 		mediaRepository.save(media);
-		mediaRepository.deleteById(id);;
+		mediaRepository.deleteById(id);
 	}
 
 	
