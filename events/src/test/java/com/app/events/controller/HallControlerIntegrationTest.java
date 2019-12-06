@@ -22,7 +22,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,10 +33,8 @@ import java.util.HashSet;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
-
 
 public class HallControlerIntegrationTest {
 
@@ -57,9 +54,9 @@ public class HallControlerIntegrationTest {
     }
 
     @Test()
-    public void whenValidId_thenFoundHall() throws Exception{
+    public void foundHall_when_Valid_ID_thenShouldFindHall() throws Exception{
         
-        URI uri = new URI("/api/hall/"+HallConstans.HALL_ID);
+        URI uri = new URI("/api/hall/"+HallConstans.PERSISTED_HALL_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<String> req = new HttpEntity<>(headers);
@@ -67,15 +64,15 @@ public class HallControlerIntegrationTest {
         ResponseEntity<HallDTO> res = restTemplate.exchange(uri, HttpMethod.GET, req, HallDTO.class);
 
         assertNotNull(res.getBody());
-        assertEquals(HallConstans.HALL_ID, res.getBody().getId());
-        assertEquals(HallConstans.HALL_NAME, res.getBody().getName());
+        assertEquals(HallConstans.PERSISTED_HALL_ID, res.getBody().getId());
+        assertEquals(HallConstans.PERSISTED_HALL_NAME, res.getBody().getName());
         assertEquals(HttpStatus.OK, res.getStatusCode());
     }
 
     @Test
-    public void whenInvalidId_thenThowException() throws Exception{
+    public void foundHall_when_Invalid_ID_then_return_NotFound() throws Exception{
         
-        URI uri = new URI("/api/hall/"+HallConstans.INVALID_HALL_ID);
+        URI uri = new URI("/api/hall/" + HallConstans.INVALID_HALL_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<String> req = new HttpEntity<>(headers);
@@ -86,12 +83,14 @@ public class HallControlerIntegrationTest {
     }
 
     @Test
-    public void whenAddValidHall_thenHallShouldBeAdded() throws Exception
+    public void addHall_when_ValidHall_then_HallShouldBeAdded() throws Exception
     {
         int sizeBeforeInsert = hallRepository.findAll().size();
 
         Hall hall = new Hall(
-            null,HallConstans.NEW_HALL_NAME,new Place(PlaceConstants.PLACE_ID),
+            null,
+            HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE,
+            new Place(PlaceConstants.PERSISTED_PLACE_ID),
             new HashSet<>(), new HashSet<>());
         
         HallDTO content = HallMapper.toDTO(hall);
@@ -109,7 +108,7 @@ public class HallControlerIntegrationTest {
         assertNotNull(res.getBody());
         assertEquals(HttpStatus.CREATED, res.getStatusCode());
 
-        assertEquals(HallConstans.NEW_HALL_NAME, res.getBody().getName());
+        assertEquals(HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE, res.getBody().getName());
         assertEquals(sizeBeforeInsert + 1, afterInsert.size());
         checkCreatedHallDTO(addedHall, res.getBody());
 
@@ -117,12 +116,13 @@ public class HallControlerIntegrationTest {
     }
 
     @Test
-    public void whenAdddHall_withInvalidPlace_thenHallShould_NotBeAdded() throws Exception
+    public void addHall_when_InvalidPlace_thenHallShould_NotBeAdded() throws Exception
     {
         int sizeBeforeInsert = hallRepository.findAll().size();
 
         Hall hall = new Hall(
-            null,HallConstans.NEW_HALL_NAME,new Place(PlaceConstants.INVALID_PLACE_ID),
+            null,HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE,
+            new Place(PlaceConstants.INVALID_PLACE_ID),
             new HashSet<>(), new HashSet<>());
         
         HallDTO content = HallMapper.toDTO(hall);
