@@ -36,7 +36,7 @@ import java.util.List;
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 
-public class HallControlerIntegrationTest {
+public class HallControllerIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -56,7 +56,7 @@ public class HallControlerIntegrationTest {
     @Test()
     public void foundHall_when_Valid_ID_thenShouldFindHall() throws Exception{
         
-        URI uri = new URI("/api/hall/"+HallConstans.PERSISTED_HALL_ID);
+        URI uri = new URI(HallConstans.URI_PREFIX + HallConstans.PERSISTED_HALL_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<String> req = new HttpEntity<>(headers);
