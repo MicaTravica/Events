@@ -5,6 +5,8 @@ package com.app.events.constants;
  */
 public class MediaConstants {
 
+	public static final String URL_PREFIX = "/api/media";
+	
 	public static final Long PERSISTED_MEDIA_ID = 1l;
 	public static final String PERSISTED_MEDIA_PATH = "slicica";
 

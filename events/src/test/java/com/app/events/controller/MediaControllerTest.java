@@ -30,8 +30,6 @@ import com.app.events.dto.MediaDTO;
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 public class MediaControllerTest {
-	
-	private static final String URL_PREFIX = "/api/media";
 
     private String authTokenAdmin = "";
     
@@ -47,7 +45,7 @@ public class MediaControllerTest {
 
     @Test
     public void testGetOneMedia() throws Exception {
-    	URI uri = new URI(URL_PREFIX + "/" + MediaConstants.PERSISTED_MEDIA_ID);
+    	URI uri = new URI(MediaConstants.URL_PREFIX + "/" + MediaConstants.PERSISTED_MEDIA_ID);
     	
         ResponseEntity<MediaDTO> response = restTemplate.getForEntity(uri, MediaDTO.class);
         MediaDTO found = response.getBody();
@@ -59,7 +57,7 @@ public class MediaControllerTest {
     
     @Test
     public void testGetOneMediaThrow() throws Exception {
-    	URI uri = new URI(URL_PREFIX + "/" + MediaConstants.INVALID_MEDIA_ID);
+    	URI uri = new URI(MediaConstants.URL_PREFIX + "/" + MediaConstants.INVALID_MEDIA_ID);
     	
         ResponseEntity<Object> response = restTemplate.getForEntity(uri, Object.class);
         
@@ -68,7 +66,7 @@ public class MediaControllerTest {
     
     @Test
     public void testGetEventMedias() throws Exception {
-    	URI uri = new URI(URL_PREFIX + "/event/" + EventConstants.PERSISTED_EVENT_ID);
+    	URI uri = new URI(MediaConstants.URL_PREFIX + "/event/" + EventConstants.PERSISTED_EVENT_ID);
     	
         ResponseEntity<MediaDTO[]> response = restTemplate.getForEntity(uri, MediaDTO[].class);
         MediaDTO[] found = response.getBody();
@@ -79,7 +77,7 @@ public class MediaControllerTest {
     
     @Test
     public void testCreateMedia() throws Exception {
-    	URI uri = new URI(URL_PREFIX);
+    	URI uri = new URI(MediaConstants.URL_PREFIX);
 
     	MediaDTO media = new MediaDTO(null, MediaConstants.VALID_MEDIA_PATH_FOR_PERSISTANCE, EventConstants.PERSISTED_EVENT_ID2);
     	
@@ -99,7 +97,7 @@ public class MediaControllerTest {
     
     @Test
     public void testDeleteMedia() throws Exception {
-    	URI uri = new URI(URL_PREFIX + '/' + MediaConstants.VALID_MEDIA_ID_FOR_DELETE);
+    	URI uri = new URI(MediaConstants.URL_PREFIX + '/' + MediaConstants.VALID_MEDIA_ID_FOR_DELETE);
     	
     	HttpHeaders headers = new HttpHeaders();
     	headers.add("Authorization", "Bearer " + this.authTokenAdmin);
