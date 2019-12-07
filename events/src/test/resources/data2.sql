@@ -17,3 +17,5 @@ INSERT INTO `test`.`event_hall` (`event_id`, `hall_id`) VALUES ('1', '1');
 
 INSERT INTO `test`.`ticket` (`id`, `bar_code`, `ticket_state`, `version`, `event_id`, `seat_id`) VALUES ('1', 'DFA', 'AVAILABLE', '0', '1', '1');
 INSERT INTO `test`.`media` (`id`, `path`, `event_id`) VALUES ('1', 'slicica','1');
+INSERT INTO `test`.`media` (`id`, `path`, `event_id`) VALUES ('2', 'slicicaa','1');
+INSERT INTO `test`.`media` (`id`, `path`, `event_id`) VALUES ('3', 'slicicaabrisanje','2');
