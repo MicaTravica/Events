@@ -13,4 +13,10 @@ public class MediaConstants {
 	public static final Long VALID_MEDIA_ID_FOR_DELETE = 3l;
 	
 	public static final Long INVALID_MEDIA_ID = -1l;
+
+	public static final String NEW_MEDIA_PATH = "nova slika";
+	public static final String NEW_MEDIA_PATH2 = "nova slika2";
+	
+	public static final Integer SUM_OF_EVENTS_MEDIAS = 2;
+	
 }
