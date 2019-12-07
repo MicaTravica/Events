@@ -1,10 +1,12 @@
 package com.app.events.serviceimpl.hall;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashSet;
 import java.util.Optional;
 
+import com.app.events.constants.HallConstans;
 import com.app.events.constants.PlaceConstants;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
@@ -28,15 +30,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 public class HallServiceImplUnitTest {
 
-    public static long HALL_NEW_ID = 1L;
-    public static long HALL_UPDATE_ID = 2L;
-    public static long INVALID_HALL_ID = -1L;
-    
     public static Hall HALL_NEW = null;
     public static Hall HALL_UPDATE = null;
 
-    public static Long PLACE_ID = 1L;
-    public static Long INVALID_PLACE_ID = -1L;
     public static Place PLACE = null;
     public static Place INVALID_PLACE = null;
 
@@ -58,13 +54,14 @@ public class HallServiceImplUnitTest {
         PLACE = new Place(PlaceConstants.PLACE_ID);
         INVALID_PLACE = new Place(PlaceConstants.INVALID_PLACE_ID);
 
-        HALL_NEW = new Hall(null, "newHall", null,new HashSet<>(), new HashSet<>());
-        HALL_UPDATE = new Hall(HALL_UPDATE_ID, "updateHall", PLACE, new HashSet<>(), new HashSet<>());
+        HALL_NEW = new Hall(null, HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE, null, new HashSet<>(), new HashSet<>());
+        
+        HALL_UPDATE = new Hall(HallConstans.PERSISTED_HALL_ID, HallConstans.PERSISTED_HALL_NAME, PLACE, new HashSet<>(), new HashSet<>());
         Optional<Hall> hallOpt = Optional.of(HALL_UPDATE);
-        Optional<Hall> emptyHallOpt = Optional.empty();
+        
 
-        Mockito.when(hallRepositoryMocked.findById(HALL_UPDATE_ID)).thenReturn(hallOpt);
-        Mockito.when(hallRepositoryMocked.findById(INVALID_HALL_ID)).thenReturn(emptyHallOpt);
+        Mockito.when(hallRepositoryMocked.findById(HallConstans.PERSISTED_HALL_ID)).thenReturn(hallOpt);
+        Mockito.when(hallRepositoryMocked.findById(HallConstans.INVALID_HALL_ID)).thenReturn(Optional.empty());
 
         Mockito.when(hallRepositoryMocked.save(HALL_NEW)).thenReturn(HALL_NEW);
         Mockito.when(hallRepositoryMocked.save(HALL_UPDATE)).thenReturn(HALL_UPDATE);
@@ -75,33 +72,31 @@ public class HallServiceImplUnitTest {
 
     }    
     @Test
-    public void whenValidId_thenHallShouldBeFound() throws Exception {
-            Hall foundHall = hallService.findOne(HALL_UPDATE_ID);
-            assertEquals(HALL_UPDATE_ID, foundHall.getId());
+    public void when_ValidID_thenHallShouldBeFound() throws Exception {
+            Hall foundHall = hallService.findOne(HallConstans.PERSISTED_HALL_ID);
+            assertNotNull(foundHall);
+            assertEquals(HallConstans.PERSISTED_HALL_ID, foundHall.getId());
+            assertEquals(HallConstans.PERSISTED_HALL_NAME, foundHall.getName());
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void whenInvalidId_thenThrow_ResourceNotFoundException() throws ResourceNotFoundException
     {
-        hallService.findOne(INVALID_HALL_ID);
+        hallService.findOne(HallConstans.INVALID_HALL_ID);
     }
 
-    /*
-        problem how to set id new Hall when is created...
-        also is global object problem, due atribute changes?
-    */
     @Test
     public void WhenCreateValidHall_thenHallShouldBeSaved() throws Exception{
         HALL_NEW.setPlace(PLACE);
         Hall savedHall = hallService.create(HALL_NEW);
         assertEquals(savedHall.getName(), HALL_NEW.getName());
+        assertEquals(savedHall.getPlace().getId(), HALL_NEW.getPlace().getId());
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void WhenCreateInValidHallPlace_thenThrow_ResourceNotFoundException() throws Exception{
         HALL_NEW.setPlace(INVALID_PLACE);
-        Hall savedHall = hallService.create(HALL_NEW);
-        assertEquals(savedHall.getName(), HALL_NEW.getName());
+        hallService.create(HALL_NEW);
     }
 
 
@@ -116,17 +111,13 @@ public class HallServiceImplUnitTest {
     @Test(expected = ResourceNotFoundException.class)
     public void WhenUpateInValidHallPlace_thenThrow_ResourceNotFoundException() throws Exception{
         HALL_UPDATE.setPlace(INVALID_PLACE);
-        Hall savedHall = hallService.update(HALL_UPDATE);
-        assertEquals(savedHall.getName(), HALL_UPDATE.getName());
-        assertEquals(savedHall.getPlace().getId(), HALL_UPDATE.getPlace().getId());
+        hallService.update(HALL_UPDATE);
     }
 
     @Test(expected = Exception.class)
     public void WhenUpateNotExsistingHall_thenThrow_ResourceNotFoundException() throws Exception{
-        HALL_UPDATE.setId(INVALID_HALL_ID);
+        HALL_UPDATE.setId(HallConstans.INVALID_HALL_ID);
         hallService.update(HALL_UPDATE);
     }
-
-
 
 }
