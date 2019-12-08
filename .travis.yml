@@ -15,13 +15,13 @@ jobs:
     - 
       if: (type = push AND branch = master) OR (type = push AND branch = testSector)
       before_script:
-        # - mysql -u root -e 'CREATE DATABASE events_database;'
+        - mysql -u root -e 'CREATE DATABASE events_database;'
         - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
-        # - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
+        - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
 
         # da li moze ovako sa 2 baze??? ---> msm posto su obe na istom portu.
-        - mysql -u root -e 'CREATE DATABASE test;'
-        - mysql -u root -e "GRANT ALL ON test.* TO 'events'@'localhost';"
+        # - mysql -u root -e 'CREATE DATABASE test;'
+        # - mysql -u root -e "GRANT ALL ON test.* TO 'events'@'localhost';"
       install:
         - cd ./events 
         # -DskipTests=false --> da li je ovo da preskoci dependancije iz pom.xml-a 
