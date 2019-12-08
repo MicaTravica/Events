@@ -51,7 +51,7 @@ public class MediaController extends BaseController {
 	}
 
 
-	@DeleteMapping(value = "/media/{id}}")
+	@DeleteMapping(value = "/media/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<String> deleteMedia(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		mediaService.delete(id);
