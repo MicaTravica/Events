@@ -12,8 +12,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.events.constants.EventConstants;
 import com.app.events.constants.MediaConstants;
@@ -31,6 +33,8 @@ public class MediaServiceImplIntegrationTest {
 
 
 	@Test
+    @Transactional
+    @Rollback(true)
 	public void create_valid() throws Exception {
 		Media media = new Media(null, MediaConstants.NEW_MEDIA_PATH, null);
 		Media created = mediaService.create(media, EventConstants.PERSISTED_EVENT_ID2);
@@ -41,13 +45,15 @@ public class MediaServiceImplIntegrationTest {
 	}
 
 	@Test
-	public void create_throw() {
+	public void create_throwResourceNotFoundException() {
 		Media media = new Media(null, MediaConstants.NEW_MEDIA_PATH, null);
 		
 		assertThrows(ResourceNotFoundException.class, () -> mediaService.create(media, EventConstants.INVALID_EVENT_ID));
 	}
 
 	@Test
+    @Transactional
+    @Rollback(true)
 	public void createMedias_valid() throws ResourceNotFoundException {
 
 		Media media1 = new Media(null, MediaConstants.NEW_MEDIA_PATH, null);
@@ -61,7 +67,7 @@ public class MediaServiceImplIntegrationTest {
 	}
 
 	@Test
-	public void createMedias_throw() {
+	public void createMedias_throwResourceNotFoundException() {
 		Collection<Media> mediaList = new ArrayList<>();
 		assertThrows(ResourceNotFoundException.class, () -> mediaService.createMedias(mediaList, EventConstants.INVALID_EVENT_ID));
 	}
@@ -74,7 +80,7 @@ public class MediaServiceImplIntegrationTest {
 	}
 
 	@Test
-	public void findOne_throw() {
+	public void findOne_throwResourceNotFoundException() {
 		assertThrows(ResourceNotFoundException.class, () -> mediaService.findOne(MediaConstants.INVALID_MEDIA_ID));
 	}
 

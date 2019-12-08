@@ -17,8 +17,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.events.constants.EventConstants;
 import com.app.events.constants.MediaConstants;
@@ -29,7 +31,7 @@ import com.app.events.dto.MediaDTO;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
-public class MediaControllerTest {
+public class MediaControllerIntegrationTest {
 
     private String authTokenAdmin = "";
     
@@ -56,7 +58,7 @@ public class MediaControllerTest {
     }
     
     @Test
-    public void testGetOneMediaThrow() throws Exception {
+    public void testGetOneMediaThrowResourceNotFoundException() throws Exception {
     	URI uri = new URI(MediaConstants.URL_PREFIX + "/" + MediaConstants.INVALID_MEDIA_ID);
     	
         ResponseEntity<Object> response = restTemplate.getForEntity(uri, Object.class);
@@ -76,6 +78,8 @@ public class MediaControllerTest {
     }
     
     @Test
+    @Transactional
+    @Rollback(true)
     public void testCreateMedia() throws Exception {
     	URI uri = new URI(MediaConstants.URL_PREFIX);
 
@@ -96,6 +100,8 @@ public class MediaControllerTest {
     }
     
     @Test
+    @Transactional
+    @Rollback(true)
     public void testDeleteMedia() throws Exception {
     	URI uri = new URI(MediaConstants.URL_PREFIX + '/' + MediaConstants.VALID_MEDIA_ID_FOR_DELETE);
     	
