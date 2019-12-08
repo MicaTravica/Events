@@ -37,7 +37,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application.properties")
+@TestPropertySource("classpath:application-test.properties")
 public class SectorControllerIntegrationTest {
 
     public static URI uri;
@@ -129,5 +129,8 @@ public class SectorControllerIntegrationTest {
         assertEquals(sector.getSectorRows(), sectorDto.getSectorRows());
         assertEquals(sector.getHall().getId(), sectorDto.getHallId());
     }
+
+
+
 
 }
