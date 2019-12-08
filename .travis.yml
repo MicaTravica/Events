@@ -10,14 +10,14 @@ addons:
 jobs:
   include:
     - 
-      if: (type = push AND branch = master) #OR (type = pull_request)
+      if: (type = push AND branch = master) OR (type = push AND branch = testSector)
       before_script:
         - mysql -u root -e 'CREATE DATABASE events_database;'
         - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
         - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
       install:
         - cd ./events 
-        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        - mvn install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
       script:  
         #########
         # ovo samo ako hoces da izblidas i da pokrenes app
