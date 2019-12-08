@@ -15,6 +15,9 @@ jobs:
         - mysql -u root -e 'CREATE DATABASE events_database;'
         - mysql -u root -e "CREATE USER 'events'@'localhost' IDENTIFIED BY 'events1!';"
         - mysql -u root -e "GRANT ALL ON events_database.* TO 'events'@'localhost';"
+
+        - mysql -u root -e 'CREATE DATABASE test;'
+        - mysql -u root -e "GRANT ALL ON test.* TO 'events'@'localhost';"
       install:
         - cd ./events 
         - mvn install -DskipTests=false -Dmaven.javadoc.skip=true -B -V
