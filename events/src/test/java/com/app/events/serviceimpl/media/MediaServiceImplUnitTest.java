@@ -88,7 +88,7 @@ public class MediaServiceImplUnitTest {
 	}
 	
 	@Test
-	public void findOneById_Throw() {
+	public void findOneById_ThrowResourceNotFoundException() {
 		Long id = new Long(10);
 		assertThrows(ResourceNotFoundException.class, () -> mediaService.findOne(id));
 	}
