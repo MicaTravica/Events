@@ -36,8 +36,8 @@ jobs:
         ########
       
         ########
-        # dodat sonar qube
-        - mvn clean verify sonar:sonar -Pcoverage -Dsonar.projectKey=DusanBucan_Events
+        # dodat sonar qube  ---> ovo sam izbacio: clean verify 
+        - mvn sonar:sonar -Pcoverage -Dsonar.projectKey=DusanBucan_Events
         ########
 
 
