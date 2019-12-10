@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.SectorCapacatyMustBePositiveNumberException;
 import com.app.events.exception.TicketReservationException;
 import com.app.events.model.Event;
 import com.app.events.model.Hall;
@@ -35,39 +36,35 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private EventService eventService;
-	
+
 	@Autowired
 	private SectorService sectorService;
-	
+
 	@Autowired
 	private SeatService seatService;
-	
+
 	@Autowired
 	private SectorCapacityService sectorCapacityService;
 
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
-		return ticketRepository.findById(id)
-                    .orElseThrow(
-                        ()-> new ResourceNotFoundException("Ticket")
-                    ); 
+		return ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket"));
 	}
 
 	@Override
-	public Ticket create(Ticket ticket) {	
+	public Ticket create(Ticket ticket) {
 		return ticketRepository.save(ticket);
 	}
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
 	public Ticket reserveTicket(Long id, Long userId, Long ticketVersion) throws Exception {
-		Ticket ticketToUpdate = findOne(id);  
-		
-		if( !(ticketToUpdate.getVersion() == ticketVersion && ticketToUpdate.getUser() == null))
-		{
+		Ticket ticketToUpdate = findOne(id);
+
+		if (!(ticketToUpdate.getVersion() == ticketVersion && ticketToUpdate.getUser() == null)) {
 			throw new TicketReservationException("Ticket already reserved");
 		}
 		User user = userService.findOne(userId);
@@ -80,11 +77,9 @@ public class TicketServiceImpl implements TicketService {
 	public Ticket buyTicket(Long id, Long userId) throws Exception {
 		Ticket ticketToUpdate = findOne(id);
 		ticketToUpdate.setTicketState(TicketState.BOUGHT);
-		if(ticketToUpdate.getUser().getId() == userId)
-		{
+		if (ticketToUpdate.getUser().getId() == userId) {
 			return ticketRepository.save(ticketToUpdate);
-		}
-		else{
+		} else {
 			return null;
 		}
 	}
@@ -98,24 +93,31 @@ public class TicketServiceImpl implements TicketService {
 	public void createTickets(Set<Hall> halls, Long eventId) throws Exception {
 		Event savedEvent = eventService.findOne(eventId);
 		ArrayList<Ticket> tickets = new ArrayList<>();
-		for(Hall h : halls) {
-			for(Sector s: h.getSectors()) {
-				Sector sector  = sectorService.findOne(s.getId());
-				if(sector.getSeats().size() > 0) {
-					for(Seat seat: seatService.findSeatFromSector(sector.getId())) {
-						tickets.add(new Ticket(null, null, TicketState.AVAILABLE, null, savedEvent, seat, null, new Long(0)));
+		for (Hall h : halls) {
+			for (Sector s : h.getSectors()) {
+				Sector sector = sectorService.findOne(s.getId());
+				if (sector.getSeats().size() > 0) {
+					for (Seat seat : seatService.findSeatFromSector(sector.getId())) {
+						tickets.add(new Ticket(null, null, TicketState.AVAILABLE, null, savedEvent, seat, null,
+								new Long(0)));
 					}
 				} else {
 					int capacity = s.getSectorCapacities().iterator().next().getCapacity();
-					SectorCapacity sc = sectorCapacityService.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
+					if (capacity < 1) {
+						eventService.delete(eventId);
+						throw new SectorCapacatyMustBePositiveNumberException();
+					}
+					SectorCapacity sc = sectorCapacityService
+							.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
 					for (int i = 0; i < sc.getCapacity(); i++) {
-						tickets.add(new Ticket(null, null, TicketState.AVAILABLE, null, savedEvent, null, sc, new Long(0)));
+						tickets.add(
+								new Ticket(null, null, TicketState.AVAILABLE, null, savedEvent, null, sc, new Long(0)));
 					}
 				}
 			}
 		}
 		ticketRepository.saveAll(tickets);
-		
+
 	}
 
 }

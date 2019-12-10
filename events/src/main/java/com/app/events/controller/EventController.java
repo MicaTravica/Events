@@ -37,13 +37,15 @@ public class EventController extends BaseController{
 	
 	@Autowired
 	private TicketService ticketService;
-	
+	// dodati pretragu
+	// dodati izvestaje
 	@GetMapping(value = "/api/event/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) throws ResourceNotFoundException{
 		Event event = eventService.findOne(id);
 		return new ResponseEntity<>(EventMapper.toDTO(event), HttpStatus.OK);
 	}
 
+	//pricelist
 	@PostMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) throws Exception {
@@ -55,19 +57,19 @@ public class EventController extends BaseController{
 		ticketService.createTickets(halls, savedEvent.getId());
 		return new ResponseEntity<>(EventMapper.toDTO(savedEvent), HttpStatus.CREATED);
 	}
-
-
+	// ne sme da se menja hala ako je prodata jedna karta
 	@PutMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> updateEvent(@RequestBody EventDTO eventDTO) throws Exception {
 		Event updatedEvent = eventService.update(EventMapper.toEvent(eventDTO));
 		return new ResponseEntity<>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
 	}
-
+	
+	//sta sa ovim?
 	@DeleteMapping(value = "/api/event/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> deleteEvent(@PathVariable("id") Long id) {
-		eventService.delete(id);
+//		eventService.delete(id);
 		return new ResponseEntity<EventDTO>(HttpStatus.NO_CONTENT);
 	}
 

@@ -6,7 +6,7 @@ INSERT INTO `test`.`place` (`id`, `address`, `latitude`, `longitude`, `name`) VA
 INSERT INTO `test`.`hall` (`id`, `name`, `place_id`) VALUES ('1', 'sala1', '1');
 
 INSERT INTO `test`.`sector` (`id`, `name`, `sector_columns`, `sector_rows`, `hall_id`) VALUES ('1', 'sektor1', '1', '1', '1');
-INSERT INTO `test`.`sector` (`id`, `name`, `sector_columns`, `sector_rows`, `hall_id`) VALUES ('2', 'dasfa', '0', '0', '1');
+INSERT INTO `test`.`sector` (`id`, `name`, `sector_columns`, `sector_rows`, `hall_id`) VALUES ('2', 'sektor2', '0', '0', '1');
 
 INSERT INTO `test`.`seat` (`id`, `seat_column`, `seat_row`, `sector_id`) VALUES ('1', '1', '1', '1');
 
