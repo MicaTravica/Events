@@ -55,7 +55,7 @@ public class MediaServiceImpl implements MediaService {
 		Media media = mediaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Media"));
 		media.setEvent(null);
 		mediaRepository.save(media);
-		mediaRepository.deleteById(id);;
+		mediaRepository.deleteById(id);
 	}
 
 	

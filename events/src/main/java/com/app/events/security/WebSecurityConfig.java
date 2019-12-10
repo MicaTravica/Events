@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
@@ -60,8 +60,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers( "/", "/index.html", "/api/login", "/api/registration", "/api/user/verify/**").permitAll() 
 				.antMatchers(HttpMethod.GET, "/api/event/**", "/api/hall/**", "/api/media/**", "/api/media/event/**", "/api/place/**", "/api/priceList/**", "/api/seats/**", "/api/sectorCapacity/**", "/api/sector/**").permitAll()
 				.anyRequest().authenticated();
-				 
-		
 		// Custom JWT based authentication
 		httpSecurity.addFilterBefore(authenticationTokenFilterBean(),
 				UsernamePasswordAuthenticationFilter.class);

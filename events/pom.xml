@@ -41,17 +41,18 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!--for testing -->
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.5.2</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
+		<!-- end for testing -->
 		<dependency>
 	        <groupId>org.projectlombok</groupId>
 	        <artifactId>lombok</artifactId>
@@ -99,6 +100,11 @@
 			<version>2.2.6</version>
 		</dependency>
 		<!--end for entity validation -->
+		<dependency>
+			<groupId>com.paypal.sdk</groupId>
+			<artifactId>rest-api-sdk</artifactId>
+			<version>LATEST</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
