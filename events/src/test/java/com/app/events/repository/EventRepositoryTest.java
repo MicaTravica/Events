@@ -43,7 +43,7 @@ public class EventRepositoryTest {
 		Boolean result = eventRepository.hallHaveEvent(HallConstans.PERSISTED_HALL_ID, fromDate, toDate);
 		assertTrue(result);
 	}
-	
+
 	@Test
 	public void hallHaveEvent_yesToDate() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.DECEMBER, 31).getTime();
@@ -51,28 +51,31 @@ public class EventRepositoryTest {
 		Boolean result = eventRepository.hallHaveEvent(HallConstans.PERSISTED_HALL_ID, fromDate, toDate);
 		assertTrue(result);
 	}
-	
+
 	@Test
 	public void hallHaveEventUpdate_no() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.DECEMBER, 31).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 2).getTime();
-		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate, EventConstants.PERSISTED_EVENT_ID);
+		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate,
+				EventConstants.PERSISTED_EVENT_ID);
 		assertFalse(result);
 	}
-	
+
 	@Test
 	public void hallHaveEventUpdate_yesFromDate() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.JANUARY, 2).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 4).getTime();
-		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate, EventConstants.PERSISTED_EVENT_ID2);
+		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate,
+				EventConstants.PERSISTED_EVENT_ID2);
 		assertTrue(result);
 	}
-	
+
 	@Test
 	public void hallHaveEventUpdate_yesToDate() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.DECEMBER, 31).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 2).getTime();
-		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate, EventConstants.PERSISTED_EVENT_ID2);
+		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate,
+				EventConstants.PERSISTED_EVENT_ID2);
 		assertTrue(result);
 	}
 }

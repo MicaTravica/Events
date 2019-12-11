@@ -1,6 +1,8 @@
 package com.app.events.serviceimpl;
 
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +56,11 @@ public class HallServiceImpl implements HallService {
     public void delete(Long id) {
         this.hallRepository.deleteById(id);
     }
+
+	@Override
+	public Collection<Hall> findHallByEventId(Long id) {
+		return hallRepository.findAllByEvents(id);
+	}
 
 }
 

@@ -1,6 +1,5 @@
 package com.app.events.controller;
 
-
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,50 +21,66 @@ import com.app.events.mapper.EventMapper;
 import com.app.events.model.Event;
 import com.app.events.model.Hall;
 import com.app.events.model.Media;
+import com.app.events.model.PriceList;
 import com.app.events.service.EventService;
 import com.app.events.service.MediaService;
 import com.app.events.service.TicketService;
 
 @RestController
-public class EventController extends BaseController{
-	
+public class EventController extends BaseController {
+
 	@Autowired
 	private EventService eventService;
 
 	@Autowired
 	private MediaService mediaService;
-	
+
 	@Autowired
 	private TicketService ticketService;
+
 	// dodati pretragu
 	// dodati izvestaje
 	@GetMapping(value = "/api/event/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) throws ResourceNotFoundException{
+	public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Event event = eventService.findOne(id);
 		return new ResponseEntity<>(EventMapper.toDTO(event), HttpStatus.OK);
 	}
 
-	//pricelist
 	@PostMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> createEvent(@RequestBody EventDTO eventDTO) throws Exception {
 		Event event = EventMapper.toEvent(eventDTO);
 		Set<Media> mediaList = event.getMediaList();
 		Set<Hall> halls = event.getHalls();
+		Set<PriceList> priceLists = event.getPriceLists();
 		Event savedEvent = eventService.create(event);
 		mediaService.createMedias(mediaList, savedEvent.getId());
-		ticketService.createTickets(halls, savedEvent.getId());
+		ticketService.createTickets(halls, priceLists, savedEvent.getId());
 		return new ResponseEntity<>(EventMapper.toDTO(savedEvent), HttpStatus.CREATED);
 	}
-	// ne sme da se menja hala ako je prodata jedna karta
+
 	@PutMapping(value = "/api/event", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> updateEvent(@RequestBody EventDTO eventDTO) throws Exception {
 		Event updatedEvent = eventService.update(EventMapper.toEvent(eventDTO));
 		return new ResponseEntity<>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
 	}
-	
-	//sta sa ovim?
+
+	//obrisati postojece karte za taj dogadjaj i kreirati nove
+	// obrisati postojece karte za taj dogadjaj i kreirati nove
+	@PutMapping(value = "/api/event/hall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	public ResponseEntity<EventDTO> updateEventHall(@RequestBody EventDTO eventDTO) throws Exception {
+		Event event = EventMapper.toEvent(eventDTO);
+		Event updatedEvent = eventService.updateHall(event);
+		Set<Hall> halls = event.getHalls();
+		Set<PriceList> priceLists = event.getPriceLists();
+		ticketService.deleteTicketsByEventId(updatedEvent.getId());
+		ticketService.createTickets(halls, priceLists, updatedEvent.getId());
+		return new ResponseEntity<>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
+	}
+
+	// sta sa ovim?
 	@DeleteMapping(value = "/api/event/{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> deleteEvent(@PathVariable("id") Long id) {

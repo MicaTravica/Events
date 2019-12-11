@@ -15,5 +15,5 @@ public interface EventService {
 
 	void delete(Long id) throws ResourceNotFoundException;
 
-	void canceledEvent();
+	Event updateHall(Event event) throws Exception;
 }

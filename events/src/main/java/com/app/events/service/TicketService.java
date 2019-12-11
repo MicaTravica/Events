@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
+import com.app.events.model.PriceList;
 import com.app.events.model.Ticket;
 
 public interface TicketService {
@@ -18,6 +19,10 @@ public interface TicketService {
 
 	public void delete(Long id);
 
-	public void createTickets(Set<Hall> halls, Long eventId) throws ResourceNotFoundException, Exception;
+	public boolean ticketForEventIsSale(Long id);
+
+	void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId) throws Exception;
+
+	public void deleteTicketsByEventId(Long id);
 
 }

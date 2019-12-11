@@ -29,8 +29,8 @@ public class EventConstants {
 	public static final String NEW_EVENT_DESCRIPTION = "lep opis";
 	public static final EventState NEW_EVENT_EVENT_STATE = EventState.AVAILABLE;
 	public static final EventType NEW_EVENT_EVENT_TYPE = EventType.CONCERT;
-	public static final Date NEW_EVENT_FROM_DATE = new GregorianCalendar(2020, Calendar.JUNE, 1).getTime();
-	public static final Date NEW_EVENT_TO_DATE = new GregorianCalendar(2020, Calendar.JUNE, 2).getTime();
+	public static final Date NEW_EVENT_FROM_DATE = new GregorianCalendar(2018, Calendar.JUNE, 1).getTime();
+	public static final Date NEW_EVENT_TO_DATE = new GregorianCalendar(2018, Calendar.JUNE, 2).getTime();
 	
 	public static final String UPDATE_EVENT_NAME = "Dogadjaj izmenjen";
 	public static final String UPDATE_EVENT_DESCRIPTION = "izmenjen lep opis";
