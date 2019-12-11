@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class PayPalServiceImpl implements PayPalService {
 
+    public static String CURRENCY = "USD";
+    public static String QUANTITY = "1";
+
     @Value("${paypal.mode}")
     private String clientMode;
 
@@ -40,20 +43,16 @@ public class PayPalServiceImpl implements PayPalService {
     private String frontEndPayPalFailRoute;
 
     @Override
-    public Payment createPaymentObject(long TicketId, double price) {
+    public Payment createPaymentObject(long TicketId, double price, String currency) {
         Amount amount = new Amount();
-        amount.setCurrency("USD");
+        amount.setCurrency(currency);
         amount.setTotal(String.valueOf(price));
 
-        Item item = new Item();
+        Item item = new Item(String.valueOf(TicketId), QUANTITY, String.valueOf(price), currency);
         item.setDescription("KTSNVT - Reservation");
-        item.setName(String.valueOf(TicketId));
-        item.setPrice(String.valueOf(price));
-        item.setCurrency("USD");
-        item.setQuantity("1");
+        
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
-
 
         transaction.setItemList(new ItemList());
         transaction.getItemList().setItems(new ArrayList<Item>());
@@ -84,7 +83,7 @@ public class PayPalServiceImpl implements PayPalService {
 
     public Map<String, Object> startPayment(long TicketId, double price)
     {
-        Payment payment = createPaymentObject(TicketId, price);
+        Payment payment = createPaymentObject(TicketId, price, CURRENCY);
         Map<String, Object> response = new HashMap<String, Object>();
         Payment createdPayment;
         try {

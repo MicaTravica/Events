@@ -8,7 +8,7 @@ import com.paypal.api.payments.Payment;
  */
 public interface PayPalService {
 
-    Payment createPaymentObject(long TicketId, double price);
+    Payment createPaymentObject(long TicketId, double price, String currency);
 
     public Map<String, Object> startPayment(long TicketId, double price);
     
