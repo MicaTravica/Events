@@ -59,7 +59,7 @@ public class HallServiceImpl implements HallService {
 
 	@Override
 	public Collection<Hall> findHallByEventId(Long id) {
-		return hallRepository.findAllByEvents(id);
+		return hallRepository.findAllByEventsId(id);
 	}
 
 }

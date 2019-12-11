@@ -3,7 +3,7 @@ package com.app.events.constants;
 /**
  * UserConstans
  */
-public class UserConstans {
+public class UserConstants {
 
      // Login data for existing user (admin)
     public static final String DB_ADMIN_USERNAME = "milovica";

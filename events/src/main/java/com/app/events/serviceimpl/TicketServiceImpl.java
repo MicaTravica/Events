@@ -53,7 +53,7 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private SectorCapacityService sectorCapacityService;
-	
+
 	@Autowired
 	private PriceListService priceListService;
 
@@ -98,23 +98,23 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists,Long eventId) throws Exception {
+	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId) throws Exception {
 		Event savedEvent = eventService.findOne(eventId);
-		Map<Long, PriceList> priceListMap = priceLists.stream().collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
+		Map<Long, PriceList> priceListMap = priceLists.stream()
+				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
+//		if (checkSectorHavePriceList(halls, priceListMap))
+//			throw new SectorPriceListException();
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		for (Hall h : halls) {
 			for (Sector s : h.getSectors()) {
 				Sector sector = sectorService.findOne(s.getId());
 				PriceList priceList = priceListMap.get(sector.getId());
-				if(priceList == null) {
-					// dodati excepiton
-					throw new Exception();
-				}
-				PriceList savedPriceList = priceListService.create(new PriceList(null, priceList.getPrice(), savedEvent, sector));
+				PriceList savedPriceList = priceListService
+						.create(new PriceList(null, priceList.getPrice(), savedEvent, sector));
 				if (sector.getSeats().size() > 0) {
 					for (Seat seat : seatService.findSeatFromSector(sector.getId())) {
-						tickets.add(new Ticket(null, null, savedPriceList.getPrice(), TicketState.AVAILABLE, null, savedEvent, seat, null,
-								new Long(0)));
+						tickets.add(new Ticket(null, null, savedPriceList.getPrice(), TicketState.AVAILABLE, null,
+								savedEvent, seat, null, new Long(0)));
 					}
 				} else {
 					int capacity = s.getSectorCapacities().iterator().next().getCapacity();
@@ -125,8 +125,8 @@ public class TicketServiceImpl implements TicketService {
 					SectorCapacity sc = sectorCapacityService
 							.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
 					for (int i = 0; i < sc.getCapacity(); i++) {
-						tickets.add(
-								new Ticket(null, null, savedPriceList.getPrice(),TicketState.AVAILABLE, null, savedEvent, null, sc, new Long(0)));
+						tickets.add(new Ticket(null, null, savedPriceList.getPrice(), TicketState.AVAILABLE, null,
+								savedEvent, null, sc, new Long(0)));
 					}
 				}
 			}

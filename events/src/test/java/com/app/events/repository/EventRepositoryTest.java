@@ -17,7 +17,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.app.events.constants.EventConstants;
-import com.app.events.constants.HallConstans;
+import com.app.events.constants.HallConstants;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -32,7 +32,7 @@ public class EventRepositoryTest {
 	public void hallHaveEvent_no() {
 		Date fromDate = new GregorianCalendar(2020, Calendar.JANUARY, 3).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JUNE, 22).getTime();
-		Boolean result = eventRepository.hallHaveEvent(HallConstans.PERSISTED_HALL_ID, fromDate, toDate);
+		Boolean result = eventRepository.hallHaveEvent(HallConstants.PERSISTED_HALL_ID, fromDate, toDate);
 		assertFalse(result);
 	}
 	
@@ -40,7 +40,7 @@ public class EventRepositoryTest {
 	public void hallHaveEvent_yesFromDate() {
 		Date fromDate = new GregorianCalendar(2020, Calendar.JANUARY, 2).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JUNE, 2).getTime();
-		Boolean result = eventRepository.hallHaveEvent(HallConstans.PERSISTED_HALL_ID, fromDate, toDate);
+		Boolean result = eventRepository.hallHaveEvent(HallConstants.PERSISTED_HALL_ID, fromDate, toDate);
 		assertTrue(result);
 	}
 
@@ -48,7 +48,7 @@ public class EventRepositoryTest {
 	public void hallHaveEvent_yesToDate() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.DECEMBER, 31).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 2).getTime();
-		Boolean result = eventRepository.hallHaveEvent(HallConstans.PERSISTED_HALL_ID, fromDate, toDate);
+		Boolean result = eventRepository.hallHaveEvent(HallConstants.PERSISTED_HALL_ID, fromDate, toDate);
 		assertTrue(result);
 	}
 
@@ -56,7 +56,7 @@ public class EventRepositoryTest {
 	public void hallHaveEventUpdate_no() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.DECEMBER, 31).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 2).getTime();
-		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate,
+		Boolean result = eventRepository.hallHaveEventUpdate(HallConstants.PERSISTED_HALL_ID, fromDate, toDate,
 				EventConstants.PERSISTED_EVENT_ID);
 		assertFalse(result);
 	}
@@ -65,7 +65,7 @@ public class EventRepositoryTest {
 	public void hallHaveEventUpdate_yesFromDate() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.JANUARY, 2).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 4).getTime();
-		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate,
+		Boolean result = eventRepository.hallHaveEventUpdate(HallConstants.PERSISTED_HALL_ID, fromDate, toDate,
 				EventConstants.PERSISTED_EVENT_ID2);
 		assertTrue(result);
 	}
@@ -74,7 +74,7 @@ public class EventRepositoryTest {
 	public void hallHaveEventUpdate_yesToDate() {
 		Date fromDate = new GregorianCalendar(2019, Calendar.DECEMBER, 31).getTime();
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 2).getTime();
-		Boolean result = eventRepository.hallHaveEventUpdate(HallConstans.PERSISTED_HALL_ID, fromDate, toDate,
+		Boolean result = eventRepository.hallHaveEventUpdate(HallConstants.PERSISTED_HALL_ID, fromDate, toDate,
 				EventConstants.PERSISTED_EVENT_ID2);
 		assertTrue(result);
 	}

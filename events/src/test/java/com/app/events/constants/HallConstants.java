@@ -3,7 +3,7 @@ package com.app.events.constants;
 /**
  * HallConstans
  */
-public class HallConstans {
+public class HallConstants {
 
     /*
         info of persisted hall from data2.sql script

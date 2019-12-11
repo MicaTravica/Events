@@ -74,8 +74,10 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Event update(Event event) throws Exception {
 		Event eventToUpdate = this.findOne(event.getId());
+
 		if (event.getFromDate() == null || event.getToDate() == null || event.getFromDate().after(event.getToDate()))
 			throw new DateException("Dates can not be null and to date must be after from date");
+
 		boolean ready = prepareForUpdateEventState(event, eventToUpdate);
 		if (!event.getFromDate().equals(eventToUpdate.getFromDate())
 				|| !event.getToDate().equals(eventToUpdate.getToDate())) {
@@ -87,9 +89,11 @@ public class EventServiceImpl implements EventService {
 				}
 			}
 		}
-		if(!ready) {
-			//vratiti ljudima novac jer je dogadaj otkazan
+
+		if (!ready) {
+			// vratiti ljudima novac jer je dogadaj otkazan
 		}
+
 		eventToUpdate = this.prepareEventFields(eventToUpdate, event);
 		return this.eventRepository.save(eventToUpdate);
 	}
@@ -152,7 +156,7 @@ public class EventServiceImpl implements EventService {
 				} else if (eventToUpdate.getEventState().equals(EventState.AVAILABLE)
 						&& eventToUpdate.getFromDate().before(new Date())) {
 					throw new BadEventStateException("Event state can not be available!");
-				} 
+				}
 			} else if (event.getEventState().equals(EventState.AVAILABLE)) {
 
 				if (!eventToUpdate.getEventState().equals(EventState.CANCELED)) {
