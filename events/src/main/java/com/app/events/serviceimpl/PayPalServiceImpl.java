@@ -8,10 +8,12 @@ import java.util.Map;
 import com.app.events.service.PayPalService;
 import com.paypal.api.payments.Amount;
 import com.paypal.api.payments.Item;
+import com.paypal.api.payments.ItemList;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payer;
 import com.paypal.api.payments.Payment;
 import com.paypal.api.payments.PaymentExecution;
+import com.paypal.api.payments.RedirectUrls;
 import com.paypal.api.payments.Transaction;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
@@ -31,6 +33,12 @@ public class PayPalServiceImpl implements PayPalService {
     @Value("${paypal.client.secret}")
     private String clientSecret;
 
+    @Value("${paypal.client.route.success}")
+    private String frontEndPayPalSuccessRoute;
+
+    @Value("${paypal.client.route.fail}")
+    private String frontEndPayPalFailRoute;
+
     @Override
     public Payment createPaymentObject(long TicketId, double price) {
         Amount amount = new Amount();
@@ -40,8 +48,20 @@ public class PayPalServiceImpl implements PayPalService {
         Item item = new Item();
         item.setDescription("KTSNVT - Reservation");
         item.setName(String.valueOf(TicketId));
+        item.setPrice(String.valueOf(price));
+        item.setCurrency("USD");
+        item.setQuantity("1");
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
+
+
+        transaction.setItemList(new ItemList());
+        transaction.getItemList().setItems(new ArrayList<Item>());
+
+        System.out.println(transaction.getItemList());
+        System.out.println(transaction.getItemList().getItems());
+        System.out.println(item);
+
         transaction.getItemList().getItems().add(item);
         List<Transaction> transactions = new ArrayList<>();
         transactions.add(transaction);
@@ -53,6 +73,12 @@ public class PayPalServiceImpl implements PayPalService {
         payment.setIntent("sale");
         payment.setPayer(payer);
         payment.setTransactions(transactions);
+
+        RedirectUrls redirectUrls = new RedirectUrls();
+        redirectUrls.setCancelUrl(frontEndPayPalFailRoute);
+        redirectUrls.setReturnUrl(frontEndPayPalSuccessRoute);
+        payment.setRedirectUrls(redirectUrls);
+
         return payment;
     }
 
@@ -73,6 +99,8 @@ public class PayPalServiceImpl implements PayPalService {
                         break;
                     }
                 }
+                // return url with token for paypal payment..
+                
                 response.put("status", "success");
                 response.put("redirect_url", redirectUrl);
             }

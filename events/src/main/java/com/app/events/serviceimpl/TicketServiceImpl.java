@@ -1,7 +1,9 @@
 package com.app.events.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.TicketReservationException;
 import com.app.events.model.Event;
@@ -21,6 +24,7 @@ import com.app.events.model.TicketState;
 import com.app.events.model.User;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.EventService;
+import com.app.events.service.PayPalService;
 import com.app.events.service.SeatService;
 import com.app.events.service.SectorCapacityService;
 import com.app.events.service.SectorService;
@@ -47,6 +51,9 @@ public class TicketServiceImpl implements TicketService {
 	
 	@Autowired
 	private SectorCapacityService sectorCapacityService;
+
+	@Autowired
+	private PayPalService payPalService;
 
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
@@ -77,12 +84,30 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public Ticket buyTicket(Long id, Long userId) throws Exception {
+	public Map<String,Object> ticketPaymentCreation(Long id, Long userId) throws Exception{
+
 		Ticket ticketToUpdate = findOne(id);
-		ticketToUpdate.setTicketState(TicketState.BOUGHT);
-		if(ticketToUpdate.getUser().getId() == userId)
+		if(ticketToUpdate.getTicketState().equals(TicketState.BOUGHT) && (ticketToUpdate.getUser().getId() == userId))
 		{
-			return ticketRepository.save(ticketToUpdate);
+			return null;
+		}
+		//:TODO add to ticket price so payment can be proceded
+		return payPalService.startPayment(ticketToUpdate.getId(), 1000);
+	}
+
+
+	@Override
+	public Ticket buyTicket(TicketDTO ticketDTO) throws Exception {
+		Ticket ticketToUpdate = findOne(ticketDTO.getId());
+		ticketToUpdate.setTicketState(TicketState.BOUGHT);
+		if(ticketToUpdate.getUser().getId() == ticketDTO.getUserId())
+		{
+			boolean payed = payPalService.completedPayment(ticketDTO.getPayPalPaymentID(), ticketDTO.getPayPalPayerID());
+			if(payed)
+			{
+				return ticketRepository.save(ticketToUpdate);
+			}
+			return null;
 		}
 		else{
 			return null;
