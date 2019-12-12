@@ -98,7 +98,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId) throws Exception {
+	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception {
 		Event savedEvent = eventService.findOne(eventId);
 		Map<Long, PriceList> priceListMap = priceLists.stream()
 				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
@@ -117,7 +117,8 @@ public class TicketServiceImpl implements TicketService {
 				} else {
 					int capacity = s.getSectorCapacities().iterator().next().getCapacity();
 					if (capacity < 1) {
-						eventService.delete(eventId);
+						if(!update)
+							eventService.delete(eventId);
 						throw new SectorCapacatyMustBePositiveNumberException();
 					}
 					SectorCapacity sc = sectorCapacityService

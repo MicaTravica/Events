@@ -11,6 +11,7 @@ import com.app.events.exception.CollectionIsEmptyException;
 import com.app.events.exception.DateException;
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.SectorCapacatyMustBePositiveNumberException;
+import com.app.events.exception.SectorIsNotInThisHallException;
 import com.app.events.exception.SectorPriceListException;
 import com.app.events.exception.TicketIsBoughtException;
 
@@ -37,7 +38,8 @@ public abstract class BaseController {
 
 	@ExceptionHandler({ ResourceExistsException.class, DateException.class,
 			SectorCapacatyMustBePositiveNumberException.class, TicketIsBoughtException.class,
-			CollectionIsEmptyException.class, BadEventStateException.class, SectorPriceListException.class })
+			CollectionIsEmptyException.class, BadEventStateException.class, SectorPriceListException.class,
+			SectorIsNotInThisHallException.class })
 	public ResponseEntity<String> badRequest(Exception e) {
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}

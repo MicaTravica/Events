@@ -15,6 +15,7 @@ public class SectorConstants {
     public static final Long PERSISTED_SECTOR_HALL_ID = 1l;
 
     public static final Long PERSISTED_SECTOR_ID2 = 2l;
+    public static final Long PERSISTED_SECTOR_ID3 = 3l;
     /*
         constants for pesisting new sector in db
     */

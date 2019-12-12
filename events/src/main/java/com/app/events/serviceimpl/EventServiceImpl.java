@@ -155,10 +155,10 @@ public class EventServiceImpl implements EventService {
 		}
 		for (Sector s : sectors) {
 			Sector sector = sectorService.findOne(s.getId());
-			if (priceListMap.get(s.getId()) == null)
-				throw new SectorPriceListException();
 			if (sector.getHall().getId() != hallId)
 				throw new SectorIsNotInThisHallException();
+			if (priceListMap.get(s.getId()) == null)
+				throw new SectorPriceListException();
 		}
 	}
 

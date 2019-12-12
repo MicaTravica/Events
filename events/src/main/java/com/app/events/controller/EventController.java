@@ -54,7 +54,7 @@ public class EventController extends BaseController {
 		Set<PriceList> priceLists = event.getPriceLists();
 		Event savedEvent = eventService.create(event);
 		mediaService.createMedias(mediaList, savedEvent.getId());
-		ticketService.createTickets(halls, priceLists, savedEvent.getId());
+		ticketService.createTickets(halls, priceLists, savedEvent.getId(), false);
 		return new ResponseEntity<>(EventMapper.toDTO(savedEvent), HttpStatus.CREATED);
 	}
 
@@ -73,7 +73,7 @@ public class EventController extends BaseController {
 		Set<Hall> halls = event.getHalls();
 		Set<PriceList> priceLists = event.getPriceLists();
 		ticketService.deleteTicketsByEventId(updatedEvent.getId());
-		ticketService.createTickets(halls, priceLists, updatedEvent.getId());
+		ticketService.createTickets(halls, priceLists, updatedEvent.getId(), true);
 		return new ResponseEntity<>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
 	}
 

@@ -12,6 +12,7 @@ public class HallConstants {
     public static final String PERSISTED_HALL_NAME = "sala1";
     public static final Long PERSISTED_HALL_PLACE_ID  = 1l;
 
+    public static final Long PERSISTED_HALL_ID2 = 2l;
     /*
         constants for pesisting new hall in db
     */

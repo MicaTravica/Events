@@ -21,8 +21,8 @@ public interface TicketService {
 
 	public boolean ticketForEventIsSale(Long id);
 
-	void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId) throws Exception;
-
 	public void deleteTicketsByEventId(Long id);
+
+	void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception;
 
 }
