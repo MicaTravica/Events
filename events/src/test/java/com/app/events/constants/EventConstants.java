@@ -19,9 +19,8 @@ public class EventConstants {
 	public static final String PERSISTED_EVENT_DESCRIPTION = "dfa";
 	public static final EventState PERSISTED_EVENT_EVENT_STATE = EventState.AVAILABLE;
 	public static final EventType PERSISTED_EVENT_EVENT_TYPE = EventType.SPORT;
-	public static final Date PERSISTED_EVENT_FROM_DATE = new GregorianCalendar(2020, Calendar.JANUARY, 1, 1, 0)
-			.getTime();
-	public static final Date PERSISTED_EVENT_TO_DATE = new GregorianCalendar(2020, Calendar.JANUARY, 2, 1, 0).getTime();
+	public static final Date PERSISTED_EVENT_FROM_DATE = new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime();
+	public static final Date PERSISTED_EVENT_TO_DATE = new GregorianCalendar(2020, Calendar.JANUARY, 2).getTime();
 
 	public static final Long PERSISTED_EVENT_ID2 = 2l;
 	public static final Date PERSISTED_EVENT_FROM_DATE2 = new GregorianCalendar(2021, Calendar.JANUARY, 1, 1, 0)

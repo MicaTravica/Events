@@ -72,7 +72,7 @@ public class HallControllerIntegrationTest {
     @Test
     public void foundHall_when_Invalid_ID_then_return_NotFound() throws Exception{
         
-        URI uri = new URI(HallConstans.URI_PREFIX + HallConstans.INVALID_HALL_ID);
+        URI uri = new URI(HallConstants.URI_PREFIX + HallConstants.INVALID_HALL_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<String> req = new HttpEntity<>(headers);
@@ -95,7 +95,7 @@ public class HallControllerIntegrationTest {
         
         HallDTO content = HallMapper.toDTO(hall);
 
-        URI uri = new URI(HallConstans.URI_PREFIX);
+        URI uri = new URI(HallConstants.URI_PREFIX);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<HallDTO> req = new HttpEntity<>(content, headers);
@@ -127,7 +127,7 @@ public class HallControllerIntegrationTest {
         
         HallDTO content = HallMapper.toDTO(hall);
 
-        URI uri = new URI(HallConstans.URI_PREFIX);
+        URI uri = new URI(HallConstants.URI_PREFIX);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<HallDTO> req = new HttpEntity<>(content, headers);

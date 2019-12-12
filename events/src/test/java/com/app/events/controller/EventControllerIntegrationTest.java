@@ -295,6 +295,7 @@ public class EventControllerIntegrationTest {
 
 		ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
 		String message = (String) response.getBody();
+		System.out.println(response.getBody());
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		assertEquals("Sector capacity must be positiv number!", message);
 	}
