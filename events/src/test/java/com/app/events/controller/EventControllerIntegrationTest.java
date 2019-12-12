@@ -101,7 +101,7 @@ public class EventControllerIntegrationTest {
 
 		HashSet<PriceListDTO> priceLists = new HashSet<>();
 		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID));
-		
+
 		EventDTO event = new EventDTO(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
 				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.NEW_EVENT_FROM_DATE,
 				EventConstants.NEW_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
@@ -142,7 +142,7 @@ public class EventControllerIntegrationTest {
 
 		HashSet<PriceListDTO> priceLists = new HashSet<>();
 		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID));
-		
+
 		EventDTO event = new EventDTO(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
 				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.EVENT_FROM_DATE_BAD,
 				EventConstants.EVENT_TO_DATE_BAD, EventConstants.NEW_EVENT_EVENT_STATE,
@@ -177,7 +177,7 @@ public class EventControllerIntegrationTest {
 
 		HashSet<PriceListDTO> priceLists = new HashSet<>();
 		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID));
-		
+
 		EventDTO event = new EventDTO(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
 				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.PERSISTED_EVENT_FROM_DATE,
 				EventConstants.PERSISTED_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
@@ -189,7 +189,10 @@ public class EventControllerIntegrationTest {
 
 		ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
 
+		String message = (String) response.getBody();
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertEquals("Hall is not available in desired period", message);
+
 	}
 
 	@Test
@@ -210,7 +213,7 @@ public class EventControllerIntegrationTest {
 
 		HashSet<PriceListDTO> priceLists = new HashSet<>();
 		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID));
-		
+
 		EventDTO event = new EventDTO(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
 				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.NEW_EVENT_FROM_DATE,
 				EventConstants.NEW_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
@@ -222,7 +225,9 @@ public class EventControllerIntegrationTest {
 
 		ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
 
+		String message = (String) response.getBody();
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		assertEquals("Hall is not found!", message);
 	}
 
 	@Test
@@ -243,7 +248,7 @@ public class EventControllerIntegrationTest {
 
 		HashSet<PriceListDTO> priceLists = new HashSet<>();
 		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID));
-		
+
 		EventDTO event = new EventDTO(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
 				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.NEW_EVENT_FROM_DATE,
 				EventConstants.NEW_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
@@ -255,40 +260,107 @@ public class EventControllerIntegrationTest {
 
 		ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
 
+		String message = (String) response.getBody();
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+		assertEquals("Sector is not found!", message);
 	}
 
-//	@Test
-//	@Transactional
-//	@Rollback(true)
-//	public void create_throwsSectorCapacityCanNotBeZero() throws Exception {
-//		URI uri = new URI(EventConstants.URL_PREFIX);
-//
-//		HashSet<SectorDTO> sectors = new HashSet<>();
-//		sectors.add(new SectorDTO(SectorConstants.PERSISTED_SECTOR_ID2, "", 0, 0, 0, HallConstants.PERSISTED_HALL_ID));
-//
-//		HashSet<HallDTO> halls = new HashSet<>();
-//		halls.add(new HallDTO(HallConstants.PERSISTED_HALL_ID, HallConstants.PERSISTED_HALL_NAME,
-//				new PlaceDTO(HallConstants.PERSISTED_HALL_PLACE_ID, "", "", 0, 0), sectors));
-//
-//		HashSet<MediaDTO> mediaList = new HashSet<>();
-//		mediaList.add(new MediaDTO(null, MediaConstants.NEW_MEDIA_PATH, null));
-//
-//		HashSet<PriceListDTO> priceLists = new HashSet<>();
-//		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID));
-//		
-//		EventDTO event = new EventDTO(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
-//				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.NEW_EVENT_FROM_DATE,
-//				EventConstants.NEW_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
-//				EventConstants.NEW_EVENT_EVENT_TYPE, halls, priceLists, mediaList);
-//
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-//		HttpEntity<EventDTO> req = new HttpEntity<>(event, headers);
-//
-//		ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
-//
-//		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//	}
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void create_throwsSectorCapacityCanNotBeZero() throws Exception {
+		URI uri = new URI(EventConstants.URL_PREFIX);
+
+		HashSet<SectorDTO> sectors = new HashSet<>();
+		sectors.add(new SectorDTO(SectorConstants.PERSISTED_SECTOR_ID2, "", 0, 0, 0, HallConstants.PERSISTED_HALL_ID));
+
+		HashSet<HallDTO> halls = new HashSet<>();
+		halls.add(new HallDTO(HallConstants.PERSISTED_HALL_ID, HallConstants.PERSISTED_HALL_NAME,
+				new PlaceDTO(HallConstants.PERSISTED_HALL_PLACE_ID, "", "", 0, 0), sectors));
+
+		HashSet<MediaDTO> mediaList = new HashSet<>();
+		mediaList.add(new MediaDTO(null, MediaConstants.NEW_MEDIA_PATH, null));
+
+		HashSet<PriceListDTO> priceLists = new HashSet<>();
+		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID2));
+
+		EventDTO event = new EventDTO(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
+				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.NEW_EVENT_FROM_DATE,
+				EventConstants.NEW_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
+				EventConstants.NEW_EVENT_EVENT_TYPE, halls, priceLists, mediaList);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+		HttpEntity<EventDTO> req = new HttpEntity<>(event, headers);
+
+		ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
+		String message = (String) response.getBody();
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertEquals("Sector capacity must be positiv number!", message);
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void update_valid() throws Exception {
+		URI uri = new URI(EventConstants.URL_PREFIX);
+
+		EventDTO event = new EventDTO(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
+				EventConstants.UPDATE_EVENT_DESCRIPTION, EventConstants.UPDATE_EVENT_FROM_DATE,
+				EventConstants.UPDATE_EVENT_TO_DATE, EventConstants.UPDATE_EVENT_EVENT_STATE,
+				EventConstants.UPDATE_EVENT_EVENT_TYPE, new HashSet<>(), new HashSet<>(), new HashSet<>());
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+		HttpEntity<EventDTO> req = new HttpEntity<>(event, headers);
+
+		ResponseEntity<EventDTO> response = restTemplate.exchange(uri, HttpMethod.PUT, req, EventDTO.class);
+		EventDTO updated = response.getBody();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(EventConstants.PERSISTED_EVENT_ID, updated.getId());
+		assertEquals(EventConstants.UPDATE_EVENT_NAME, updated.getName());
+		assertEquals(EventConstants.UPDATE_EVENT_DESCRIPTION, updated.getDescription());
+		assertEquals(EventConstants.UPDATE_EVENT_FROM_DATE, updated.getFromDate());
+		assertEquals(EventConstants.UPDATE_EVENT_TO_DATE, updated.getToDate());
+		assertEquals(EventConstants.UPDATE_EVENT_EVENT_STATE, updated.getEventState());
+		assertEquals(EventConstants.UPDATE_EVENT_EVENT_TYPE, updated.getEventType());
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void updateHall_valid() throws Exception {
+		URI uri = new URI(EventConstants.URL_PREFIX + "/hall");
+
+		HashSet<SectorDTO> sectors = new HashSet<>();
+		sectors.add(new SectorDTO(SectorConstants.PERSISTED_SECTOR_ID, "", 0, 0, 0, HallConstants.PERSISTED_HALL_ID));
+
+		HashSet<HallDTO> halls = new HashSet<>();
+		halls.add(new HallDTO(HallConstants.PERSISTED_HALL_ID, HallConstants.PERSISTED_HALL_NAME,
+				new PlaceDTO(HallConstants.PERSISTED_HALL_PLACE_ID, "", "", 0, 0), sectors));
+
+		HashSet<MediaDTO> mediaList = new HashSet<>();
+		mediaList.add(new MediaDTO(null, MediaConstants.NEW_MEDIA_PATH, null));
+
+		HashSet<PriceListDTO> priceLists = new HashSet<>();
+		priceLists.add(new PriceListDTO(null, 100.0, null, SectorConstants.PERSISTED_SECTOR_ID));
+
+		EventDTO event = new EventDTO(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
+				EventConstants.UPDATE_EVENT_DESCRIPTION, EventConstants.UPDATE_EVENT_FROM_DATE,
+				EventConstants.UPDATE_EVENT_TO_DATE, EventConstants.UPDATE_EVENT_EVENT_STATE,
+				EventConstants.UPDATE_EVENT_EVENT_TYPE, halls, priceLists, mediaList);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+		HttpEntity<EventDTO> req = new HttpEntity<>(event, headers);
+
+		ResponseEntity<EventDTO> response = restTemplate.exchange(uri, HttpMethod.PUT, req, EventDTO.class);
+		EventDTO updated = response.getBody();
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertEquals(EventConstants.PERSISTED_EVENT_ID, updated.getId());
+		assertEquals(halls.size(), updated.getHalls().size());
+	}
 
 }

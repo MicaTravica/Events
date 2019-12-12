@@ -25,9 +25,11 @@ import com.app.events.exception.BadEventStateException;
 import com.app.events.exception.CollectionIsEmptyException;
 import com.app.events.exception.DateException;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.SectorPriceListException;
 import com.app.events.exception.TicketIsBoughtException;
 import com.app.events.model.Event;
 import com.app.events.model.Hall;
+import com.app.events.model.PriceList;
 import com.app.events.model.Sector;
 import com.app.events.repository.EventRepository;
 import com.app.events.service.EventService;
@@ -61,7 +63,8 @@ public class EventServiceImplIntegrationTest {
 	@Rollback(true)
 	public void create_valid() throws Exception {
 		HashSet<Sector> sectors = new HashSet<>();
-		sectors.add(new Sector(SectorConstants.PERSISTED_SECTOR_ID));
+		Sector sector = new Sector(SectorConstants.PERSISTED_SECTOR_ID);
+		sectors.add(sector);
 
 		Hall hall = new Hall(HallConstants.PERSISTED_HALL_ID);
 		hall.setSectors(sectors);
@@ -69,10 +72,12 @@ public class EventServiceImplIntegrationTest {
 		HashSet<Hall> halls = new HashSet<>();
 		halls.add(hall);
 
+		HashSet<PriceList> priceList = new HashSet<>();
+		priceList.add(new PriceList(null, 100, null, sector));
 		Event event = new Event(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
 				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.NEW_EVENT_FROM_DATE,
 				EventConstants.NEW_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
-				EventConstants.NEW_EVENT_EVENT_TYPE, halls, new HashSet<>(), new HashSet<>());
+				EventConstants.NEW_EVENT_EVENT_TYPE, halls, priceList, new HashSet<>());
 		Event created = eventService.create(event);
 
 		assertNotNull(created.getId());
@@ -215,6 +220,27 @@ public class EventServiceImplIntegrationTest {
 	@Test
 	@Transactional
 	@Rollback(true)
+	public void create_throwsSectorPriceListException() {
+		HashSet<Sector> sectors = new HashSet<>();
+		Sector sector = new Sector(SectorConstants.PERSISTED_SECTOR_ID);
+		sectors.add(sector);
+
+		Hall hall = new Hall(HallConstants.PERSISTED_HALL_ID);
+		hall.setSectors(sectors);
+
+		HashSet<Hall> halls = new HashSet<>();
+		halls.add(hall);
+		Event event = new Event(EventConstants.NEW_EVENT_ID, EventConstants.NEW_EVENT_NAME,
+				EventConstants.NEW_EVENT_DESCRIPTION, EventConstants.NEW_EVENT_FROM_DATE,
+				EventConstants.NEW_EVENT_TO_DATE, EventConstants.NEW_EVENT_EVENT_STATE,
+				EventConstants.NEW_EVENT_EVENT_TYPE, halls, new HashSet<>(), new HashSet<>());
+
+		assertThrows(SectorPriceListException.class, () -> eventService.create(event));
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
 	public void update_valid() throws Exception {
 		Event event = new Event(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
 				EventConstants.UPDATE_EVENT_DESCRIPTION, EventConstants.UPDATE_EVENT_FROM_DATE,
@@ -284,7 +310,8 @@ public class EventServiceImplIntegrationTest {
 	@Rollback(true)
 	public void updateHall_valid() throws Exception {
 		HashSet<Sector> sectors = new HashSet<>();
-		sectors.add(new Sector(SectorConstants.PERSISTED_SECTOR_ID));
+		Sector sector = new Sector(SectorConstants.PERSISTED_SECTOR_ID);
+		sectors.add(sector);
 
 		Hall hall = new Hall(HallConstants.PERSISTED_HALL_ID);
 		hall.setSectors(sectors);
@@ -292,10 +319,12 @@ public class EventServiceImplIntegrationTest {
 		HashSet<Hall> halls = new HashSet<>();
 		halls.add(hall);
 
+		HashSet<PriceList> priceList = new HashSet<>();
+		priceList.add(new PriceList(null, 100, null, sector));
 		Event event = new Event(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
 				EventConstants.UPDATE_EVENT_DESCRIPTION, EventConstants.UPDATE_EVENT_FROM_DATE,
 				EventConstants.UPDATE_EVENT_TO_DATE, EventConstants.UPDATE_EVENT_EVENT_STATE,
-				EventConstants.UPDATE_EVENT_EVENT_TYPE, halls, new HashSet<>(), new HashSet<>());
+				EventConstants.UPDATE_EVENT_EVENT_TYPE, halls, priceList, new HashSet<>());
 		Event updated = eventService.updateHall(event);
 
 		assertNotNull(updated.getId());
@@ -383,9 +412,9 @@ public class EventServiceImplIntegrationTest {
 
 		HashSet<Hall> halls = new HashSet<>();
 		halls.add(hall);
-		Event event = new Event(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
-				EventConstants.UPDATE_EVENT_DESCRIPTION, EventConstants.PERSISTED_EVENT_FROM_DATE2,
-				EventConstants.PERSISTED_EVENT_TO_DATE2, EventConstants.UPDATE_EVENT_EVENT_STATE,
+		Event event = new Event(EventConstants.PERSISTED_EVENT_ID2, EventConstants.UPDATE_EVENT_NAME,
+				EventConstants.UPDATE_EVENT_DESCRIPTION, EventConstants.PERSISTED_EVENT_FROM_DATE,
+				EventConstants.PERSISTED_EVENT_TO_DATE, EventConstants.UPDATE_EVENT_EVENT_STATE,
 				EventConstants.UPDATE_EVENT_EVENT_TYPE, halls, new HashSet<>(), new HashSet<>());
 
 		assertThrows(DateException.class, () -> eventService.updateHall(event));
@@ -428,6 +457,27 @@ public class EventServiceImplIntegrationTest {
 				EventConstants.UPDATE_EVENT_EVENT_TYPE, halls, new HashSet<>(), new HashSet<>());
 
 		assertThrows(ResourceNotFoundException.class, () -> eventService.updateHall(event));
+	}
+
+	@Test
+	@Transactional
+	@Rollback(true)
+	public void updateHall_throwsSectorPriceListException() {
+		HashSet<Sector> sectors = new HashSet<>();
+		Sector sector = new Sector(SectorConstants.PERSISTED_SECTOR_ID);
+		sectors.add(sector);
+
+		Hall hall = new Hall(HallConstants.PERSISTED_HALL_ID);
+		hall.setSectors(sectors);
+
+		HashSet<Hall> halls = new HashSet<>();
+		halls.add(hall);
+		Event event = new Event(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
+				EventConstants.UPDATE_EVENT_DESCRIPTION, EventConstants.UPDATE_EVENT_FROM_DATE,
+				EventConstants.UPDATE_EVENT_TO_DATE, EventConstants.UPDATE_EVENT_EVENT_STATE,
+				EventConstants.UPDATE_EVENT_EVENT_TYPE, halls, new HashSet<>(), new HashSet<>());
+
+		assertThrows(SectorPriceListException.class, () -> eventService.updateHall(event));
 	}
 
 	@Test

@@ -29,11 +29,13 @@ import com.app.events.exception.BadEventStateException;
 import com.app.events.exception.CollectionIsEmptyException;
 import com.app.events.exception.DateException;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.SectorPriceListException;
 import com.app.events.exception.TicketIsBoughtException;
 import com.app.events.model.Event;
 import com.app.events.model.EventState;
 import com.app.events.model.EventType;
 import com.app.events.model.Hall;
+import com.app.events.model.PriceList;
 import com.app.events.model.Sector;
 import com.app.events.repository.EventRepository;
 import com.app.events.service.EventService;
@@ -68,8 +70,9 @@ public class EventServiceImplUnitTest {
 	public static Event EVENT_CREATE_UPDATE5;
 	public static Event EVENT_CREATE_UPDATE6;
 	public static Event EVENT_CREATE_UPDATE7;
-	public static Event EVENT_UPDATE8;
+	public static Event EVENT_CREATE_UPDATE8;
 	public static Event EVENT_UPDATE9;
+	public static Event EVENT_UPDATE10;
 
 	public static Event EVENT_CREATED;
 
@@ -90,14 +93,14 @@ public class EventServiceImplUnitTest {
 
 	@Before
 	public void setUp() throws ResourceNotFoundException {
-
-		SECTOR_FOR_EVENT = new Sector(1L);
+		SECTOR_FOR_EVENT = new Sector(1L, "sektor", 2, 2, null, new HashSet<>(), new HashSet<>(), new HashSet<>());
 
 		HashSet<Sector> sectors = new HashSet<>();
 		sectors.add(SECTOR_FOR_EVENT);
 
 		HALL_FOR_EVENT = new Hall(1L, "hala1");
 		HALL_FOR_EVENT.setSectors(sectors);
+		SECTOR_FOR_EVENT.setHall(HALL_FOR_EVENT);
 		HALL_FOR_EVENT2 = new Hall(2L, "hala2");
 		HALL_FOR_EVENT3 = new Hall(3L, "hala3");
 		HALL_FOR_EVENT4 = new Hall(4L, "hala4");
@@ -112,55 +115,60 @@ public class EventServiceImplUnitTest {
 		HashSet<Hall> halls4 = new HashSet<>();
 		halls4.add(HALL_FOR_EVENT4);
 
+		HashSet<PriceList> priceList = new HashSet<>();
+		priceList.add(new PriceList(null, 100, null, SECTOR_FOR_EVENT));
+
 		Date date = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		c.add(Calendar.DATE, 1);
 		date = c.getTime();
 		EVENT_VALID = new Event(1L, "Dogadjaj", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
-				EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventType.SPORT, halls, priceList, new HashSet<>());
 
 		EVENT_CREATE = new Event(null, "Kreirani dogadjaj", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
-				EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventType.SPORT, halls, priceList, new HashSet<>());
 		EVENT_TO_UPDATE = new Event(3L, "dogadjaj", "Jako lepo", new Date(), new Date(), EventState.NOT_AVAILABLE,
-				EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventType.SPORT, halls, priceList, new HashSet<>());
 		EVENT_TO_UPDATE2 = new Event(4L, "dogadjaj", "Jako lepo", new Date(), new Date(), EventState.NOT_AVAILABLE,
-				EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventType.SPORT, halls, priceList, new HashSet<>());
 		EVENT_UPDATE = new Event(EVENT_TO_UPDATE.getId(), "Izmenjeni dogadjaj", "Jako lep", date, date,
-				EventState.AVAILABLE, EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventState.AVAILABLE, EventType.SPORT, halls, priceList, new HashSet<>());
 		EVENT_UPDATE_SAVED = new Event(EVENT_TO_UPDATE.getId(), EVENT_UPDATE.getName(), EVENT_UPDATE.getDescription(),
 				EVENT_UPDATE.getFromDate(), EVENT_UPDATE.getToDate(), EVENT_UPDATE.getEventState(),
 				EVENT_UPDATE.getEventType(), EVENT_TO_UPDATE.getHalls(), EVENT_TO_UPDATE.getPriceLists(),
 				EVENT_TO_UPDATE.getMediaList());
 		EVENT_CREATED = new Event(2L, "Kreirani dogadjaj", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
-				EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventType.SPORT, halls, priceList, new HashSet<>());
 
 		EVENT_CREATE_UPDATE1 = new Event(EVENT_TO_UPDATE.getId(), "Dogadjaj1", "Jako lepo", null, null,
-				EventState.AVAILABLE, EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventState.AVAILABLE, EventType.SPORT, halls, priceList, new HashSet<>());
 		EVENT_CREATE_UPDATE2 = new Event(EVENT_TO_UPDATE.getId(), "Dogadjaj2", "Jako lepo", new Date(), new Date(),
-				EventState.FINISHED, EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
+				EventState.FINISHED, EventType.SPORT, halls, priceList, new HashSet<>());
 		EVENT_CREATE_UPDATE3 = new Event(EVENT_TO_UPDATE.getId(), "Dogadjaj3", "Jako lepo", new Date(), new Date(),
 				EventState.AVAILABLE, EventType.SPORT, new HashSet<>(), new HashSet<>(), new HashSet<>());
 		EVENT_CREATE_UPDATE4 = new Event(EVENT_TO_UPDATE.getId(), "Dogadjaj4", "Jako lepo", new Date(), new Date(),
-				EventState.AVAILABLE, EventType.SPORT, halls2, new HashSet<>(), new HashSet<>());
+				EventState.AVAILABLE, EventType.SPORT, halls2, priceList, new HashSet<>());
 		EVENT_CREATE_UPDATE5 = new Event(EVENT_TO_UPDATE2.getId(), "Dogadjaj5", "Jako lepo", date, date,
-				EventState.AVAILABLE, EventType.SPORT, halls3, new HashSet<>(), new HashSet<>());
+				EventState.AVAILABLE, EventType.SPORT, halls3, priceList, new HashSet<>());
 		EVENT_CREATE_UPDATE6 = new Event(EVENT_TO_UPDATE.getId(), "Dogadjaj6", "Jako lepo", new Date(), new Date(),
-				EventState.AVAILABLE, EventType.SPORT, halls4, new HashSet<>(), new HashSet<>());
+				EventState.AVAILABLE, EventType.SPORT, halls4, priceList, new HashSet<>());
 		EVENT_CREATE_UPDATE7 = new Event(EVENT_TO_UPDATE.getId(), "Dogadjaj7", "Jako lepo", new Date(), new Date(),
+				EventState.AVAILABLE, EventType.SPORT, halls, priceList, new HashSet<>());
+		EVENT_CREATE_UPDATE8 = new Event(EVENT_TO_UPDATE.getId(), "Dogadjaj8", "Jako lepo", new Date(), new Date(),
 				EventState.AVAILABLE, EventType.SPORT, halls, new HashSet<>(), new HashSet<>());
-		EVENT_UPDATE8 = new Event(-1L, "Dogadjaj8", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
-				EventType.SPORT, halls3, new HashSet<>(), new HashSet<>());
-		EVENT_UPDATE9 = new Event(5L, "Dogadjaj9", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
-				EventType.SPORT, halls3, new HashSet<>(), new HashSet<>());
+		EVENT_UPDATE9 = new Event(-1L, "Dogadjaj9", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
+				EventType.SPORT, halls3, priceList, new HashSet<>());
+		EVENT_UPDATE10 = new Event(5L, "Dogadjaj10", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
+				EventType.SPORT, halls3, priceList, new HashSet<>());
 
 		Mockito.when(eventRepositoryMocked.findById(EVENT_VALID.getId())).thenReturn(Optional.of(EVENT_VALID));
 		Mockito.when(eventRepositoryMocked.findById(EVENT_UPDATE.getId())).thenReturn(Optional.of(EVENT_TO_UPDATE));
 		Mockito.when(eventRepositoryMocked.findById(EVENT_CREATE_UPDATE5.getId()))
 				.thenReturn(Optional.of(EVENT_TO_UPDATE2));
-		Mockito.when(eventRepositoryMocked.findById(EVENT_UPDATE9.getId())).thenReturn(Optional.of(EVENT_UPDATE9));
+		Mockito.when(eventRepositoryMocked.findById(EVENT_UPDATE10.getId())).thenReturn(Optional.of(EVENT_UPDATE10));
 
-		Mockito.when(ticketService.ticketForEventIsSale(EVENT_UPDATE9.getId())).thenReturn(true);
+		Mockito.when(ticketService.ticketForEventIsSale(EVENT_UPDATE10.getId())).thenReturn(true);
 
 		Mockito.when(sectorService.findOne(SECTOR_FOR_EVENT.getId())).thenReturn(SECTOR_FOR_EVENT);
 
@@ -180,9 +188,14 @@ public class EventServiceImplUnitTest {
 				EVENT_CREATE_UPDATE6.getToDate())).thenReturn(false);
 		Mockito.when(eventRepositoryMocked.hallHaveEvent(HALL_FOR_EVENT.getId(), EVENT_CREATE_UPDATE7.getFromDate(),
 				EVENT_CREATE_UPDATE7.getToDate())).thenReturn(false);
+		Mockito.when(eventRepositoryMocked.hallHaveEvent(HALL_FOR_EVENT.getId(), EVENT_CREATE_UPDATE8.getFromDate(),
+				EVENT_CREATE_UPDATE8.getToDate())).thenReturn(false);
 
 		Mockito.when(eventRepositoryMocked.hallHaveEventUpdate(HALL_FOR_EVENT.getId(), EVENT_UPDATE.getFromDate(),
 				EVENT_UPDATE.getToDate(), EVENT_UPDATE.getId())).thenReturn(false);
+		Mockito.when(eventRepositoryMocked.hallHaveEventUpdate(HALL_FOR_EVENT.getId(),
+				EVENT_CREATE_UPDATE8.getFromDate(), EVENT_CREATE_UPDATE8.getToDate(), EVENT_CREATE_UPDATE8.getId()))
+				.thenReturn(false);
 		Mockito.when(eventRepositoryMocked.hallHaveEventUpdate(HALL_FOR_EVENT3.getId(),
 				EVENT_CREATE_UPDATE5.getFromDate(), EVENT_CREATE_UPDATE5.getToDate(), EVENT_CREATE_UPDATE5.getId()))
 				.thenReturn(true);
@@ -260,6 +273,11 @@ public class EventServiceImplUnitTest {
 	}
 
 	@Test
+	public void create_throwsSectorPriceListException() {
+		assertThrows(SectorPriceListException.class, () -> eventService.create(EVENT_CREATE_UPDATE8));
+	}
+
+	@Test
 	public void update_valid() throws Exception {
 		Event updated = eventService.update(EVENT_UPDATE);
 
@@ -274,7 +292,7 @@ public class EventServiceImplUnitTest {
 
 	@Test
 	public void update_throwsResourceNotFoundException_badEvent() {
-		assertThrows(ResourceNotFoundException.class, () -> eventService.update(EVENT_UPDATE8));
+		assertThrows(ResourceNotFoundException.class, () -> eventService.update(EVENT_UPDATE9));
 	}
 
 	@Test
@@ -302,12 +320,12 @@ public class EventServiceImplUnitTest {
 
 	@Test
 	public void updateHall_throwsResourceNotFoundException_badEvent() {
-		assertThrows(ResourceNotFoundException.class, () -> eventService.updateHall(EVENT_UPDATE8));
+		assertThrows(ResourceNotFoundException.class, () -> eventService.updateHall(EVENT_UPDATE9));
 	}
 
 	@Test
 	public void updateHall_throwsTicketIsBoughtException() {
-		assertThrows(TicketIsBoughtException.class, () -> eventService.updateHall(EVENT_UPDATE9));
+		assertThrows(TicketIsBoughtException.class, () -> eventService.updateHall(EVENT_UPDATE10));
 	}
 
 	@Test
@@ -326,17 +344,22 @@ public class EventServiceImplUnitTest {
 	}
 
 	@Test
-	public void createHall_throwsCollectionIsEmptyException_sectors() {
+	public void updateHall_throwsCollectionIsEmptyException_sectors() {
 		assertThrows(CollectionIsEmptyException.class, () -> eventService.updateHall(EVENT_CREATE_UPDATE6));
 	}
-	
+
+	@Test
+	public void updateHall_throwsSectorPriceListException() {
+		assertThrows(SectorPriceListException.class, () -> eventService.updateHall(EVENT_CREATE_UPDATE8));
+	}
+
 	@Test
 	public void delete_valid() throws ResourceNotFoundException {
 		eventService.delete(EVENT_VALID.getId());
-		
+
 		verify(eventRepositoryMocked, atMostOnce()).deleteById(EVENT_VALID.getId());
 	}
-	
+
 	@Test
 	public void delete_throwsResourceNotFoundException() {
 		assertThrows(ResourceNotFoundException.class, () -> eventService.delete(EVENT_INVALID_ID));

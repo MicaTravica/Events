@@ -102,8 +102,6 @@ public class TicketServiceImpl implements TicketService {
 		Event savedEvent = eventService.findOne(eventId);
 		Map<Long, PriceList> priceListMap = priceLists.stream()
 				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
-//		if (checkSectorHavePriceList(halls, priceListMap))
-//			throw new SectorPriceListException();
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		for (Hall h : halls) {
 			for (Sector s : h.getSectors()) {

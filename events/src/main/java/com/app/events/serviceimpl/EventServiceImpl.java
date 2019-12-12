@@ -3,7 +3,9 @@ package com.app.events.serviceimpl;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,13 @@ import com.app.events.exception.BadEventStateException;
 import com.app.events.exception.CollectionIsEmptyException;
 import com.app.events.exception.DateException;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.SectorIsNotInThisHallException;
+import com.app.events.exception.SectorPriceListException;
 import com.app.events.exception.TicketIsBoughtException;
 import com.app.events.model.Event;
 import com.app.events.model.EventState;
 import com.app.events.model.Hall;
+import com.app.events.model.PriceList;
 import com.app.events.model.Sector;
 import com.app.events.repository.EventRepository;
 import com.app.events.service.EventService;
@@ -57,12 +62,15 @@ public class EventServiceImpl implements EventService {
 		if (event.getHalls().isEmpty())
 			throw new CollectionIsEmptyException("hall");
 
+		Map<Long, PriceList> priceListMap = event.getPriceLists().stream()
+				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
 		for (Hall h : event.getHalls()) {
 			Hall ha = hallService.findOne(h.getId());
 			if (eventRepository.hallHaveEvent(ha.getId(), event.getFromDate(), event.getToDate())) {
 				throw new DateException("Hall is not available in desired period");
 			}
-			prepareForUpdateSectors(h.getSectors());
+			// proveriti da li je sektor u hali
+			prepareForUpdateSectors(ha.getId(), h.getSectors(), priceListMap);
 			halls.add(ha);
 		}
 		event.setHalls(halls);
@@ -108,13 +116,15 @@ public class EventServiceImpl implements EventService {
 		if (event.getHalls().isEmpty())
 			throw new CollectionIsEmptyException("hall");
 
+		Map<Long, PriceList> priceListMap = event.getPriceLists().stream()
+				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
 		for (Hall h : event.getHalls()) {
 			Hall ha = hallService.findOne(h.getId());
 			if (eventRepository.hallHaveEventUpdate(ha.getId(), eventToUpdate.getFromDate(), eventToUpdate.getToDate(),
 					eventToUpdate.getId())) {
 				throw new DateException("Hall is not available in desired period");
 			}
-			prepareForUpdateSectors(h.getSectors());
+			prepareForUpdateSectors(ha.getId(), h.getSectors(), priceListMap);
 			halls.add(ha);
 		}
 		return eventRepository.save(eventToUpdate);
@@ -138,12 +148,17 @@ public class EventServiceImpl implements EventService {
 		return toUpdate;
 	}
 
-	private void prepareForUpdateSectors(Collection<Sector> sectors) throws Exception {
+	private void prepareForUpdateSectors(Long hallId, Collection<Sector> sectors, Map<Long, PriceList> priceListMap)
+			throws Exception {
 		if (sectors.isEmpty()) {
 			throw new CollectionIsEmptyException("sector");
 		}
 		for (Sector s : sectors) {
-			sectorService.findOne(s.getId());
+			Sector sector = sectorService.findOne(s.getId());
+			if (priceListMap.get(s.getId()) == null)
+				throw new SectorPriceListException();
+			if (sector.getHall().getId() != hallId)
+				throw new SectorIsNotInThisHallException();
 		}
 	}
 

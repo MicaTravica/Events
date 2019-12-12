@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,8 +65,6 @@ public class EventController extends BaseController {
 		return new ResponseEntity<>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
 	}
 
-	//obrisati postojece karte za taj dogadjaj i kreirati nove
-	// obrisati postojece karte za taj dogadjaj i kreirati nove
 	@PutMapping(value = "/api/event/hall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<EventDTO> updateEventHall(@RequestBody EventDTO eventDTO) throws Exception {
@@ -78,14 +75,6 @@ public class EventController extends BaseController {
 		ticketService.deleteTicketsByEventId(updatedEvent.getId());
 		ticketService.createTickets(halls, priceLists, updatedEvent.getId());
 		return new ResponseEntity<>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
-	}
-
-	// sta sa ovim?
-	@DeleteMapping(value = "/api/event/{id}")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<EventDTO> deleteEvent(@PathVariable("id") Long id) {
-//		eventService.delete(id);
-		return new ResponseEntity<EventDTO>(HttpStatus.NO_CONTENT);
 	}
 
 }
