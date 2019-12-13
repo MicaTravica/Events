@@ -15,3 +15,8 @@ INSERT INTO `events_database`.`event` (`id`, `description`, `event_state`, `even
 INSERT INTO `events_database`.`event_hall` (`event_id`, `hall_id`) VALUES ('1', '1');
 
 INSERT INTO `events_database`.`ticket` (`id`, `bar_code`, `price`, `ticket_state`, `version`, `event_id`, `seat_id`) VALUES ('1', 'DFA', '100.00','AVAILABLE', '0', '1', '1');
+
+INSERT INTO `events_database`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('1', '100', '100', '1');
+INSERT INTO `events_database`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('2', '140', '140', '1');
+INSERT INTO `events_database`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('3', '110', '110', '1');
+INSERT INTO `events_database`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('4', '100', '100', '2');
