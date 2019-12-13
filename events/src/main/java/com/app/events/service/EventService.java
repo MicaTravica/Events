@@ -1,18 +1,19 @@
 package com.app.events.service;
 
-
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Event;
 
 public interface EventService {
-	
-	public Event findOne(Long id) throws ResourceNotFoundException;
 
-	public Event create(Event event) throws Exception;
+	Event findOne(Long id) throws ResourceNotFoundException;
 
-	public Event update(Event event) throws Exception;
-	
-	public Event prepareEventFields(Event toUpdate, Event newEvent);
+	Event create(Event event) throws Exception;
 
-	public void delete(Long id);
+	Event update(Event event) throws Exception;
+
+	Event prepareEventFields(Event toUpdate, Event newEvent);
+
+	void delete(Long id) throws ResourceNotFoundException;
+
+	Event updateHall(Event event) throws Exception;
 }
