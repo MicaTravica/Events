@@ -53,7 +53,7 @@ public class SectorServiceImplIntegrationTest {
         Sector s = new Sector(null, SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE,
                                     SectorConstants.PERSISTED_SECTOR_ROWS, 
                                     SectorConstants.PERSISTED_SECTOR_COLUMNS);
-        s.setHall(new Hall(HallConstans.INVALID_HALL_ID));
+        s.setHall(new Hall(HallConstants.INVALID_HALL_ID));
         sectorServiceImpl.create(s);
     }
 
@@ -67,7 +67,7 @@ public class SectorServiceImplIntegrationTest {
         Sector s = new Sector(null, SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE,
                                     SectorConstants.PERSISTED_SECTOR_ROWS, 
                                     SectorConstants.PERSISTED_SECTOR_COLUMNS);
-        s.setHall(new Hall(HallConstans.PERSISTED_HALL_ID));
+        s.setHall(new Hall(HallConstants.PERSISTED_HALL_ID));
         Sector savedSector = sectorServiceImpl.create(s);
 
         assertEquals(numberOfSectors + 1, sectorRepository.findAll().size());
@@ -91,7 +91,7 @@ public class SectorServiceImplIntegrationTest {
                                     SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE,
                                     SectorConstants.PERSISTED_SECTOR_ROWS, 
                                     SectorConstants.PERSISTED_SECTOR_COLUMNS);
-        s.setHall(new Hall(HallConstans.PERSISTED_HALL_ID));
+        s.setHall(new Hall(HallConstants.PERSISTED_HALL_ID));
         Sector savedSector = sectorServiceImpl.update(s);
 
         assertEquals(numberOfSectors, sectorRepository.findAll().size());

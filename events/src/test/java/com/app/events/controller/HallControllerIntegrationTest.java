@@ -1,8 +1,8 @@
 package com.app.events.controller;
 
-import com.app.events.constants.HallConstans;
+import com.app.events.constants.HallConstants;
 import com.app.events.constants.PlaceConstants;
-import com.app.events.constants.UserConstans;
+import com.app.events.constants.UserConstants;
 import com.app.events.dto.HallDTO;
 import com.app.events.dto.LoginDTO;
 import com.app.events.mapper.HallMapper;
@@ -48,7 +48,7 @@ public class HallControllerIntegrationTest {
 
     @Before
     public void login() throws Exception{
-        LoginDTO loginDto = new LoginDTO(UserConstans.DB_ADMIN_USERNAME, UserConstans.DB_ADMIN_PASSWORD);
+        LoginDTO loginDto = new LoginDTO(UserConstants.DB_ADMIN_USERNAME, UserConstants.DB_ADMIN_PASSWORD);
         ResponseEntity<String> response = restTemplate.postForEntity("/api/login", loginDto, String.class);
         authTokenAdmin = response.getBody();
     }
@@ -56,7 +56,7 @@ public class HallControllerIntegrationTest {
     @Test()
     public void foundHall_when_Valid_ID_thenShouldFindHall() throws Exception{
         
-        URI uri = new URI(HallConstans.URI_PREFIX + HallConstans.PERSISTED_HALL_ID);
+        URI uri = new URI(HallConstants.URI_PREFIX + HallConstants.PERSISTED_HALL_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<String> req = new HttpEntity<>(headers);
@@ -64,15 +64,15 @@ public class HallControllerIntegrationTest {
         ResponseEntity<HallDTO> res = restTemplate.exchange(uri, HttpMethod.GET, req, HallDTO.class);
 
         assertNotNull(res.getBody());
-        assertEquals(HallConstans.PERSISTED_HALL_ID, res.getBody().getId());
-        assertEquals(HallConstans.PERSISTED_HALL_NAME, res.getBody().getName());
+        assertEquals(HallConstants.PERSISTED_HALL_ID, res.getBody().getId());
+        assertEquals(HallConstants.PERSISTED_HALL_NAME, res.getBody().getName());
         assertEquals(HttpStatus.OK, res.getStatusCode());
     }
 
     @Test
     public void foundHall_when_Invalid_ID_then_return_NotFound() throws Exception{
         
-        URI uri = new URI(HallConstans.URI_PREFIX + HallConstans.INVALID_HALL_ID);
+        URI uri = new URI(HallConstants.URI_PREFIX + HallConstants.INVALID_HALL_ID);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<String> req = new HttpEntity<>(headers);
@@ -89,13 +89,13 @@ public class HallControllerIntegrationTest {
 
         Hall hall = new Hall(
             null,
-            HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE,
+            HallConstants.VALID_HALL_NAME_FOR_PERSISTANCE,
             new Place(PlaceConstants.PERSISTED_PLACE_ID),
             new HashSet<>(), new HashSet<>());
         
         HallDTO content = HallMapper.toDTO(hall);
 
-        URI uri = new URI(HallConstans.URI_PREFIX);
+        URI uri = new URI(HallConstants.URI_PREFIX);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<HallDTO> req = new HttpEntity<>(content, headers);
@@ -108,7 +108,7 @@ public class HallControllerIntegrationTest {
         assertNotNull(res.getBody());
         assertEquals(HttpStatus.CREATED, res.getStatusCode());
 
-        assertEquals(HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE, res.getBody().getName());
+        assertEquals(HallConstants.VALID_HALL_NAME_FOR_PERSISTANCE, res.getBody().getName());
         assertEquals(sizeBeforeInsert + 1, afterInsert.size());
         checkCreatedHallDTO(addedHall, res.getBody());
 
@@ -121,13 +121,13 @@ public class HallControllerIntegrationTest {
         int sizeBeforeInsert = hallRepository.findAll().size();
 
         Hall hall = new Hall(
-            null,HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE,
+            null,HallConstants.VALID_HALL_NAME_FOR_PERSISTANCE,
             new Place(PlaceConstants.INVALID_PLACE_ID),
             new HashSet<>(), new HashSet<>());
         
         HallDTO content = HallMapper.toDTO(hall);
 
-        URI uri = new URI(HallConstans.URI_PREFIX);
+        URI uri = new URI(HallConstants.URI_PREFIX);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
         HttpEntity<HallDTO> req = new HttpEntity<>(content, headers);

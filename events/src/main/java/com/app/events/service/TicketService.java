@@ -3,9 +3,9 @@ package com.app.events.service;
 import java.util.Map;
 import java.util.Set;
 
-import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
+import com.app.events.model.PriceList;
 import com.app.events.model.Ticket;
 
 public interface TicketService {
@@ -18,10 +18,14 @@ public interface TicketService {
 
 	public Map<String,Object> ticketPaymentCreation(Long id, Long userId) throws Exception;
 
-	public Ticket buyTicket(TicketDTO ticketDTO) throws Exception;
-
+	public Ticket  buyTicket(Long ticketID, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception;
+	
 	public void delete(Long id);
 
-	public void createTickets(Set<Hall> halls, Long eventId) throws ResourceNotFoundException, Exception;
+	public boolean ticketForEventIsSale(Long id);
+
+	public void deleteTicketsByEventId(Long id);
+
+	void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception;
 
 }

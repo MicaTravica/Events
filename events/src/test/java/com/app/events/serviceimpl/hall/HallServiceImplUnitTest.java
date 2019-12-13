@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.HashSet;
 import java.util.Optional;
 
-import com.app.events.constants.HallConstans;
+import com.app.events.constants.HallConstants;
 import com.app.events.constants.PlaceConstants;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
@@ -54,14 +54,14 @@ public class HallServiceImplUnitTest {
         PLACE = new Place(PlaceConstants.PLACE_ID);
         INVALID_PLACE = new Place(PlaceConstants.INVALID_PLACE_ID);
 
-        HALL_NEW = new Hall(null, HallConstans.VALID_HALL_NAME_FOR_PERSISTANCE, null, new HashSet<>(), new HashSet<>());
+        HALL_NEW = new Hall(null, HallConstants.VALID_HALL_NAME_FOR_PERSISTANCE, null, new HashSet<>(), new HashSet<>());
         
-        HALL_UPDATE = new Hall(HallConstans.PERSISTED_HALL_ID, HallConstans.PERSISTED_HALL_NAME, PLACE, new HashSet<>(), new HashSet<>());
+        HALL_UPDATE = new Hall(HallConstants.PERSISTED_HALL_ID, HallConstants.PERSISTED_HALL_NAME, PLACE, new HashSet<>(), new HashSet<>());
         Optional<Hall> hallOpt = Optional.of(HALL_UPDATE);
         
 
-        Mockito.when(hallRepositoryMocked.findById(HallConstans.PERSISTED_HALL_ID)).thenReturn(hallOpt);
-        Mockito.when(hallRepositoryMocked.findById(HallConstans.INVALID_HALL_ID)).thenReturn(Optional.empty());
+        Mockito.when(hallRepositoryMocked.findById(HallConstants.PERSISTED_HALL_ID)).thenReturn(hallOpt);
+        Mockito.when(hallRepositoryMocked.findById(HallConstants.INVALID_HALL_ID)).thenReturn(Optional.empty());
 
         Mockito.when(hallRepositoryMocked.save(HALL_NEW)).thenReturn(HALL_NEW);
         Mockito.when(hallRepositoryMocked.save(HALL_UPDATE)).thenReturn(HALL_UPDATE);
@@ -73,16 +73,16 @@ public class HallServiceImplUnitTest {
     }    
     @Test
     public void when_ValidID_thenHallShouldBeFound() throws Exception {
-            Hall foundHall = hallService.findOne(HallConstans.PERSISTED_HALL_ID);
+            Hall foundHall = hallService.findOne(HallConstants.PERSISTED_HALL_ID);
             assertNotNull(foundHall);
-            assertEquals(HallConstans.PERSISTED_HALL_ID, foundHall.getId());
-            assertEquals(HallConstans.PERSISTED_HALL_NAME, foundHall.getName());
+            assertEquals(HallConstants.PERSISTED_HALL_ID, foundHall.getId());
+            assertEquals(HallConstants.PERSISTED_HALL_NAME, foundHall.getName());
     }
 
     @Test(expected = ResourceNotFoundException.class)
     public void whenInvalidId_thenThrow_ResourceNotFoundException() throws ResourceNotFoundException
     {
-        hallService.findOne(HallConstans.INVALID_HALL_ID);
+        hallService.findOne(HallConstants.INVALID_HALL_ID);
     }
 
     @Test
@@ -116,7 +116,7 @@ public class HallServiceImplUnitTest {
 
     @Test(expected = Exception.class)
     public void WhenUpateNotExsistingHall_thenThrow_ResourceNotFoundException() throws Exception{
-        HALL_UPDATE.setId(HallConstans.INVALID_HALL_ID);
+        HALL_UPDATE.setId(HallConstants.INVALID_HALL_ID);
         hallService.update(HALL_UPDATE);
     }
 

@@ -7,15 +7,6 @@ import static org.mockito.Mockito.when;
 import java.util.HashSet;
 import java.util.Optional;
 
-import com.app.events.constants.HallConstans;
-import com.app.events.constants.SectorConstants;
-import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.model.Hall;
-import com.app.events.model.Sector;
-import com.app.events.repository.HallRepository;
-import com.app.events.repository.SectorRepository;
-import com.app.events.serviceimpl.SectorServiceImpl;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +15,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.app.events.constants.HallConstants;
+import com.app.events.constants.SectorConstants;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.model.Hall;
+import com.app.events.model.Sector;
+import com.app.events.repository.HallRepository;
+import com.app.events.repository.SectorRepository;
+import com.app.events.serviceimpl.SectorServiceImpl;
 
 /**
  * SectorServiceImplUnitTest
@@ -69,11 +69,11 @@ public class SectorServiceImplUnitTest {
         when(sectorRepository.save(NEW_SECTOR)).thenReturn(NEW_SECTOR);
         when(sectorRepository.save(SAVED_SECTOR)).thenReturn(SAVED_SECTOR);
 
-        when(hallRepository.findById(HallConstans.INVALID_HALL_ID)).thenReturn(Optional.empty());
-        when(hallRepository.findById(HallConstans.PERSISTED_HALL_ID)).thenReturn(Optional.of(
+        when(hallRepository.findById(HallConstants.INVALID_HALL_ID)).thenReturn(Optional.empty());
+        when(hallRepository.findById(HallConstants.PERSISTED_HALL_ID)).thenReturn(Optional.of(
             new Hall(
-                HallConstans.PERSISTED_HALL_ID,
-                HallConstans.PERSISTED_HALL_NAME,
+                HallConstants.PERSISTED_HALL_ID,
+                HallConstants.PERSISTED_HALL_NAME,
                 null, new HashSet<>(), new HashSet<>()
             )
         ));
@@ -95,7 +95,7 @@ public class SectorServiceImplUnitTest {
     @Test
     public void createSector_when_CreateValidSector_thenSectorShouldBeSaved() throws Exception{
 
-        Hall hall = new Hall(HallConstans.PERSISTED_HALL_ID);
+        Hall hall = new Hall(HallConstants.PERSISTED_HALL_ID);
 
         NEW_SECTOR.setHall(hall);
         Sector savedSector = sectorService.create(NEW_SECTOR);
@@ -106,7 +106,7 @@ public class SectorServiceImplUnitTest {
 
     @Test(expected = ResourceNotFoundException.class)
     public void createSector_when_InValidSectorHall_thenThrow_ResourceNotFoundException() throws Exception{
-        Hall hall = new Hall(HallConstans.INVALID_HALL_ID);
+        Hall hall = new Hall(HallConstants.INVALID_HALL_ID);
         NEW_SECTOR.setHall(hall);
         sectorService.create(NEW_SECTOR);
     }

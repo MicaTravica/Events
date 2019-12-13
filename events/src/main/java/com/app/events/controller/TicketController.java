@@ -64,7 +64,10 @@ public class TicketController {
 	@PutMapping(value = "/api/buyTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
 	public ResponseEntity<TicketDTO> buyTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Ticket updatedTicket = ticketService.buyTicket(ticketDTO);
+		Ticket updatedTicket = ticketService.buyTicket(
+								ticketDTO.getId(), ticketDTO.getUserId(),
+								ticketDTO.getPayPalPaymentID(), ticketDTO.getPayPalPayerID());
+
 		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
 	}
 

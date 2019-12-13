@@ -3,7 +3,7 @@ package com.app.events.constants;
 /**
  * HallConstans
  */
-public class HallConstans {
+public class HallConstants {
 
     /*
         info of persisted hall from data2.sql script
@@ -12,6 +12,7 @@ public class HallConstans {
     public static final String PERSISTED_HALL_NAME = "sala1";
     public static final Long PERSISTED_HALL_PLACE_ID  = 1l;
 
+    public static final Long PERSISTED_HALL_ID2 = 2l;
     /*
         constants for pesisting new hall in db
     */
