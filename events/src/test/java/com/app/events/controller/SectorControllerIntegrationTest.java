@@ -7,16 +7,6 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 
-import com.app.events.constants.HallConstans;
-import com.app.events.constants.SectorConstants;
-import com.app.events.constants.UserConstans;
-import com.app.events.dto.LoginDTO;
-import com.app.events.dto.SectorDTO;
-import com.app.events.mapper.SectorMapper;
-import com.app.events.model.Hall;
-import com.app.events.model.Sector;
-import com.app.events.repository.SectorRepository;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +21,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.app.events.constants.HallConstants;
+import com.app.events.constants.SectorConstants;
+import com.app.events.constants.UserConstants;
+import com.app.events.dto.LoginDTO;
+import com.app.events.dto.SectorDTO;
+import com.app.events.mapper.SectorMapper;
+import com.app.events.model.Hall;
+import com.app.events.model.Sector;
+import com.app.events.repository.SectorRepository;
 
 /**
  * SectorControllerIntegrationTest
@@ -53,7 +53,7 @@ public class SectorControllerIntegrationTest {
 
     @Before
     public void login() throws Exception{
-        LoginDTO loginDto = new LoginDTO(UserConstans.DB_ADMIN_USERNAME, UserConstans.DB_ADMIN_PASSWORD);
+        LoginDTO loginDto = new LoginDTO(UserConstants.DB_ADMIN_USERNAME, UserConstants.DB_ADMIN_PASSWORD);
         ResponseEntity<String> response = restTemplate.postForEntity("/api/login", loginDto, String.class);
         authTokenAdmin = response.getBody();
     }
@@ -95,7 +95,7 @@ public class SectorControllerIntegrationTest {
                     SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE,
                     SectorConstants.PERSISTED_SECTOR_COLUMNS,
                     SectorConstants.PERSISTED_SECTOR_ROWS,
-                    new Hall(HallConstans.PERSISTED_HALL_ID),
+                    new Hall(HallConstants.PERSISTED_HALL_ID),
                     new HashSet<>(),new HashSet<>(),new HashSet<>());
 
         SectorDTO content = SectorMapper.toDTO(sector);

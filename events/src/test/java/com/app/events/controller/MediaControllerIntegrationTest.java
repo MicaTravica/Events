@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.events.constants.EventConstants;
 import com.app.events.constants.MediaConstants;
-import com.app.events.constants.UserConstans;
+import com.app.events.constants.UserConstants;
 import com.app.events.dto.LoginDTO;
 import com.app.events.dto.MediaDTO;
 
@@ -40,7 +40,7 @@ public class MediaControllerIntegrationTest {
     
     @Before
     public void login() throws Exception{
-        LoginDTO loginDto = new LoginDTO(UserConstans.DB_ADMIN_USERNAME, UserConstans.DB_ADMIN_PASSWORD);
+        LoginDTO loginDto = new LoginDTO(UserConstants.DB_ADMIN_USERNAME, UserConstants.DB_ADMIN_PASSWORD);
         ResponseEntity<String> response = restTemplate.postForEntity("/api/login", loginDto, String.class);
         authTokenAdmin = response.getBody();
     }
