@@ -1,7 +1,6 @@
 package com.app.events.serviceimpl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.SectorCapacatyMustBePositiveNumberException;
 import com.app.events.exception.TicketReservationException;
