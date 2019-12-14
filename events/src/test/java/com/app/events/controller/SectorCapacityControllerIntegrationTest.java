@@ -2,10 +2,7 @@ package com.app.events.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import java.net.URI;
-import java.util.HashSet;
 
 import javax.transaction.Transactional;
 

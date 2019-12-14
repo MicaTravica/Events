@@ -97,5 +97,4 @@ public class SectorCapacityServiceImplIntegrationTest {
         int sizeAfterSave = sectorCapacityRepository.findAll().size();
         assertEquals(sizeAfterSave, sizeBeforeSave);
     }
-    
 }
