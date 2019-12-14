@@ -19,6 +19,10 @@ public class SectorDTO {
 	private int sectorCapacity;
 	private Long hallId;
 
+	public SectorDTO(Long id){
+		this.id = id;
+	}
+
 
 
 }
