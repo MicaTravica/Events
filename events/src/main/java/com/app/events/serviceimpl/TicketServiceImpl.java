@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.events.exception.PayPalException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.SectorCapacatyMustBePositiveNumberException;
+import com.app.events.exception.TicketIsBoughtException;
 import com.app.events.exception.TicketReservationException;
 import com.app.events.model.Event;
 import com.app.events.model.Hall;
@@ -90,9 +92,13 @@ public class TicketServiceImpl implements TicketService {
 	public Map<String,Object> ticketPaymentCreation(Long id, Long userId) throws Exception{
 
 		Ticket ticketToUpdate = findOne(id);
-		if(ticketToUpdate.getTicketState().equals(TicketState.BOUGHT) && (ticketToUpdate.getUser().getId() == userId))
+		if (ticketToUpdate.getTicketState().equals(TicketState.RESERVED)
+				&& ticketToUpdate.getUser().getId() != userId) {
+			throw new TicketReservationException("Ticket already reserved by other user");
+		}
+		if(ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))
 		{
-			return null;
+			throw new TicketIsBoughtException("Ticket is already bought");
 		}
 		return payPalService.startPayment(ticketToUpdate.getId(), ticketToUpdate.getPrice());
 	}
@@ -108,10 +114,10 @@ public class TicketServiceImpl implements TicketService {
 			{
 				return ticketRepository.save(ticketToUpdate);
 			}
-			return null;
+			throw new PayPalException("Not enough money on card for ticket purchuse");
 		}
 		else{
-			return null;
+			throw new TicketIsBoughtException("Ticket is already bought by other user");
 		}
 	}
 

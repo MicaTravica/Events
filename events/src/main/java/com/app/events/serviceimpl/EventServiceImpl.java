@@ -110,7 +110,7 @@ public class EventServiceImpl implements EventService {
 	public Event updateHall(Event event) throws Exception {
 		Event eventToUpdate = findOne(event.getId());
 		if (ticketService.ticketForEventIsSale(event.getId()))
-			throw new TicketIsBoughtException();
+			throw new TicketIsBoughtException("Ticket is bought for this event, you can not change the hall!");
 
 		Set<Hall> halls = new HashSet<>();
 		if (event.getHalls().isEmpty())

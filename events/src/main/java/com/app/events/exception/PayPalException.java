@@ -1,10 +1,10 @@
 package com.app.events.exception;
 
-public class TicketIsBoughtException extends Exception {
+public class PayPalException extends Exception {
 
 	private static final long serialVersionUID = 8830698075924627835L;
 
-	public TicketIsBoughtException(String message) {
+	public PayPalException(String message) {
 		super(message);
 	}
 }
