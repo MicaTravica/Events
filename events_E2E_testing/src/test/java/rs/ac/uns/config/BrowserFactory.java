@@ -8,9 +8,16 @@ import org.openqa.selenium.chrome.ChromeDriver;
  */
 public  class BrowserFactory {
 
+    public static WebDriver browser;
+
     public BrowserFactory(){}
 
     public static WebDriver getBrowser() throws Exception {
+
+        if(browser != null)
+        {
+            return browser;
+        }
 
         String operatingSystem = System.getProperty("os.name").toUpperCase();
 
@@ -23,12 +30,12 @@ public  class BrowserFactory {
             System.setProperty("webdriver.chrome.driver", "events_E2E_testing/chromedriver");
         }
 
-		WebDriver browser = new ChromeDriver();
+		browser = new ChromeDriver();
         browser.manage().window().maximize();
         return browser;
     }
 
-    public static void quitBrowser(WebDriver browser) {
+    public static void quitBrowser() {
         if (null != browser) {
             browser.quit();
         }

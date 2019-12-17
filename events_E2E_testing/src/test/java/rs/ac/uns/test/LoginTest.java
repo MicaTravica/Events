@@ -42,6 +42,6 @@ public class LoginTest {
 
 	@After
 	public void closeSelenium() {
-		BrowserFactory.quitBrowser(browser);
+		BrowserFactory.quitBrowser();
 	}
 }
