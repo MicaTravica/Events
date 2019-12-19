@@ -27,7 +27,7 @@ public  class BrowserFactory {
         }
         else
         {
-            System.setProperty("webdriver.chrome.driver", "events_E2E_testing/chromedriver");
+            System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         }
 
 		browser = new ChromeDriver();
