@@ -36,7 +36,8 @@ public abstract class BaseController {
 		return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
 	}
 
-	@ExceptionHandler({ ResourceExistsException.class, DateException.class,
+	@ExceptionHandler({ ResourceExistsException.class,
+		 	DateException.class,
 			SectorCapacatyMustBePositiveNumberException.class, TicketIsBoughtException.class,
 			CollectionIsEmptyException.class, BadEventStateException.class, SectorPriceListException.class,
 			SectorIsNotInThisHallException.class })

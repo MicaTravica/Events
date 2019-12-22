@@ -25,3 +25,8 @@ INSERT INTO `test`.`ticket` (`id`, `bar_code`, `price`, `ticket_state`, `version
 INSERT INTO `test`.`media` (`id`, `path`, `event_id`) VALUES ('1', 'slicica','1');
 INSERT INTO `test`.`media` (`id`, `path`, `event_id`) VALUES ('2', 'slicicaa','1');
 INSERT INTO `test`.`media` (`id`, `path`, `event_id`) VALUES ('3', 'slicicaabrisanje','2');
+
+INSERT INTO `test`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('1', '100', '100', '1');
+INSERT INTO `test`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('2', '140', '140', '1');
+INSERT INTO `test`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('3', '110', '110', '1');
+INSERT INTO `test`.`sector_capacity` (`id`, `capacity`, `free`, `sector_id`) VALUES ('4', '100', '100', '2');

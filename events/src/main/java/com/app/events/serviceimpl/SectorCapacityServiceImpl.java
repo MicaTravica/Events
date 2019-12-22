@@ -29,9 +29,7 @@ public class SectorCapacityServiceImpl implements SectorCapacityService {
 
     @Override
     public SectorCapacity create(SectorCapacity sectorCapacity) throws Exception{
-        if(sectorCapacity.getId() != null){
-            throw new RuntimeException("SectorCapacity already exists and has ID."); // custom exception here!
-        }
+        sectorCapacity.setId(null);
         Sector sector = sectorService.findOne(sectorCapacity.getSector().getId());
         sectorCapacity.setSector(sector);
         sectorCapacity.setFree(sectorCapacity.getCapacity());

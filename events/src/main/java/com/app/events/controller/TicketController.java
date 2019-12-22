@@ -1,5 +1,7 @@
 package com.app.events.controller;
 
+import java.util.Map;
+
 import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.TicketMapper;
@@ -50,10 +52,22 @@ public class TicketController {
 		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
 	}
 
+	@PutMapping(value = "/api/ticketPaymentCreation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_REGULAR')")
+	public ResponseEntity<Map<String, Object>> ticketPaymentCreation(@RequestBody TicketDTO ticketDTO) throws Exception {
+		Map<String, Object> res = ticketService.ticketPaymentCreation(ticketDTO.getId(), ticketDTO.getUserId());
+		return new ResponseEntity<>(res, HttpStatus.OK);
+	}
+
+	
+
 	@PutMapping(value = "/api/buyTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
 	public ResponseEntity<TicketDTO> buyTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Ticket updatedTicket = ticketService.buyTicket(ticketDTO.getId(), ticketDTO.getUserId());
+		Ticket updatedTicket = ticketService.buyTicket(
+								ticketDTO.getId(), ticketDTO.getUserId(),
+								ticketDTO.getPayPalPaymentID(), ticketDTO.getPayPalPayerID());
+
 		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
 	}
 
