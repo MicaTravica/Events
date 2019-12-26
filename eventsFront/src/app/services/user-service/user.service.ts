@@ -17,13 +17,13 @@ export class UserService {
   private usersUrl: string;
 
   constructor(private http: HttpClient) {
-    this.usersUrl = 'http://localhost:8080/users';
+    this.usersUrl = 'http://localhost:8080/api';
   }
 
   public save(user: User) {
     console.log(user);
     console.log(httpOptions);
-    return this.http.post<User>(this.usersUrl + "/api/registration", user, httpOptions)
+    return this.http.post<User>(this.usersUrl + "/registration", user, httpOptions)
     .subscribe(data => { console.log(data) });
 
   }

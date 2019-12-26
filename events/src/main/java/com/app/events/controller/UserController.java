@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.app.events.dto.LoginDTO;
 import com.app.events.dto.PasswordChangeDTO;
@@ -33,6 +34,7 @@ import com.app.events.security.TokenUtils;
 import com.app.events.service.UserService;
 
 @RestController
+@CrossOrigin(origins="*")
 @RequestMapping("api")
 public class UserController extends BaseController {
 
@@ -66,7 +68,7 @@ public class UserController extends BaseController {
 				 produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws Exception {
 		userService.registration(UserMapper.toUser(userDTO));
-		return new ResponseEntity<>("You are registred, now you need to verify your email", HttpStatus.OK);
+		return new ResponseEntity<>("You are registered, now you need to verify your email", HttpStatus.OK);
 	}
 	
 	
