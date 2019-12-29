@@ -7,11 +7,16 @@ import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
 import { HomepageComponent } from './core/homepage/homepage.component';
 
+import { GuestGuard } from './guards/GuestGuard'
+import { UserGuard } from './guards/UserGuard'
+import { AdminGuard } from './guards/AdminGuard'
+import { RegularGuard } from './guards/RegularGuard'
+
 const routes: Routes = [
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'homepage', component: HomepageComponent },
+  { path: 'login', component: LoginComponent, canActivate: [GuestGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [GuestGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [UserGuard] },
+  { path: 'homepage', component: HomepageComponent, canActivate: [UserGuard] },
 ];
 
 @NgModule({

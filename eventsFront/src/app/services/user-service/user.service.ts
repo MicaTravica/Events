@@ -10,6 +10,14 @@ const httpOptions = {
   })
 }
 
+const authHttpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer ' + localStorage.getItem('token')
+   })
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,11 +33,18 @@ export class UserService {
   }
 
   public login(loginData) {
-    return this.http.post(this.usersUrl + "/login", loginData, {responseType: 'text'})
+    return this.http.post(this.usersUrl + "/login", loginData, httpOptions)
     .subscribe(data => { 
-      localStorage.setItem("token", data);
+      localStorage.setItem("user", JSON.stringify(data['user']));
+      localStorage.setItem("token", data['value']);
       this.router.navigate(['/homepage']);
     });
+  }
+
+  public logout() {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    this.router.navigate(['/login']);
   }
 
   public save(user: User) {

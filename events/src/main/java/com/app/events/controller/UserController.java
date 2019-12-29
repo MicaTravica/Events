@@ -26,10 +26,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.app.events.dto.LoginDTO;
 import com.app.events.dto.PasswordChangeDTO;
+import com.app.events.dto.TokenDTO;
 import com.app.events.dto.UserDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.UserNotFoundByUsernameException;
 import com.app.events.mapper.UserMapper;
+import com.app.events.model.User;
 import com.app.events.security.TokenUtils;
 import com.app.events.service.UserService;
 
@@ -56,11 +58,15 @@ public class UserController extends BaseController {
 	@PostMapping(value="/login",
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
 				 produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+	public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO loginDTO) throws UserNotFoundByUsernameException {
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword());
 		authenticationManager.authenticate(token);
 		UserDetails userDetails = userDetailsService.loadUserByUsername(loginDTO.getUsername());
-		return new ResponseEntity<>(tokenUtils.generateToken(userDetails), HttpStatus.OK);
+
+		User user = userService.findOneByUsername(loginDTO.getUsername());
+		UserDTO userDTO = UserMapper.toDTO(user);
+		
+		return new ResponseEntity<TokenDTO>(new TokenDTO(userDTO, tokenUtils.generateToken(userDetails)), HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/registration", 

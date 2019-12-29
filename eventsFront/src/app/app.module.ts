@@ -15,6 +15,9 @@ import { ProfileComponent } from './core/profile/profile.component';
 
 import { UserService } from './services/user-service/user.service';
 import { HomepageComponent } from './core/homepage/homepage.component'
+import { GuestGuard } from './guards/GuestGuard';
+import { UserGuard } from './guards/UserGuard';
+import { AuthService } from './services/auth-service/auth.service';
 
 
 
@@ -36,7 +39,10 @@ import { HomepageComponent } from './core/homepage/homepage.component'
     HttpClientModule
   ],
   providers: [
-    UserService
+    UserService,
+    AuthService,
+    GuestGuard,
+    UserGuard
   ],
   bootstrap: [AppComponent]
 })
