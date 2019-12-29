@@ -11,12 +11,14 @@ const httpOptions = {
   })
 }
 
-const authHttpOptions = {
-  headers: new HttpHeaders({
+const authHttpOptions = (token) => {
+  return {
+    headers: new HttpHeaders({
     'Content-Type': 'application/json',
     'Accept': 'application/json',
-    'Authorization': 'Bearer ' + localStorage.getItem('token')
+    'Authorization': 'Bearer ' + token
    })
+  }
 }
 
 @Injectable({
@@ -34,15 +36,24 @@ export class UserService {
   }
 
   public login(loginData, loginComponent: LoginComponent) {
-    return this.http.post(this.usersUrl + "/login", loginData, httpOptions)
+    let login = this.http.post(this.usersUrl + "/login", loginData, {responseType: 'text'})
     .subscribe(
-      data => { 
-        localStorage.setItem("user", JSON.stringify(data['user']));
-        localStorage.setItem("token", data['value']);
+      async data => { 
+        await localStorage.setItem("token", data);
+        const token = localStorage.getItem("token");
+        this.me(token);
         this.router.navigate(['/homepage']);
-      },
-      err => {
-        loginComponent.setError(err.status);
+      }
+    );
+
+    return login;
+  }
+
+  public me(token) {
+    this.http.get(this.usersUrl + "/userme", authHttpOptions(token))
+    .subscribe(
+      data => {
+        localStorage.setItem("user", JSON.stringify(data));
       }
     );
   }
