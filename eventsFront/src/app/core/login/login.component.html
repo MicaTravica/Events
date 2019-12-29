@@ -1,11 +1,16 @@
 <div>
-    <form method="POST">
-        <label for="username">Username</label>
-        <input name="username" type="text"/>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)" method="POST">
 
-        <label for="password">Password</label>
-        <input name="password" type="password"/>
+        <div>
+            <label for="username"> Username </label><br/>
+            <input id="username" type="text" formControlName="username">
+        </div>
 
-        <input type="submit">
+        <div>
+            <label for="password"> Password </label><br/>
+            <input id="password" type="password" formControlName="password">
+        </div>
+
+        <button class="button" type="submit">Login</button>
     </form>
 </div>

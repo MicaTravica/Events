@@ -13,7 +13,8 @@ import { LoginComponent } from './core/login/login.component';
 import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
 
-import { UserService } from './services/user-service/user.service'
+import { UserService } from './services/user-service/user.service';
+import { HomepageComponent } from './core/homepage/homepage.component'
 
 
 
@@ -24,7 +25,8 @@ import { UserService } from './services/user-service/user.service'
     MenuComponent,
     LoginComponent,
     RegisterComponent,
-    ProfileComponent
+    ProfileComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,
