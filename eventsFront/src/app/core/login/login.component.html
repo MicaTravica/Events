@@ -11,6 +11,14 @@
             <input id="password" type="password" formControlName="password">
         </div>
 
+        <div *ngIf="submitted && (form.username.errors || form.password.errors)">
+            Please enter your data!
+        </div>
+
+        <div *ngIf="error === 400">
+            Bad credentials!
+        </div>
+
         <button class="button" type="submit">Login</button>
     </form>
 </div>
