@@ -1,0 +1,24 @@
+<div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)" method="POST">
+
+        <div>
+            <label for="username"> Username </label><br/>
+            <input id="username" type="text" formControlName="username">
+        </div>
+
+        <div>
+            <label for="password"> Password </label><br/>
+            <input id="password" type="password" formControlName="password">
+        </div>
+
+        <div *ngIf="submitted && (form.username.errors || form.password.errors)">
+            Please enter your data!
+        </div>
+
+        <div *ngIf="error === 400">
+            Bad credentials!
+        </div>
+
+        <button class="button" type="submit">Login</button>
+    </form>
+</div>
