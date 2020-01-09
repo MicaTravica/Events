@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
-import { UserService } from '../../services/user-service/user.service'
+import { AuthService } from 'src/app/services/auth-service/auth.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -9,14 +11,14 @@ import { UserService } from '../../services/user-service/user.service'
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  loginForm;
-  submitted;
-  error;
-
+  loginForm: FormGroup;
+  nesto = 'eeee';
   constructor(
-    private userService: UserService,
-    private formBuilder: FormBuilder
-  ) { 
+    private authService: AuthService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    // private toastr: ToastrService
+  ) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
@@ -26,22 +28,20 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
-  get form() { 
-    return this.loginForm.controls; 
-  }
-
-  setError(status) {
-    this.error = status;
-  }
-
-  onSubmit(loginData) {
-    this.submitted = true;
-    if (this.loginForm.invalid) {
-      return;
-    }
-
-    this.userService.login(loginData, this);
-
+  onSubmit() {
+    this.authService.login({ username: this.loginForm.value.username, password: this.loginForm.value.password }).subscribe(
+      result => {
+        console.log(result);
+        // this.toastr.success('Successful login!');
+        localStorage.setItem('user', JSON.stringify(result));
+        this.router.navigate(['/homepage']);
+        this.nesto = result;
+      },
+      error => {
+        // this.toastr.error(error.error);
+        this.nesto = error;
+      }
+    );
   }
 
 }

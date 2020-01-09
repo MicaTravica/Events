@@ -35,20 +35,6 @@ export class UserService {
     this.usersUrl = 'http://localhost:8080/api';
   }
 
-  public login(loginData, loginComponent: LoginComponent) {
-    let login = this.http.post(this.usersUrl + "/login", loginData, {responseType: 'text'})
-    .subscribe(
-      async data => { 
-        await localStorage.setItem("token", data);
-        const token = localStorage.getItem("token");
-        this.me(token);
-        this.router.navigate(['/homepage']);
-      }
-    );
-
-    return login;
-  }
-
   public me(token) {
     this.http.get(this.usersUrl + "/userme", authHttpOptions(token))
     .subscribe(
@@ -56,12 +42,6 @@ export class UserService {
         localStorage.setItem("user", JSON.stringify(data));
       }
     );
-  }
-
-  public logout() {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    this.router.navigate(['/login']);
   }
 
   public save(user: User) {

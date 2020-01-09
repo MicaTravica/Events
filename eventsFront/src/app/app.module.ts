@@ -15,8 +15,8 @@ import { ProfileComponent } from './core/profile/profile.component';
 
 import { UserService } from './services/user-service/user.service';
 import { HomepageComponent } from './core/homepage/homepage.component'
-import { GuestGuard } from './guards/GuestGuard';
-import { UserGuard } from './guards/UserGuard';
+import { LoginGuard } from './guards/login.service';
+import { RoleGuard } from './guards/role.service';
 import { AuthService } from './services/auth-service/auth.service';
 
 
@@ -41,8 +41,8 @@ import { AuthService } from './services/auth-service/auth.service';
   providers: [
     UserService,
     AuthService,
-    GuestGuard,
-    UserGuard
+    LoginGuard,
+    RoleGuard
   ],
   bootstrap: [AppComponent]
 })

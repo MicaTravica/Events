@@ -67,6 +67,7 @@ public class TokenUtils {
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("sub", userDetails.getUsername());
+        claims.put("role", userDetails.getAuthorities());
 		claims.put("created", new Date(System.currentTimeMillis()));
 		return Jwts.builder().setClaims(claims)
 				.setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
