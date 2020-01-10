@@ -12,12 +12,16 @@ import { MenuComponent } from './core/menu/menu.component';
 import { LoginComponent } from './core/login/login.component';
 import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
+import { HomepageComponent } from './core/homepage/homepage.component'
+import { AddEventComponent } from './core/add-event/add-event.component';
 
 import { UserService } from './services/user-service/user.service';
-import { HomepageComponent } from './core/homepage/homepage.component'
 import { GuestGuard } from './guards/GuestGuard';
 import { UserGuard } from './guards/UserGuard';
 import { AuthService } from './services/auth-service/auth.service';
+import { EventService } from './services/event-service/event.service';
+import { HallService } from './services/hall-service/hall.service';
+import { PlaceService } from './services/place-service/place.service';
 
 
 
@@ -29,7 +33,8 @@ import { AuthService } from './services/auth-service/auth.service';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    HomepageComponent
+    HomepageComponent,
+    AddEventComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +45,10 @@ import { AuthService } from './services/auth-service/auth.service';
   ],
   providers: [
     UserService,
+    EventService,
     AuthService,
+    HallService,
+    PlaceService,
     GuestGuard,
     UserGuard
   ],

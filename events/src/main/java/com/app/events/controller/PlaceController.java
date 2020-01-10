@@ -1,6 +1,15 @@
 package com.app.events.controller;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.app.events.dto.PlaceDTO;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.mapper.PlaceMapper;
+import com.app.events.model.Place;
+import com.app.events.service.PlaceService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,18 +23,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.events.dto.PlaceDTO;
-import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.mapper.PlaceMapper;
-import com.app.events.model.Place;
-import com.app.events.service.PlaceService;
-
 @RestController
 public class PlaceController extends BaseController {
 
 	@Autowired
 	private PlaceService placeService;
 
+	@GetMapping(value = "/api/places", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<PlaceDTO>> getPlaces() {
+		List<Place> places = placeService.findAll();
+		List<PlaceDTO> placesDTO = new ArrayList<PlaceDTO>();
+		for (Place place: places) {
+			placesDTO.add(PlaceMapper.toDTO(place));
+		}
+		return new ResponseEntity<>(placesDTO, HttpStatus.OK);
+	}
 
 	@GetMapping(value = "/api/place/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlaceDTO> getPlace(@PathVariable("id") Long id) throws ResourceNotFoundException {

@@ -12,10 +12,10 @@ export class AuthService {
   };
 
   isAdmin() {
-    return JSON.parse(localStorage.getItem('user')).role === ROLE_ADMIN;
+    return JSON.parse(localStorage.getItem('user')).userRole === ROLE_ADMIN;
   }
 
   isRegular() {
-    return JSON.parse(localStorage.getItem('user')).role === ROLE_REGULAR;
+    return JSON.parse(localStorage.getItem('user')).userRole === ROLE_REGULAR;
   }
 }
