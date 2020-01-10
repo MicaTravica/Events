@@ -14,7 +14,6 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private userService: UserService,
     private router: Router
   ) {
     this.router.events.subscribe((event: Event) => {
@@ -31,7 +30,8 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.userService.logout();
+    localStorage.removeItem('user');
+    this.router.navigate(['/login']);
   }
 
 }

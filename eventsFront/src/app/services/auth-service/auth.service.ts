@@ -1,21 +1,27 @@
 import { Injectable } from '@angular/core';
-import { ROLE_ADMIN, ROLE_REGULAR } from './constants';
+import { Observable } from 'rxjs';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor() { }
+  private headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  isLoggedIn() {
-    return localStorage.getItem('token') !== null;
-  };
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  isAdmin() {
-    return JSON.parse(localStorage.getItem('user')).role === ROLE_ADMIN;
+  login(auth: any): Observable<any> {
+    return this.http.post(environment.restPath + '/login', { username: auth.username, password: auth.password },
+      { headers: this.headers, responseType: 'text' });
   }
 
-  isRegular() {
-    return JSON.parse(localStorage.getItem('user')).role === ROLE_REGULAR;
+  isLoggedIn(): boolean {
+    if (!localStorage.getItem('user')) {
+      return false;
+    }
+    return true;
   }
 }
