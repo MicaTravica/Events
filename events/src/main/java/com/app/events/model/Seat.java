@@ -36,4 +36,16 @@ public class Seat {
 	@JoinColumn(name="sector_id", referencedColumnName="id")
 	private Sector sector;
 	
+	public Seat(Long id, @PositiveOrZero(message = "Number of row must be positive number or zero") int seatRow,
+			@PositiveOrZero(message = "Number of row must be positive number or zero") int seatColumn) {
+		super();
+		this.id = id;
+		this.seatRow = seatRow;
+		this.seatColumn = seatColumn;
+	}
+
+	public Seat(Long id) {
+		super();
+		this.id = id;
+	}
 }

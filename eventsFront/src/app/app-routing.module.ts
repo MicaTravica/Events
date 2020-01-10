@@ -6,21 +6,14 @@ import { LoginComponent } from './core/login/login.component';
 import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
 import { HomepageComponent } from './core/homepage/homepage.component';
-
-import { AddEventComponent } from './core/add-event/add-event.component';
-
-import { GuestGuard } from './guards/GuestGuard'
-import { UserGuard } from './guards/UserGuard'
-import { AdminGuard } from './guards/AdminGuard'
-import { RegularGuard } from './guards/RegularGuard'
+import { LoginGuard } from './guards/login.service';
+import { RoleGuard } from './guards/role.service';
 
 const routes: Routes = [
-  { path: 'login', component: LoginComponent, canActivate: [GuestGuard] },
-  { path: 'register', component: RegisterComponent, canActivate: [GuestGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [UserGuard] },
-  { path: 'homepage', component: HomepageComponent, canActivate: [UserGuard] },
-
-  { path: 'add-event', component: AddEventComponent, canActivate: [AdminGuard] },
+  { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+  { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
+  { path: 'profile', component: ProfileComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
+  { path: 'homepage', component: HomepageComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
 ];
 
 @NgModule({
