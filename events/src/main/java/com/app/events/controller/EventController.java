@@ -3,6 +3,7 @@ package com.app.events.controller;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import com.app.events.model.Event;
 import com.app.events.model.Hall;
 import com.app.events.model.Media;
 import com.app.events.model.PriceList;
+import com.app.events.model.SearchParamsEvent;
 import com.app.events.service.EventService;
 import com.app.events.service.MediaService;
 import com.app.events.service.TicketService;
@@ -37,7 +39,6 @@ public class EventController extends BaseController {
 	@Autowired
 	private TicketService ticketService;
 
-	// dodati pretragu
 	// dodati izvestaje
 	@GetMapping(value = "/api/event/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) throws ResourceNotFoundException {
@@ -75,6 +76,13 @@ public class EventController extends BaseController {
 		ticketService.deleteTicketsByEventId(updatedEvent.getId());
 		ticketService.createTickets(halls, priceLists, updatedEvent.getId(), true);
 		return new ResponseEntity<>(EventMapper.toDTO(updatedEvent), HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/api/event/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<EventDTO>> search(@RequestBody SearchParamsEvent params) {
+		Page<Event> result = eventService.search(params);
+		Page<EventDTO> resultDTO = result.map(EventMapper::toDTO);
+		return new ResponseEntity<>(resultDTO, HttpStatus.OK);
 	}
 
 }

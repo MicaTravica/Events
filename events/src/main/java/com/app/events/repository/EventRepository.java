@@ -1,6 +1,5 @@
 package com.app.events.repository;
 
-import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.data.domain.Page;
@@ -29,6 +28,4 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 	Page<Event> search(String name, Date fromDate, Date toDate, EventState eventState, EventType eventType,
 			Long placeId, Pageable pageable);
 	
-	@Query("SELECT e FROM Event e INNER JOIN e.halls h INNER JOIN h.place p WHERE e.name like %:name%")
-	Page<Event> search2(String name, Pageable pageable);
 }

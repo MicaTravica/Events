@@ -8,6 +8,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.app.events.exception.BadEventStateException;
@@ -21,6 +25,7 @@ import com.app.events.model.Event;
 import com.app.events.model.EventState;
 import com.app.events.model.Hall;
 import com.app.events.model.PriceList;
+import com.app.events.model.SearchParamsEvent;
 import com.app.events.model.Sector;
 import com.app.events.repository.EventRepository;
 import com.app.events.service.EventService;
@@ -184,5 +189,14 @@ public class EventServiceImpl implements EventService {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Page<Event> search(SearchParamsEvent params) {
+		if(params.getSortBy().equals(""))
+			params.setSortBy("fromDate");
+		Pageable pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(), Sort.by(params.getSortBy()).ascending());
+		return eventRepository.search(params.getName(), params.getFromDate(), params.getToDate(),
+				params.getEventState(), params.getEventType(), params.getPlaceId(), pageable);
 	}
 }
