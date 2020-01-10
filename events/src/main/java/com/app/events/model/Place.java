@@ -49,4 +49,16 @@ public class Place {
 	public Place(Long id){
 		this.id = id;
 	}
+	
+	public Place(Long id, @NotBlank(message = "Name can not be empty string") String name,
+			@NotBlank(message = "Address can not be empty string") String address,
+			@DecimalMax(value = "180.0", message = "Latitude must not be higher than ${value}") @DecimalMin(value = "-180.0", message = "Latitude must not be lower than ${value}") double latitude,
+			@DecimalMax(value = "180.0", message = "Longitude must not be higher than ${value}") @DecimalMin(value = "-180.0", message = "Longitude must not be lower than ${value}") double longitude) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.address = address;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
 }

@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.app.events.exception.PayPalException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.SectorCapacatyMustBePositiveNumberException;
+import com.app.events.exception.TicketIsBoughtException;
 import com.app.events.exception.TicketReservationException;
 import com.app.events.model.Event;
 import com.app.events.model.Hall;
@@ -26,6 +28,7 @@ import com.app.events.model.TicketState;
 import com.app.events.model.User;
 import com.app.events.repository.TicketRepository;
 import com.app.events.service.EventService;
+import com.app.events.service.PayPalService;
 import com.app.events.service.PriceListService;
 import com.app.events.service.SeatService;
 import com.app.events.service.SectorCapacityService;
@@ -55,7 +58,11 @@ public class TicketServiceImpl implements TicketService {
 	private SectorCapacityService sectorCapacityService;
 
 	@Autowired
+	private PayPalService payPalService;
+
+	@Autowired
 	private PriceListService priceListService;
+
 
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
@@ -82,13 +89,35 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public Ticket buyTicket(Long id, Long userId) throws Exception {
+	public Map<String,Object> ticketPaymentCreation(Long id, Long userId) throws Exception{
+
 		Ticket ticketToUpdate = findOne(id);
+		if (ticketToUpdate.getTicketState().equals(TicketState.RESERVED)
+				&& ticketToUpdate.getUser().getId() != userId) {
+			throw new TicketReservationException("Ticket already reserved by other user");
+		}
+		if(ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))
+		{
+			throw new TicketIsBoughtException("Ticket is already bought");
+		}
+		return payPalService.startPayment(ticketToUpdate.getId(), ticketToUpdate.getPrice());
+	}
+
+	@Override
+	public Ticket buyTicket(Long ticketID, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception {
+		Ticket ticketToUpdate = findOne(ticketID);
 		ticketToUpdate.setTicketState(TicketState.BOUGHT);
-		if (ticketToUpdate.getUser().getId() == userId) {
-			return ticketRepository.save(ticketToUpdate);
-		} else {
-			return null;
+		if(ticketToUpdate.getUser().getId() == ticketUserID)
+		{
+			boolean payed = payPalService.completedPayment(payPalPaymentId, payPalPayerId);
+			if(payed)
+			{
+				return ticketRepository.save(ticketToUpdate);
+			}
+			throw new PayPalException("Not enough money on card for ticket purchuse");
+		}
+		else{
+			throw new TicketIsBoughtException("Ticket is already bought by other user");
 		}
 	}
 

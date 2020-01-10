@@ -13,7 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
@@ -51,7 +51,7 @@ public class User {
 	@Column(unique=true, length=100)
 	private String username;
 	
-	@Min(value = 8, message = "Password must be at least {value}")
+	@Size(min = 8, message = "Password must be at least {value}")
 	private String password;
 
 	@Enumerated(EnumType.STRING)

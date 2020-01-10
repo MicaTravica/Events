@@ -18,7 +18,7 @@ public class TicketMapper {
                 ticket.getSectorCapacity().getSector().getHall().getName(),
                 -1,
                 -1,
-                EventMapper.toDTO(ticket.getEvent())
+                EventMapper.toDTO(ticket.getEvent()),"","",""
             );
         }
         else{
@@ -31,7 +31,7 @@ public class TicketMapper {
             ticket.getSeat().getSector().getHall().getName(),
             ticket.getSeat().getSeatRow(),
             ticket.getSeat().getSeatColumn(),
-            EventMapper.toDTO(ticket.getEvent())
+            EventMapper.toDTO(ticket.getEvent()),"","",""
         );
         }
     }
