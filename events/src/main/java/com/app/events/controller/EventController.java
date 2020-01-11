@@ -1,9 +1,11 @@
 package com.app.events.controller;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,7 +83,9 @@ public class EventController extends BaseController {
 	@PostMapping(value = "/api/event/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Page<EventDTO>> search(@RequestBody SearchParamsEvent params) {
 		Page<Event> result = eventService.search(params);
-		Page<EventDTO> resultDTO = result.map(EventMapper::toDTO);
+		Page<EventDTO> resultDTO = new PageImpl<EventDTO>(
+				result.get().map(EventMapper::toDTO).collect(Collectors.toList()), result.getPageable(),
+				result.getTotalElements());
 		return new ResponseEntity<>(resultDTO, HttpStatus.OK);
 	}
 

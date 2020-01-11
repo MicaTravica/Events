@@ -22,7 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 			+ "(e.fromDate BETWEEN :fromDate AND :toDate OR e.toDate between :fromDate and :toDate)")
 	boolean hallHaveEventUpdate(Long id, Date fromDate, Date toDate, Long id2);
 
-	@Query("SELECT e FROM Event e INNER JOIN e.halls h INNER JOIN h.place p WHERE (e.name like concat('%',?1,'%') or ?1 = '')"
+	@Query("SELECT e FROM Event e INNER JOIN e.halls h INNER JOIN h.place p WHERE e.name like concat('%',?1,'%')"
 			+ " and (e.fromDate >= ?2 or ?2 = null) and (e.toDate <= ?3 or ?3 = null) and"
 			+ " (e.eventState = ?4 or ?4 = null) and (e.eventType = ?5 or ?5 = null) and (p.id = ?6 or ?6 = null)")
 	Page<Event> search(String name, Date fromDate, Date toDate, EventState eventState, EventType eventType,

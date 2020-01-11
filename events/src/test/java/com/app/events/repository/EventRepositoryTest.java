@@ -141,7 +141,6 @@ public class EventRepositoryTest {
 		Page<Event> found = eventRepository.search("UT", fromDate, toDate, EventState.AVAILABLE, EventType.SPORT, 1L,
 				pageable);
 		for (Event event : found) {
-			System.out.println(event.getId());
 			assertTrue(event.getFromDate().after(fromDate));
 			assertTrue(event.getToDate().before(toDate));
 			assertEquals(EventState.AVAILABLE, event.getEventState());

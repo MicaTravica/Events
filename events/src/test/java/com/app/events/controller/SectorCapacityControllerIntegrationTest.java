@@ -1,16 +1,9 @@
 package com.app.events.controller;
 
 import static org.junit.Assert.assertEquals;
+
 import java.net.URI;
 
-import com.app.events.constants.SectorCapacityConstants;
-import com.app.events.constants.UserConstants;
-import com.app.events.dto.LoginDTO;
-import com.app.events.dto.SectorCapacityDTO;
-import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.repository.SectorCapacityRepository;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.app.events.constants.SectorCapacityConstants;
+import com.app.events.dto.SectorCapacityDTO;
+import com.app.events.exception.ResourceNotFoundException;
 
 /**
  * SectorCapacityControllerIntegrationTest

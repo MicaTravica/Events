@@ -193,10 +193,13 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public Page<Event> search(SearchParamsEvent params) {
-		if(params.getSortBy().equals(""))
+		if (params.getSortBy().equals("")) {
 			params.setSortBy("fromDate");
-		Pageable pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(), Sort.by(params.getSortBy()).ascending());
-		return eventRepository.search(params.getName(), params.getFromDate(), params.getToDate(),
+		}
+		Pageable pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(),
+				Sort.by(params.getSortBy()).ascending());
+		Page<Event> found = eventRepository.search(params.getName(), params.getFromDate(), params.getToDate(),
 				params.getEventState(), params.getEventType(), params.getPlaceId(), pageable);
+		return found;
 	}
 }
