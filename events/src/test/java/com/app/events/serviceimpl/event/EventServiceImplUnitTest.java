@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.verify;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -23,6 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.app.events.exception.BadEventStateException;
@@ -36,6 +42,7 @@ import com.app.events.model.EventState;
 import com.app.events.model.EventType;
 import com.app.events.model.Hall;
 import com.app.events.model.PriceList;
+import com.app.events.model.SearchParamsEvent;
 import com.app.events.model.Sector;
 import com.app.events.repository.EventRepository;
 import com.app.events.service.EventService;
@@ -75,6 +82,14 @@ public class EventServiceImplUnitTest {
 	public static Event EVENT_UPDATE10;
 
 	public static Event EVENT_CREATED;
+
+	public static SearchParamsEvent PARAMS1;
+	public static SearchParamsEvent PARAMS2;
+	public static SearchParamsEvent PARAMS3;
+
+	public static Page<Event> EVENTS1;
+	public static Page<Event> EVENTS2;
+	public static Page<Event> EVENTS3;
 
 	@Autowired
 	private EventService eventService;
@@ -161,6 +176,35 @@ public class EventServiceImplUnitTest {
 				EventType.SPORT, halls3, priceList, new HashSet<>());
 		EVENT_UPDATE10 = new Event(5L, "Dogadjaj10", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
 				EventType.SPORT, halls3, priceList, new HashSet<>());
+
+		PARAMS1 = new SearchParamsEvent(0, 10, "", "", null, null, null, null, null);
+		PARAMS2 = new SearchParamsEvent(0, 10, "name", "", null, null, null, null, null);
+		PARAMS3 = new SearchParamsEvent(0, 2, "", "", new Date(), new Date(), EventState.AVAILABLE, EventType.SPORT,
+				1L);
+
+		ArrayList<Event> content = new ArrayList<>();
+		content.add(new Event());
+		content.add(new Event());
+		content.add(new Event());
+		content.add(new Event());
+
+		Pageable pageable1 = PageRequest.of(PARAMS1.getNumOfPage(), PARAMS1.getSizeOfPage(),
+				Sort.by("fromDate").ascending());
+		Pageable pageable2 = PageRequest.of(PARAMS2.getNumOfPage(), PARAMS2.getSizeOfPage(),
+				Sort.by(PARAMS2.getSortBy()).ascending());
+		Pageable pageable3 = PageRequest.of(PARAMS3.getNumOfPage(), PARAMS3.getSizeOfPage(),
+				Sort.by("fromDate").ascending());
+
+		EVENTS1 = new PageImpl<>(content, pageable1, content.size());
+		EVENTS2 = new PageImpl<>(content, pageable2, content.size());
+		EVENTS3 = new PageImpl<>(content, pageable3, content.size());
+
+		Mockito.when(eventRepositoryMocked.search(PARAMS1.getName(), PARAMS1.getFromDate(), PARAMS1.getToDate(),
+				PARAMS1.getEventState(), PARAMS1.getEventType(), PARAMS1.getPlaceId(), pageable1)).thenReturn(EVENTS1);
+		Mockito.when(eventRepositoryMocked.search(PARAMS2.getName(), PARAMS2.getFromDate(), PARAMS2.getToDate(),
+				PARAMS2.getEventState(), PARAMS2.getEventType(), PARAMS2.getPlaceId(), pageable2)).thenReturn(EVENTS2);
+		Mockito.when(eventRepositoryMocked.search(PARAMS3.getName(), PARAMS3.getFromDate(), PARAMS3.getToDate(),
+				PARAMS3.getEventState(), PARAMS3.getEventType(), PARAMS3.getPlaceId(), pageable3)).thenReturn(EVENTS3);
 
 		Mockito.when(eventRepositoryMocked.findById(EVENT_VALID.getId())).thenReturn(Optional.of(EVENT_VALID));
 		Mockito.when(eventRepositoryMocked.findById(EVENT_UPDATE.getId())).thenReturn(Optional.of(EVENT_TO_UPDATE));
@@ -363,5 +407,32 @@ public class EventServiceImplUnitTest {
 	@Test
 	public void delete_throwsResourceNotFoundException() {
 		assertThrows(ResourceNotFoundException.class, () -> eventService.delete(EVENT_INVALID_ID));
+	}
+
+	@Test
+	public void search_OneParam() {
+		Page<Event> result = eventService.search(PARAMS1);
+		
+		assertEquals(PARAMS1.getSizeOfPage(), result.getSize());
+		assertEquals(EVENTS1.getTotalPages(), result.getTotalPages());
+		assertEquals(EVENTS1.getSort(), result.getSort());
+	}
+
+	@Test
+	public void search_SortByName() {
+		Page<Event> result = eventService.search(PARAMS2);
+
+		assertEquals(PARAMS2.getSizeOfPage(), result.getSize());
+		assertEquals(EVENTS2.getTotalPages(), result.getTotalPages());
+		assertEquals(EVENTS2.getSort(), result.getSort());
+	}
+
+	@Test
+	public void search_AllParams() {
+		Page<Event> result = eventService.search(PARAMS3);
+
+		assertEquals(PARAMS3.getSizeOfPage(), result.getSize());
+		assertEquals(EVENTS3.getTotalPages(), result.getTotalPages());
+		assertEquals(EVENTS3.getSort(), result.getSort());
 	}
 }
