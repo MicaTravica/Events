@@ -2,24 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user-model/user.model'
 import { Router } from '@angular/router';
+import {httpOptions, authHttpOptions} from '../../util/http-util';
 import { LoginComponent } from 'src/app/core/login/login.component';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-   'Content-Type': 'application/json',
-   'Accept': 'application/json'
-  })
-}
-
-const authHttpOptions = (token) => {
-  return {
-    headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer ' + token
-   })
-  }
-}
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +17,7 @@ export class UserService {
     private http: HttpClient,
     private router: Router
   ) {
-    this.usersUrl = 'http://localhost:8080/api';
+    this.usersUrl = environment.restPath;
   }
 
   public me(token) {
@@ -50,6 +35,15 @@ export class UserService {
     return this.http.post<User>(this.usersUrl + "/registration", user, httpOptions)
     .subscribe(() => { 
       this.router.navigate(['/login']);
-     });
+    });
+  }
+
+  public getUserFromLocalStorage() {
+    let user: User = new User();
+    const u = localStorage.getItem('user');
+    if (u) {
+      user = user.deserialize(u);
+    }
+    return user;
   }
 }

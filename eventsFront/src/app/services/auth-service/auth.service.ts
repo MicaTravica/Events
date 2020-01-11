@@ -24,4 +24,8 @@ export class AuthService {
     }
     return true;
   }
+
+  getToken() {
+    return localStorage.getItem('token');
+  }
 }
