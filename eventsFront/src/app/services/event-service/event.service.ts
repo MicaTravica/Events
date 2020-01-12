@@ -1,25 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEvent, HttpRequest } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-   'Content-Type': 'application/json',
-   'Accept': 'application/json'
-  })
-}
-
-const authHttpOptions = (token) => {
-  return {
-    headers: new HttpHeaders({
-    // 'Content-Type': 'application/json',
-    // 'Accept': 'application/json',
-    'Authorization': 'Bearer ' + token
-   })
-  }
-}
-
+import { authHttpOptions, httpOptions } from 'src/app/util/http-util';
+import { AuthService } from '../auth-service/auth.service';
+import { environment } from 'src/environments/environment';
+import { EventSearch } from 'src/app/models/event-search-model/event-search.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,14 +15,15 @@ export class EventService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
-  ) { 
-    this.url = 'http://localhost:8080/api';
+    private authService: AuthService
+  ) {
+    this.url = environment.restPath + '/event';
   }
 
-  public save(addEventData) {
+  // zameni any
+  public save(addEventData: any) {
     console.log(addEventData);
-    const token = localStorage.getItem("token");
+    const token = this.authService.getToken();
 
   }
 
@@ -46,8 +32,12 @@ export class EventService {
 
     data.append('file', file);
 
-    const newRequest = new HttpRequest('POST', this.url + '/files', data, authHttpOptions(localStorage.getItem("token")));
+    const newRequest = new HttpRequest('POST', this.url + '/files', data, authHttpOptions(this.authService.getToken()));
 
     return this.http.request(newRequest);
+  }
+
+  public search(params: EventSearch) {
+     return this.http.post(this.url + '/search', params, httpOptions);
   }
 }

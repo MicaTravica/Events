@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user-service/user.service';
 import {httpOptions, authHttpOptions} from '../../util/http-util';
 import { AuthService } from '../auth-service/auth.service';
-import { Ticket } from 'src/app/models/ticket-model/ticket.model';
+import { Ticket } from 'src/app/models/ticket-model/ticket.modle';
 
 @Injectable({
   providedIn: 'root'

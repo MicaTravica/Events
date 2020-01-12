@@ -1,6 +1,6 @@
-<mat-grid-list cols="3" rowHeight="3:2">
-  <mat-grid-tile
-      *ngFor="let event of eventsList">
-    aaaaaaaaaaaa
+<mat-grid-list cols="3" >
+  <mat-grid-tile *ngFor="let e of events">
+    <app-event-list-item></app-event-list-item>
+    <!-- {{e.name}} -->
   </mat-grid-tile>
 </mat-grid-list>
