@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
         console.log(result);
         // this.toastr.success('Successful login!');
         localStorage.setItem('token', JSON.stringify(result));
-        this.router.navigate(['/homepage']);
+        this.router.navigate(['/events']);
       },
       error => {
         // this.toastr.error(error.error);

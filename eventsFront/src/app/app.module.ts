@@ -14,11 +14,14 @@ import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
 
 import { UserService } from './services/user-service/user.service';
-import { HomepageComponent } from './core/homepage/homepage.component'
 import { LoginGuard } from './guards/login.service';
 import { RoleGuard } from './guards/role.service';
 import { AuthService } from './services/auth-service/auth.service';
 import { TicketService } from './services/ticket-service/ticket.service';
+import { EventsListComponent } from './events/events-list/events-list.component';
+import { EventDetailsComponent } from './events/event-details/event-details.component';
+import { EventListItemComponent } from './events/event-list-item/event-list-item.component';
+import { EventService } from './services/event-service/event.service';
 
 
 @NgModule({
@@ -29,7 +32,9 @@ import { TicketService } from './services/ticket-service/ticket.service';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    HomepageComponent
+    EventsListComponent,
+    EventDetailsComponent,
+    EventListItemComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +47,7 @@ import { TicketService } from './services/ticket-service/ticket.service';
     UserService,
     AuthService,
     TicketService,
+    EventService,
     LoginGuard,
     RoleGuard
   ],
