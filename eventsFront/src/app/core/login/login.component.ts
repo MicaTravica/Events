@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  nesto = 'eeee';
+
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
@@ -33,13 +33,11 @@ export class LoginComponent implements OnInit {
       result => {
         console.log(result);
         // this.toastr.success('Successful login!');
-        localStorage.setItem('user', JSON.stringify(result));
+        localStorage.setItem('token', JSON.stringify(result));
         this.router.navigate(['/homepage']);
-        this.nesto = result;
       },
       error => {
         // this.toastr.error(error.error);
-        this.nesto = error;
       }
     );
   }

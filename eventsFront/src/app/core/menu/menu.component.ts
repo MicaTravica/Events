@@ -8,15 +8,15 @@ import { NavigationEnd, Router, Event} from '@angular/router';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-  user: boolean;
+  role: string;
 
   constructor(
     private authService: AuthService,
     private router: Router
-  ) { 
+  ) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
-        this.user = this.authService.isLoggedIn();
+        this.role = this.authService.getUserRole();
       }
     });
   }

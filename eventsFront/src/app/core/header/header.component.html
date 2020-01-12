@@ -1,8 +1,8 @@
 <mat-toolbar color="primary" class="navbar">
     <div class="name">Events</div>
     <div>
-        <a *ngIf="guest" routerLink="/login" routerLinkActive="active" mat-button color="accent">Sign in</a>
-        <a *ngIf="guest" routerLink="/register" routerLinkActive="active" mat-button color="accent">Register</a>
+        <a *ngIf="!user" routerLink="/login" routerLinkActive="active" mat-button color="accent">Sign in</a>
+        <a *ngIf="!user" routerLink="/register" routerLinkActive="active" mat-button color="accent">Register</a>
         <a *ngIf="user" routerLink="/profile" routerLinkActive="active" mat-button color="accent">My profile</a>
     
         <a *ngIf="user" (click)="logout()" mat-button color="accent">Sign out</a>
