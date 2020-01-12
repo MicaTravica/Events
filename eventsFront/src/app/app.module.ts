@@ -18,7 +18,7 @@ import { HomepageComponent } from './core/homepage/homepage.component'
 import { LoginGuard } from './guards/login.service';
 import { RoleGuard } from './guards/role.service';
 import { AuthService } from './services/auth-service/auth.service';
-
+import { TicketService } from './services/ticket-service/ticket.service';
 
 
 @NgModule({
@@ -41,6 +41,7 @@ import { AuthService } from './services/auth-service/auth.service';
   providers: [
     UserService,
     AuthService,
+    TicketService,
     LoginGuard,
     RoleGuard
   ],
