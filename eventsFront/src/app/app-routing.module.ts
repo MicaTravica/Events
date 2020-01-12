@@ -8,12 +8,15 @@ import { ProfileComponent } from './core/profile/profile.component';
 import { HomepageComponent } from './core/homepage/homepage.component';
 import { LoginGuard } from './guards/login.service';
 import { RoleGuard } from './guards/role.service';
+import { AddEventComponent } from './core/add-event/add-event.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
   { path: 'homepage', component: HomepageComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
+  { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}}
+
 ];
 
 @NgModule({

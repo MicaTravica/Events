@@ -64,7 +64,7 @@ export class AddEventComponent implements OnInit {
       return;
     }
 
-    this.eventService.save(addEventData);
+     this.eventService.save(addEventData);
     this.upload();
   }
 

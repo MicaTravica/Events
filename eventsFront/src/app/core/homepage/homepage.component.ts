@@ -16,13 +16,13 @@ export class HomepageComponent implements OnInit {
   ) { 
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
-        this.admin = this.authService.isAdmin();
+        //this.admin = this.authService.isLoggedIn();
       }
     });
   }
 
   ngOnInit() {
-    this.admin = this.authService.isAdmin();
+    //this.admin = this.authService.isLoggedIn();
   }
 
 }
