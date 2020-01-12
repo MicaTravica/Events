@@ -17,4 +17,6 @@ public interface HallService {
 
 	public Collection<Hall> findHallByEventId(Long id);
 
+	public Collection<Hall> getHallsByPlaceId(Long id);
+
 }

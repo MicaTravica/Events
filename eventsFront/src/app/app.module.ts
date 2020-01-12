@@ -12,6 +12,7 @@ import { MenuComponent } from './core/menu/menu.component';
 import { LoginComponent } from './core/login/login.component';
 import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
+import { AddEventComponent } from './core/add-event/add-event.component';
 
 import { UserService } from './services/user-service/user.service';
 import { LoginGuard } from './guards/login.service';
@@ -22,6 +23,9 @@ import { EventsListComponent } from './events/events-list/events-list.component'
 import { EventDetailsComponent } from './events/event-details/event-details.component';
 import { EventListItemComponent } from './events/event-list-item/event-list-item.component';
 import { EventService } from './services/event-service/event.service';
+import { HallService } from './services/hall-service/hall.service';
+import { PlaceService } from './services/place-service/place.service';
+
 
 
 @NgModule({
@@ -34,7 +38,8 @@ import { EventService } from './services/event-service/event.service';
     ProfileComponent,
     EventsListComponent,
     EventDetailsComponent,
-    EventListItemComponent
+    EventListItemComponent,
+    AddEventComponent
   ],
   imports: [
     BrowserModule,
@@ -45,9 +50,12 @@ import { EventService } from './services/event-service/event.service';
   ],
   providers: [
     UserService,
+    EventService,
     AuthService,
     TicketService,
     EventService,
+    HallService,
+    PlaceService,
     LoginGuard,
     RoleGuard
   ],
