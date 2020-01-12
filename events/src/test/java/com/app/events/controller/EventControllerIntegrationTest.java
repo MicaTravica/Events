@@ -2,9 +2,16 @@ package com.app.events.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -37,6 +44,11 @@ import com.app.events.dto.MediaDTO;
 import com.app.events.dto.PlaceDTO;
 import com.app.events.dto.PriceListDTO;
 import com.app.events.dto.SectorDTO;
+import com.app.events.model.EventState;
+import com.app.events.model.EventType;
+import com.app.events.model.SearchParamsEvent;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -802,5 +814,55 @@ public class EventControllerIntegrationTest {
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		assertEquals("Sector capacity must be positiv number!", message);
+	}
+
+	@Test
+	public void search_OneParam() throws URISyntaxException {
+		URI uri = new URI(EventConstants.URL_PREFIX + "/search");
+
+		String param = "UTAK";
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "", param, null, null, null, null, null);
+
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<SearchParamsEvent> req = new HttpEntity<>(params, headers);
+
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uri, HttpMethod.POST, req, LinkedHashMap.class);
+		ObjectMapper mapper = new ObjectMapper();
+		List<EventDTO> found = mapper.convertValue(response.getBody().get("content"), new TypeReference<List<EventDTO>>() { });
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(found);
+		for (EventDTO event : found) {
+			assertTrue(event.getName().contains(param));
+		}
+	}
+
+	@Test
+	public void search_AllParams() throws URISyntaxException {
+		URI uri = new URI(EventConstants.URL_PREFIX + "/search");
+
+		Date fromDate = new GregorianCalendar(2019, Calendar.NOVEMBER, 1).getTime();
+		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 3).getTime();
+		EventState state = EventState.AVAILABLE;
+		EventType type = EventType.SPORT;
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", "UT", fromDate, toDate, state, type, 1L);
+
+		HttpHeaders headers = new HttpHeaders();
+		HttpEntity<SearchParamsEvent> req = new HttpEntity<>(params, headers);
+
+		@SuppressWarnings("rawtypes")
+		ResponseEntity<LinkedHashMap> response = restTemplate.exchange(uri, HttpMethod.POST, req, LinkedHashMap.class);
+		ObjectMapper mapper = new ObjectMapper();
+		List<EventDTO> found = mapper.convertValue(response.getBody().get("content"), new TypeReference<List<EventDTO>>() { });
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+		assertNotNull(found);
+		for (EventDTO event : found) {
+			assertTrue(event.getFromDate().after(fromDate));
+			assertTrue(event.getToDate().before(toDate));
+			assertEquals(state, event.getEventState());
+			assertEquals(type, event.getEventType());
+		}
 	}
 }

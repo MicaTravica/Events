@@ -88,6 +88,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 				.antMatchers( "/", "/index.html", "/api/login", "/api/registration", "/api/user/verify/**").permitAll() 
 				.antMatchers(HttpMethod.GET, "/api/event/**", "/api/hall/**", "/api/media/**", "/api/media/event/**", "/api/place/**", "/api/priceList/**", "/api/seats/**", "/api/sectorCapacity/**", "/api/sector/**").permitAll()
+				.antMatchers(HttpMethod.POST, "/api/event/search").permitAll()
 				.anyRequest().authenticated();
 		// Custom JWT based authentication
 		httpSecurity.addFilterBefore(authenticationTokenFilterBean(),

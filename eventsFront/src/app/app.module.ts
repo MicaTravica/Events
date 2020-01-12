@@ -23,6 +23,7 @@ import { EventService } from './services/event-service/event.service';
 import { HallService } from './services/hall-service/hall.service';
 import { PlaceService } from './services/place-service/place.service';
 
+import { TicketService } from './services/ticket-service/ticket.service';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { PlaceService } from './services/place-service/place.service';
     AuthService,
     HallService,
     PlaceService,
+    TicketService,
     LoginGuard,
     RoleGuard
   ],

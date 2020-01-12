@@ -15,7 +15,7 @@ public class EventConstants {
 	public static final String URL_PREFIX = "/api/event";
 
 	public static final Long PERSISTED_EVENT_ID = 1l;
-	public static final String PERSISTED_EVENT_NAME = "UTAKMICA";
+	public static final String PERSISTED_EVENT_NAME = "UTAKMICA1";
 	public static final String PERSISTED_EVENT_DESCRIPTION = "dfa";
 	public static final EventState PERSISTED_EVENT_EVENT_STATE = EventState.AVAILABLE;
 	public static final EventType PERSISTED_EVENT_EVENT_TYPE = EventType.SPORT;

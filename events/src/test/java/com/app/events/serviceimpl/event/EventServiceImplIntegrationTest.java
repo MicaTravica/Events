@@ -1,10 +1,16 @@
 package com.app.events.serviceimpl.event;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -13,6 +19,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.data.domain.Page;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,8 +35,11 @@ import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.SectorPriceListException;
 import com.app.events.exception.TicketIsBoughtException;
 import com.app.events.model.Event;
+import com.app.events.model.EventState;
+import com.app.events.model.EventType;
 import com.app.events.model.Hall;
 import com.app.events.model.PriceList;
+import com.app.events.model.SearchParamsEvent;
 import com.app.events.model.Sector;
 import com.app.events.repository.EventRepository;
 import com.app.events.service.EventService;
@@ -38,6 +48,7 @@ import com.app.events.service.EventService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource("classpath:application-test.properties")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Transactional
 public class EventServiceImplIntegrationTest {
 
 	@Autowired
@@ -59,8 +70,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
-	@Rollback(true)
 	public void create_valid() throws Exception {
 		HashSet<Sector> sectors = new HashSet<>();
 		Sector sector = new Sector(SectorConstants.PERSISTED_SECTOR_ID);
@@ -87,10 +96,11 @@ public class EventServiceImplIntegrationTest {
 		assertEquals(event.getToDate(), created.getToDate());
 		assertEquals(event.getEventState(), created.getEventState());
 		assertEquals(event.getEventType(), created.getEventType());
+
+		eventRepository.delete(created);
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsDateException_badDates() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -110,7 +120,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsBadEventStateException() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -130,7 +139,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsCollectionIsEmptyException_halls() {
 		HashSet<Hall> halls = new HashSet<>();
@@ -143,7 +151,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsResourceNotFoundException_hall() {
 		Hall hall = new Hall(HallConstants.INVALID_HALL_ID);
@@ -159,7 +166,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsDateException_hallIsNotAvailable() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -179,7 +185,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsCollectionIsEmptyException_sectors() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -198,7 +203,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsResourceNotFoundException_sector() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -218,7 +222,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void create_throwsSectorPriceListException() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -239,7 +242,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void update_valid() throws Exception {
 		Event event = new Event(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
@@ -258,7 +260,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void update_throwsResourceNotFoundExcpetion_badEvent() {
 		Event event = new Event(EventConstants.INVALID_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
@@ -270,7 +271,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void update_throwsDateException_badDates() {
 		Event event = new Event(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
@@ -282,7 +282,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void update_throwsBadEventStateException() {
 		Event event = new Event(EventConstants.PERSISTED_EVENT_ID, EventConstants.UPDATE_EVENT_NAME,
@@ -294,7 +293,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void update_throwsDateException_hallIsNotAvailable() {
 		Event event = new Event(EventConstants.PERSISTED_EVENT_ID2, EventConstants.UPDATE_EVENT_NAME,
@@ -306,7 +304,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_valid() throws Exception {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -332,7 +329,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_ResourceNotFoundException_event() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -352,7 +348,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_throwsTicketIsBoughtException() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -372,7 +367,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_throwsCollectionIsEmptyException_halls() {
 		HashSet<Hall> halls = new HashSet<>();
@@ -385,7 +379,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_throwsResourceNotFoundException_hall() {
 		Hall hall = new Hall(HallConstants.INVALID_HALL_ID);
@@ -401,7 +394,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_throwsDateException_hallIsNotAvailable() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -421,7 +413,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_throwsCollectionIsEmptyException_sectors() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -440,7 +431,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_throwsResourceNotFoundException_sector() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -460,7 +450,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void updateHall_throwsSectorPriceListException() {
 		HashSet<Sector> sectors = new HashSet<>();
@@ -481,7 +470,6 @@ public class EventServiceImplIntegrationTest {
 	}
 
 	@Test
-	@Transactional
 	@Rollback(true)
 	public void delete_valid() throws Exception {
 		int countOfEvents = eventRepository.findAll().size();
@@ -489,5 +477,41 @@ public class EventServiceImplIntegrationTest {
 		int countOfEvnetsAfterDelete = eventRepository.findAll().size();
 
 		assertEquals(countOfEvents - 1, countOfEvnetsAfterDelete);
+	}
+
+	@Test
+	public void search_OneParam() {
+		String param = "UTAK";
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "", param, null, null, null, null, null);
+		Page<Event> found = eventService.search(params);
+		for (Event event : found) {
+			assertTrue(event.getName().contains(param));
+		}
+	}
+
+	@Test
+	public void search_SortByName() {
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", "", null, null, null, null, null);
+		Page<Event> found = eventService.search(params);
+		List<Event> events = found.get().collect(Collectors.toList());
+		for (int i = 0; i < events.size() - 1; i++) {
+			assertTrue(events.get(i).getName().compareTo(events.get(i + 1).getName()) < 0);
+		}
+	}
+
+	@Test
+	public void search_AllParams() {
+		Date fromDate = new GregorianCalendar(2019, Calendar.NOVEMBER, 1).getTime();
+		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 3).getTime();
+		EventState state = EventState.AVAILABLE;
+		EventType type = EventType.SPORT;
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", "UT", fromDate, toDate, state, type, 1L);
+		Page<Event> found = eventService.search(params);
+		for (Event event : found) {
+			assertTrue(event.getFromDate().after(fromDate));
+			assertTrue(event.getToDate().before(toDate));
+			assertEquals(state, event.getEventState());
+			assertEquals(type, event.getEventType());
+		}
 	}
 }

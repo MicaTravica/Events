@@ -12,12 +12,15 @@ INSERT INTO `test`.`sector` (`id`, `name`, `sector_columns`, `sector_rows`, `hal
 
 INSERT INTO `test`.`seat` (`id`, `seat_column`, `seat_row`, `sector_id`) VALUES ('1', '1', '1', '1');
 
-INSERT INTO `test`.`event` (`id`, `description`, `event_state`, `event_type`, `from_date`, `name`, `to_date`) VALUES ('1', 'dfa', 'AVAILABLE', 'SPORT', '2020-01-01', 'UTAKMICA', '2020-01-02');
-INSERT INTO `test`.`event` (`id`, `description`, `event_state`, `event_type`, `from_date`, `name`, `to_date`) VALUES ('2', 'dfa', 'AVAILABLE', 'SPORT', '2021-01-01', 'UTAKMICA', '2021-01-02');
-INSERT INTO `test`.`event` (`id`, `description`, `event_state`, `event_type`, `from_date`, `name`, `to_date`) VALUES ('3', 'dfa', 'AVAILABLE', 'SPORT', '2022-01-01', 'Brisanje', '2022-01-02');
+INSERT INTO `test`.`event` (`id`, `description`, `event_state`, `event_type`, `from_date`, `name`, `to_date`) VALUES ('1', 'dfa', 'AVAILABLE', 'SPORT', '2020-01-01', 'UTAKMICA1', '2020-01-02');
+INSERT INTO `test`.`event` (`id`, `description`, `event_state`, `event_type`, `from_date`, `name`, `to_date`) VALUES ('2', 'dfa', 'CANCELED', 'SPORT', '2021-01-01', 'UTAKMICA3', '2021-01-02');
+INSERT INTO `test`.`event` (`id`, `description`, `event_state`, `event_type`, `from_date`, `name`, `to_date`) VALUES ('3', 'dfa', 'AVAILABLE', 'OPERA', '2023-01-01', 'UTAKMICA2', '2023-01-02');
+INSERT INTO `test`.`event` (`id`, `description`, `event_state`, `event_type`, `from_date`, `name`, `to_date`) VALUES ('4', 'dfa', 'AVAILABLE', 'SPORT', '2022-01-01', 'UTAKMICA4', '2022-01-02');
 
 INSERT INTO `test`.`event_hall` (`event_id`, `hall_id`) VALUES ('1', '1');
 INSERT INTO `test`.`event_hall` (`event_id`, `hall_id`) VALUES ('2', '1');
+INSERT INTO `test`.`event_hall` (`event_id`, `hall_id`) VALUES ('3', '1');
+INSERT INTO `test`.`event_hall` (`event_id`, `hall_id`) VALUES ('4', '1');
 
 INSERT INTO `test`.`ticket` (`id`, `bar_code`, `price`, `ticket_state`, `version`, `event_id`, `seat_id`) VALUES ('1', 'DFA', '100.00','AVAILABLE', '0', '1', '1');
 INSERT INTO `test`.`ticket` (`id`, `bar_code`, `price`, `ticket_state`, `version`, `event_id`, `seat_id`) VALUES ('2', 'DFA', '100.00','BOUGHT', '0', '2', '1');

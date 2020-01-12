@@ -10,7 +10,6 @@ import { UserService } from 'src/app/services/user-service/user.service';
 })
 export class HeaderComponent implements OnInit {
   user: boolean;
-  guest: boolean;
 
   constructor(
     private authService: AuthService,
@@ -19,18 +18,17 @@ export class HeaderComponent implements OnInit {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.user = this.authService.isLoggedIn();
-        this.guest = !this.user;
       }
     });
   }
 
   ngOnInit() {
     this.user = this.authService.isLoggedIn();
-    this.guest = !this.user;
   }
 
   logout() {
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
 
