@@ -40,4 +40,8 @@ export class EventService {
   public search(params: EventSearch) {
      return this.http.post(this.url + '/search', params, httpOptions);
   }
+
+  public getEvent(id: string) {
+     return this.http.get(this.url + '/' + id, httpOptions);
+  }
 }

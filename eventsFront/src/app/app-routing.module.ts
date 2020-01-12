@@ -9,12 +9,14 @@ import { LoginGuard } from './guards/login.service';
 import { RoleGuard } from './guards/role.service';
 import { EventsListComponent } from './events/events-list/events-list.component';
 import { AddEventComponent } from './core/add-event/add-event.component';
+import { EventDetailsComponent } from './events/event-details/event-details.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
   { path: 'events', component: EventsListComponent },
+  { path: 'event/:id', component: EventDetailsComponent },
   { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}}
 
 ];
