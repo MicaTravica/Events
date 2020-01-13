@@ -62,6 +62,11 @@ public class HallServiceImpl implements HallService {
 		return hallRepository.findAllByEventsId(id);
 	}
 
+    @Override
+	public Collection<Hall> getHallsByPlaceId(Long id) {
+		return hallRepository.findAllByPlaceId(id);
+	}
+
 }
 
 

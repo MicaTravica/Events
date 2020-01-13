@@ -1,5 +1,14 @@
 package com.app.events.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.app.events.dto.HallDTO;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.mapper.HallMapper;
+import com.app.events.model.Hall;
+import com.app.events.service.HallService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,12 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.app.events.dto.HallDTO;
-import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.mapper.HallMapper;
-import com.app.events.model.Hall;
-import com.app.events.service.HallService;
 
 @RestController
 public class HallController extends BaseController {
@@ -52,8 +55,13 @@ public class HallController extends BaseController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	@GetMapping(value = "/api/placeHalls/{id}")
+	public ResponseEntity<Collection<HallDTO>> getHallsByPlaceId(@PathVariable("id") Long id) {
+		Collection<Hall> halls = hallService.getHallsByPlaceId(id);
+		Collection<HallDTO> hallsDTO = new ArrayList<HallDTO>();
+		for (Hall hall: halls) {
+			hallsDTO.add(HallMapper.toDTO(hall));
+		}
+		return new ResponseEntity<>(hallsDTO, HttpStatus.OK);
+	}
 }
-
-
-
-
