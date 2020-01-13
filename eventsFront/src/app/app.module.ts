@@ -26,6 +26,8 @@ import { EventService } from './services/event-service/event.service';
 import { HallService } from './services/hall-service/hall.service';
 import { PlaceService } from './services/place-service/place.service';
 import { DateFormatPipe } from './pipes/date-format.pipe';
+import { EventSearchComponent } from './events/event-search/event-search.component';
+import { PaginationComponent } from './pagination/pagination.component';
 
 
 
@@ -41,7 +43,9 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
     EventDetailsComponent,
     EventListItemComponent,
     AddEventComponent,
-    DateFormatPipe
+    DateFormatPipe,
+    EventSearchComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,
