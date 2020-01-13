@@ -42,10 +42,10 @@ export class ReservationComponent implements OnInit {
             (tickets: any[]) => {
               this.tickets = tickets;
             },
-            (err: HttpErrorResponse)  =>{
+            (err: HttpErrorResponse)  => {
               console.log(err.message);
             }
-          )
+          );
         }
       );
     }
@@ -65,11 +65,11 @@ export class ReservationComponent implements OnInit {
   chooseSector(sectorId: number) {
     if (sectorId !== -1) {
       this.sector = this.hall.sectors.find(s => s.id === sectorId);
-      this.ticketsFiltered = this.tickets.filter(t => 
+      this.ticketsFiltered = this.tickets.filter(t =>
           t.sectorName === this.sector.name && t.hallName === this.hall.name
         );
     } else {
-      this.ticketsFiltered = []
+      this.ticketsFiltered = [];
       this.sector = {};
     }
   }
@@ -77,9 +77,9 @@ export class ReservationComponent implements OnInit {
   // ticket vec postoji da li postoji nacin da ih dobavim 
   reserveTicket(ticket: Ticket) {
     this.ticketService.makeReservation(ticket).subscribe(
-      (res: Ticket) => {
+      (res: any) => {
         this.toastr.success('reservation successfully made');
-        this.updateTicketInLists(res);
+        // this.updateTicketInLists(res);
       },
       (err: HttpErrorResponse)  => {
         console.log(err.message);
@@ -89,17 +89,18 @@ export class ReservationComponent implements OnInit {
 
   buyTicket(ticket: Ticket) {
     this.ticketService.startBuyingProcess(ticket).subscribe(
-      (res: Ticket) => {
+      (res: any) => {
         this.toastr.success('first step in buying successfully made');
         // this.updateTicketInLists(res);
+        console.log(res);
       },
-      (err: HttpErrorResponse)  =>{
+      (err: HttpErrorResponse)  => {
         console.log(err.message);
       },
     );
   }
 
-  updateTicketInLists(newTicket: Ticket){
+  updateTicketInLists(newTicket: Ticket) {
     const indx = this.ticketsFiltered.findIndex( ticket => ticket.id === newTicket.id);
     this.ticketsFiltered.splice(indx, 1, newTicket);
     const indx2 = this.tickets.findIndex(ticket => ticket.id === newTicket.id);
