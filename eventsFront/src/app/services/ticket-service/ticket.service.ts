@@ -39,6 +39,10 @@ export class TicketService {
     return this.http.put(environment.restPath + '/ticketPaymentCreation', payload, authHttpOptions(token));
   }
 
+  redirectPayPal(url: string) {
+    window.open(url, '_blank');
+  }
+
   finishBuyingProcess(ticketId: number, payPalPaymentId: string,
                       payPalToken: string, payPalPayerId: string) {
     const user = this.userService.getUserFromLocalStorage();

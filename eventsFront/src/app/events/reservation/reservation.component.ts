@@ -89,9 +89,10 @@ export class ReservationComponent implements OnInit {
 
   buyTicket(ticket: Ticket) {
     this.ticketService.startBuyingProcess(ticket).subscribe(
-      (res: any) => {
-        this.toastr.success('first step in buying successfully made');
-        // this.updateTicketInLists(res);
+      (res: {status: string, redirect_url: string }) => {
+        if (res.status === 'success') {
+          this.ticketService.redirectPayPal(res.redirect_url);
+        }
         console.log(res);
       },
       (err: HttpErrorResponse)  => {

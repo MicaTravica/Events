@@ -11,6 +11,7 @@ import { EventsListComponent } from './events/events-list/events-list.component'
 import { AddEventComponent } from './core/add-event/add-event.component';
 import { EventDetailsComponent } from './events/event-details/event-details.component';
 import { ReservationComponent } from './events/reservation/reservation.component';
+import { PaypalComponent } from './paypal/paypal.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
@@ -19,8 +20,8 @@ const routes: Routes = [
   { path: 'events', component: EventsListComponent },
   { path: 'event/:id', component: EventDetailsComponent },
   { path: 'reservation/:id' , component: ReservationComponent},
-  { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}}
-
+  { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'successPayPal' , component: PaypalComponent},
 ];
 
 @NgModule({

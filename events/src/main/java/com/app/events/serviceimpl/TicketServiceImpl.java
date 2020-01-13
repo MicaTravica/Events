@@ -115,8 +115,17 @@ public class TicketServiceImpl implements TicketService {
 	public Ticket buyTicket(Long ticketID, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception {
 		Ticket ticketToUpdate = findOne(ticketID);
 		ticketToUpdate.setTicketState(TicketState.BOUGHT);
-		if(ticketToUpdate.getUser().getId() == ticketUserID)
+		if(ticketToUpdate.getUser() == null || 
+				(ticketToUpdate.getUser().getId() == ticketUserID &&
+				!ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))
+			)
 		{
+			User user = null;
+			if(ticketToUpdate.getUser() == null)
+			{
+				user = userService.findOne(ticketUserID);
+				ticketToUpdate.setUser(user);
+			}
 			boolean payed = payPalService.completedPayment(payPalPaymentId, payPalPayerId);
 			if(payed)
 			{
