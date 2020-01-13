@@ -44,7 +44,7 @@ export class UserService {
         localStorage.setItem('user', JSON.stringify(data));
       });
     }
-    user = user.deserialize(u);
+    user = JSON.parse(localStorage.getItem('user'));
     return user;
   }
 }

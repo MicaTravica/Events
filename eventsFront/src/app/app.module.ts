@@ -26,6 +26,7 @@ import { EventService } from './services/event-service/event.service';
 import { HallService } from './services/hall-service/hall.service';
 import { PlaceService } from './services/place-service/place.service';
 import { DateFormatPipe } from './pipes/date-format.pipe';
+import { ReservationComponent } from './events/reservation/reservation.component';
 
 
 
@@ -41,7 +42,8 @@ import { DateFormatPipe } from './pipes/date-format.pipe';
     EventDetailsComponent,
     EventListItemComponent,
     AddEventComponent,
-    DateFormatPipe
+    DateFormatPipe,
+    ReservationComponent
   ],
   imports: [
     BrowserModule,

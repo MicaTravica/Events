@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EventService } from 'src/app/services/event-service/event.service';
 import { EventEntity } from 'src/app/models/event-model/event.model';
 import { MediaService } from 'src/app/services/media-service/media.service';
@@ -16,6 +16,7 @@ export class EventDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private eventService: EventService,
     private mediaService: MediaService
   ) { }
@@ -40,6 +41,6 @@ export class EventDetailsComponent implements OnInit {
   }
 
   buyReserve() {
-    console.log('tickets');
+      this.router.navigate(['/reservation/' + this.event.id]);
   }
 }

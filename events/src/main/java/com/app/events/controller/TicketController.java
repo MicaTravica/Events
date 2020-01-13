@@ -1,6 +1,9 @@
 package com.app.events.controller;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
@@ -13,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin(origins="*")
 public class TicketController {
 
 	@Autowired
@@ -32,6 +37,20 @@ public class TicketController {
 		Ticket ticket = ticketService.findOne(id);
 		return new ResponseEntity<>(TicketMapper.toDTO(ticket), HttpStatus.OK);
 	}
+
+	@GetMapping(value = "/api/ticketsForEvent/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<TicketDTO>> getTicketForSector(@PathVariable("id") Long eventId) throws ResourceNotFoundException {
+		
+		
+		Collection<Ticket> tickets = ticketService.findAllByEventId(eventId);
+		List<TicketDTO> retVal = tickets.stream().map(
+										ticket -> TicketMapper.toDTO(ticket)
+									).collect(Collectors.toList());
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
+	}
+
+
+
 
 	// @PostMapping(value = "/api/tickets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	// public ResponseEntity<TicketDTO> createTicket(TicketDTO ticketDTO) throws Exception {

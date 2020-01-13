@@ -35,6 +35,7 @@ import com.app.events.service.SectorCapacityService;
 import com.app.events.service.SectorService;
 import com.app.events.service.TicketService;
 import com.app.events.service.UserService;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter.FixedSpaceIndenter;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -67,6 +68,13 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
 		return ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket"));
+	}
+
+	@Override
+	public Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException {
+		Collection<Ticket> tickets  = ticketRepository.findAllByEventId(eventId);
+		if(tickets.size() == 0){ throw new ResourceNotFoundException("Tickets for Event");}
+		return tickets;
 	}
 
 	@Override
