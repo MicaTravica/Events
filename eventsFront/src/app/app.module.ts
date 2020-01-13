@@ -25,6 +25,7 @@ import { EventListItemComponent } from './events/event-list-item/event-list-item
 import { EventService } from './services/event-service/event.service';
 import { HallService } from './services/hall-service/hall.service';
 import { PlaceService } from './services/place-service/place.service';
+import { DateFormatPipe } from './pipes/date-format.pipe';
 
 
 
@@ -39,7 +40,8 @@ import { PlaceService } from './services/place-service/place.service';
     EventsListComponent,
     EventDetailsComponent,
     EventListItemComponent,
-    AddEventComponent
+    AddEventComponent,
+    DateFormatPipe
   ],
   imports: [
     BrowserModule,

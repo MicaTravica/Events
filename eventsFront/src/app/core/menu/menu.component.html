@@ -1,5 +1,5 @@
 <mat-toolbar color="accent">
-        <button mat-button color="primary">Events</button>
+        <button mat-button (click)='showEvents()' color="primary">Events</button>
         <button mat-button color="primary">Places</button>
         <button *ngIf="role=='ROLE_ADMIN'" mat-button color="primary">New event</button>
         <button *ngIf="role=='ROLE_ADMIN'" mat-button color="primary">New place</button>

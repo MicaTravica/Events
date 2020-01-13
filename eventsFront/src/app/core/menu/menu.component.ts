@@ -24,4 +24,7 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
   }
 
+  showEvents() {
+    this.router.navigate(['/events']);
+  }
 }

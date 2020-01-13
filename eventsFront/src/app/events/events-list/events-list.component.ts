@@ -18,7 +18,7 @@ export class EventsListComponent implements OnInit {
   ngOnInit() {
     const params = new EventSearch(0, 10, '', '', null, null, null, null, null);
     this.eventService.search(params).subscribe(
-      data => {
+      (data: Map<string, object>) => {
         // tslint:disable-next-line: no-string-literal
         this.events = data['content'];
       }

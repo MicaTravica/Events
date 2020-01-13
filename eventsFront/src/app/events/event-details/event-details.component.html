@@ -1,2 +1,2 @@
 <p>{{event.name}}{{event.mediaList}}</p>
-<button *ngIf="event.eventState == 'AVAILABLE'" mat-button (click)='buyReserve()'>Buy\Reserve</button>
+<button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)='buyReserve()' color="accent">Buy\Reserve</button>
