@@ -19,7 +19,7 @@ public class EventMapper {
 		return new Event(eventDTO.getId(), eventDTO.getName(), eventDTO.getDescription(), eventDTO.getFromDate(),
 				eventDTO.getToDate(), eventDTO.getEventState(), eventDTO.getEventType(),
 				eventDTO.getHalls().stream().map(HallMapper::toHall).collect(Collectors.toSet()),
-				eventDTO.getPriceLise().stream().map(PriceListMapper::toPriceList).collect(Collectors.toSet()),
+				eventDTO.getPriceList().stream().map(PriceListMapper::toPriceList).collect(Collectors.toSet()),
 				eventDTO.getMediaList().stream().map(MediaMapper::toMedia).collect(Collectors.toSet()));
 	}
 

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { EventEntity } from 'src/app/models/event-model/event.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event-list-item',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EventListItemComponent implements OnInit {
 
-  constructor() { }
+  @Input() event: EventEntity;
+
+  constructor(
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
 
+  showDetails() {
+    this.router.navigate(['/event/' + this.event.id]);
+  }
+
+  buyReserve() {
+    console.log('tickets');
+  }
 }
