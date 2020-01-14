@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TicketService } from '../services/ticket-service/ticket.service';
+import { TicketService } from 'src/app/services/ticket-service/ticket.service';
 
 @Component({
   selector: 'app-paypal',
