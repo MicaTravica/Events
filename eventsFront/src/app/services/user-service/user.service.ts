@@ -26,6 +26,8 @@ export class UserService {
   }
 
   public save(user: User) {
+    // izmeni ovo djoleeeeeeeeeeeee
+    // subscribe se ne radi ovde!
     console.log(user);
     console.log(httpOptions);
     return this.http.post<User>(this.usersUrl + '/registration', user, httpOptions)

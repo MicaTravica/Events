@@ -13,8 +13,7 @@ export class PlaceService {
   private url: string;
 
   constructor(
-    private http: HttpClient,
-    private router: Router
+    private http: HttpClient
   ) {
     this.url = environment.restPath + '/place';
   }
