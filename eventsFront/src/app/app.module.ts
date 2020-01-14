@@ -26,9 +26,12 @@ import { EventService } from './services/event-service/event.service';
 import { HallService } from './services/hall-service/hall.service';
 import { PlaceService } from './services/place-service/place.service';
 import { DateFormatPipe } from './pipes/date-format.pipe';
-import { ReservationComponent } from './events/reservation/reservation.component';
+import { EventSearchComponent } from './events/event-search/event-search.component';
+import { PaginationComponent } from './pagination/pagination.component';
 import { ToastrModule } from 'ngx-toastr';
-import { PaypalComponent } from './paypal/paypal.component';
+import { AddressFormatPipe } from './pipes/address-format.pipe';
+import { ReservationComponent } from './tickets/reservation/reservation.component';
+import { PaypalComponent } from './tickets/paypal/paypal.component';
 
 
 
@@ -45,8 +48,11 @@ import { PaypalComponent } from './paypal/paypal.component';
     EventListItemComponent,
     AddEventComponent,
     DateFormatPipe,
+    EventSearchComponent,
+    PaginationComponent,
     ReservationComponent,
-    PaypalComponent
+    PaypalComponent,
+    AddressFormatPipe
   ],
   imports: [
     BrowserModule,

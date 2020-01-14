@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class EventDetailsComponent implements OnInit {
 
   event = new EventEntity();
+  activeImg = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -42,5 +43,13 @@ export class EventDetailsComponent implements OnInit {
 
   buyReserve() {
       this.router.navigate(['/reservation/' + this.event.id]);
+  }
+
+  previous() {
+    this.activeImg -= 1;
+  }
+
+  next() {
+    this.activeImg += 1;
   }
 }

@@ -107,7 +107,6 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Map<String,Object> ticketPaymentCreation(Collection<Long> ticketIDs, Long userId) throws Exception{
 		
-		int i = 0;
 		Double amout = 0.0;
 		for(Long ticketID: ticketIDs) {
 			Ticket ticketToUpdate = findOne(ticketID);
@@ -120,7 +119,6 @@ public class TicketServiceImpl implements TicketService {
 				throw new TicketIsBoughtException("Ticket is already bought");
 			}
 			amout += ticketToUpdate.getPrice();
-			i++;
 		}
 		
 		return payPalService.startPayment(amout);

@@ -1,17 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
-
-const authHttpOptions = (token) => {
-  return {
-    headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer ' + token
-  })
-  };
-};
+import { HttpClient } from '@angular/common/http';
+import { authHttpOptions } from 'src/app/util/http-util';
+import { AuthService } from '../auth-service/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -19,21 +10,15 @@ const authHttpOptions = (token) => {
 export class HallService {
 
   private url: string;
-  private places;
 
   constructor(
     private http: HttpClient,
-    private router: Router
-  ) { 
-    this.url = 'http://localhost:8080/api';
+    private authService: AuthService
+  ) {
+    this.url = environment.restPath;
   }
 
-  public getHalls(placeID) {
-    return this.http.get(this.url + "/placeHalls/" + placeID, authHttpOptions(localStorage.getItem("token")))
-    .pipe(map(
-      res => {
-        return res;
-      }
-    ))
+  public getHalls(placeID: number) {
+    return this.http.get(this.url + '/placeHalls/' + placeID, authHttpOptions(this.authService.getToken()));
   }
 }

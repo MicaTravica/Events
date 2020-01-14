@@ -7,10 +7,8 @@
   <img *ngIf='event.mediaList.length == 0' mat-card-image src="http://getwebpromotions.com/wp-content/uploads/2019/09/Events.jpg" alt="Photo of a Shiba Inu">
   <mat-card-content>
     <p>
-      {{event.fromDate | dateFormat}}<br>
-      {{event.fromDate}}<br>
-      {{event.toDate | dateFormat}}<br>
-      {{event.toDate}}<br>
+      From: {{event.fromDate | dateFormat}}<br>
+      To: {{event.toDate | dateFormat}}<br>
     </p>
   </mat-card-content>
   <mat-card-actions>

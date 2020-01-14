@@ -74,7 +74,7 @@ export class ReservationComponent implements OnInit {
     }
   }
 
-  // ticket vec postoji da li postoji nacin da ih dobavim 
+  // ticket vec postoji da li postoji nacin da ih dobavim
   reserveTicket(ticket: Ticket) {
     this.ticketService.makeReservation(ticket).subscribe(
       (res: any) => {
