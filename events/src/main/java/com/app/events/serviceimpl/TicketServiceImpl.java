@@ -8,6 +8,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -227,6 +231,13 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Collection<Ticket> findAllReservationsByUserId(Long userId) {
 		return this.ticketRepository.findAllReservationsByUserId(userId);
+	}
+	
+	@Override
+	public Page<Ticket> findAllTicketsByUserId(Long userId, int numOfPage, int sizeOfPage) {
+		Pageable pageable = PageRequest.of(numOfPage, sizeOfPage,
+					Sort.by("event.fromDate").descending());
+		return this.ticketRepository.findAllTicketsByUserId(userId, pageable);
 	}
 
 }

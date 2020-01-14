@@ -5,6 +5,7 @@ export class EventSearch {
     public numOfPage: number;
     public sizeOfPage: number;
     public sortBy: string;
+    public ascending: boolean;
     public name: string;
     public fromDate: Date;
     public toDate: Date;
@@ -12,11 +13,12 @@ export class EventSearch {
     public eventType: EventType;
     public placeId: number;
 
-    constructor(numOfPage?: number, sizeOfPage?: number, sortBy?: string, name?: string, fromDate?: Date, toDate?: Date,
-                eventState?: EventState, eventType?: EventType, placeId?: number) {
+    constructor(numOfPage?: number, sizeOfPage?: number, sortBy?: string, ascending?: boolean, name?: string, fromDate?: Date,
+                toDate?: Date, eventState?: EventState, eventType?: EventType, placeId?: number) {
         this.numOfPage = numOfPage;
         this.sizeOfPage = sizeOfPage;
         this.sortBy = sortBy;
+        this.ascending = ascending;
         this.name = name;
         this.fromDate = fromDate;
         this.toDate = toDate;

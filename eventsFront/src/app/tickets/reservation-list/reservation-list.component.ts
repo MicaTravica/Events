@@ -43,8 +43,7 @@ export class ReservationListComponent implements OnInit {
     }
   }
 
-  // dusan
-  buy() {
+  getSelected() {
     const ids = [];
     // tslint:disable-next-line: forin
     for (const key in this.checked) {
@@ -55,9 +54,25 @@ export class ReservationListComponent implements OnInit {
     if (ids.length === 0) {
       console.log('nema rez izabranih');
     }
+    return ids;
+  }
+
+  // dusan
+  buy() {
+    const ids = this.getSelected();
+    console.log(ids);
   }
 
   buyOne(id: number) {
+    console.log(id);
+  }
+
+  cancled() {
+    const ids = this.getSelected();
+    console.log(ids);
+  }
+
+  cancledOne(id: number) {
     console.log(id);
   }
 }

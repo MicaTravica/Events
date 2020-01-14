@@ -482,7 +482,7 @@ public class EventServiceImplIntegrationTest {
 	@Test
 	public void search_OneParam() {
 		String param = "UTAK";
-		SearchParamsEvent params = new SearchParamsEvent(0, 10, "", param, null, null, null, null, null);
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "", true, param, null, null, null, null, null);
 		Page<Event> found = eventService.search(params);
 		for (Event event : found) {
 			assertTrue(event.getName().contains(param));
@@ -491,7 +491,7 @@ public class EventServiceImplIntegrationTest {
 
 	@Test
 	public void search_SortByName() {
-		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", "", null, null, null, null, null);
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", true, "", null, null, null, null, null);
 		Page<Event> found = eventService.search(params);
 		List<Event> events = found.get().collect(Collectors.toList());
 		for (int i = 0; i < events.size() - 1; i++) {
@@ -505,7 +505,7 @@ public class EventServiceImplIntegrationTest {
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 3).getTime();
 		EventState state = EventState.AVAILABLE;
 		EventType type = EventType.SPORT;
-		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", "UT", fromDate, toDate, state, type, 1L);
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", true, "UT", fromDate, toDate, state, type, 1L);
 		Page<Event> found = eventService.search(params);
 		for (Event event : found) {
 			assertTrue(event.getFromDate().after(fromDate));

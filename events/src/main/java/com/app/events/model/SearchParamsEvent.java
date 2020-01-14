@@ -16,6 +16,7 @@ public class SearchParamsEvent {
 	private int numOfPage;
 	private int sizeOfPage;
 	private String sortBy;
+	private boolean ascending;
 	private String name;
 	private Date fromDate;
 	private Date toDate;

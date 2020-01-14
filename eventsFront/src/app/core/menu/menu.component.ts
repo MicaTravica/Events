@@ -31,4 +31,8 @@ export class MenuComponent implements OnInit {
   showReservations() {
     this.router.navigate(['/reservations']);
   }
+
+  showTickets() {
+    this.router.navigate(['/tickets']);
+  }
 }
