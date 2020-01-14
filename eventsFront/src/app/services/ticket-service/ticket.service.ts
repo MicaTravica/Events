@@ -43,17 +43,33 @@ export class TicketService {
     window.open(url, '_blank');
   }
 
-  finishBuyingProcess(ticketId: number, payPalPaymentId: string,
+  finishBuyingProcess(payPalPaymentId: string,
                       payPalToken: string, payPalPayerId: string) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
     const payload = new Ticket();
+    const ticketId: number = this.getTicketIdsFromLocalStorage()[0];
+
     payload.userId = user.id;
     payload.id = ticketId;
     payload.payPalPaymentID = payPalPaymentId;
     payload.payPalToken = payPalToken;
     payload.payPalPayerID = payPalPayerId;
     return this.http.put(environment.restPath + '/buyTicket', payload, authHttpOptions(token));
+  }
+
+
+  // Helper functions
+  setTicketIdsToLocalStorage(ids: number[]) {
+    localStorage.setItem('ticketIds', JSON.stringify(ids));
+  }
+
+  getTicketIdsFromLocalStorage() {
+    JSON.parse(localStorage.getItem('ticketIds'));
+  }
+
+  removeTicketIdsFromLocalStorage() {
+    localStorage.removeItem('ticketIds');
   }
 
 }
