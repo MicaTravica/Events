@@ -1,2 +1,27 @@
-<p>{{event.name}}{{event.mediaList}}</p>
-<button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)='buyReserve()' color="accent">Buy\Reserve</button>
+<div class="main" *ngIf="event.name">
+    <h1>{{event.name}}</h1>
+    <p>
+      Place: {{event.halls[0].place | addressFormat}}<br> 
+      From: {{event.fromDate | dateFormat}}<br>
+      To: {{event.toDate | dateFormat}}<br>
+    </p>
+    <mat-grid-list *ngIf="event.mediaList.length > 0" cols="12" rowHeight="500px">
+        <mat-grid-tile>
+            <button mat-button *ngIf="activeImg != 0" (click)='previous()' color="accent" class="arrow">
+                <mat-icon>keyboard_arrow_left</mat-icon>
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan='10' style="background-color: black;">
+            <img mat-card-image src="{{event.mediaList[activeImg].path}}" alt="Photo is not found">
+        </mat-grid-tile> 
+        <mat-grid-tile>
+            <button mat-button *ngIf="activeImg != event.mediaList.length - 1" (click)='next()' color="accent"  class="arrow">
+                <mat-icon>keyboard_arrow_right</mat-icon>
+            </button>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <p>
+        {{event.description}}
+    </p>
+    <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)='buyReserve()' color="accent">Buy\Reserve</button>
+</div>

@@ -31,6 +31,7 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { ReservationComponent } from './events/reservation/reservation.component';
 import { ToastrModule } from 'ngx-toastr';
 import { PaypalComponent } from './paypal/paypal.component';
+import { AddressFormatPipe } from './pipes/address-format.pipe';
 
 
 
@@ -50,7 +51,8 @@ import { PaypalComponent } from './paypal/paypal.component';
     EventSearchComponent,
     PaginationComponent,
     ReservationComponent,
-    PaypalComponent
+    PaypalComponent,
+    AddressFormatPipe
   ],
   imports: [
     BrowserModule,

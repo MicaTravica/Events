@@ -1,6 +1,6 @@
 <div>
   <app-event-search (searchParams)='doSearch($event)'></app-event-search>
-  <mat-grid-list cols="4" rowHeight="2:3">
+  <mat-grid-list cols="4" rowHeight="450px">
     <mat-grid-tile *ngFor="let e of events" >
       <app-event-list-item class="card" [event]='e'></app-event-list-item>
     </mat-grid-tile>
