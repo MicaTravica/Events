@@ -5,6 +5,7 @@ import { UserService } from '../user-service/user.service';
 import {httpOptions, authHttpOptions} from '../../util/http-util';
 import { AuthService } from '../auth-service/auth.service';
 import { Ticket } from 'src/app/models/ticket-model/ticket.model';
+import { TicketBuyReservation } from 'src/app/models/ticket-buy-reservation-model/ticket.buy.reservation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,9 @@ export class TicketService {
   makeReservation(ticket: Ticket) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
-    const payload = ticket;
+    const payload = new TicketBuyReservation();
     payload.userId = user.id;
+    payload.ticketIDs = [ticket.id];
     return this.http.put(environment.restPath + '/reserveTicket', payload, authHttpOptions(token));
   }
 
@@ -34,8 +36,9 @@ export class TicketService {
   startBuyingProcess(ticket: Ticket) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
-    const payload = ticket;
+    const payload = new TicketBuyReservation();
     payload.userId = user.id;
+    payload.ticketIDs = [ticket.id];
     return this.http.put(environment.restPath + '/ticketPaymentCreation', payload, authHttpOptions(token));
   }
 
@@ -47,11 +50,11 @@ export class TicketService {
                       payPalToken: string, payPalPayerId: string) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
-    const payload = new Ticket();
-    const ticketId: number = this.getTicketIdsFromLocalStorage()[0];
+    const payload = new TicketBuyReservation();
+    const ticketIds: number[] = this.getTicketIdsFromLocalStorage();
 
     payload.userId = user.id;
-    payload.id = ticketId;
+    payload.ticketIDs = ticketIds;
     payload.payPalPaymentID = payPalPaymentId;
     payload.payPalToken = payPalToken;
     payload.payPalPayerID = payPalPayerId;
@@ -64,8 +67,8 @@ export class TicketService {
     localStorage.setItem('ticketIds', JSON.stringify(ids));
   }
 
-  getTicketIdsFromLocalStorage() {
-    JSON.parse(localStorage.getItem('ticketIds'));
+  getTicketIdsFromLocalStorage(): any {
+    return JSON.parse(localStorage.getItem('ticketIds'));
   }
 
   removeTicketIdsFromLocalStorage() {

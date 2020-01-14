@@ -26,6 +26,11 @@ export class PaypalComponent implements OnInit {
       console.log(PayerID);
       console.log(token);
 
+      if (!paymentId || !PayerID || !token) {
+        this.state = 'something went wrong go back to home page';
+        return;
+      }
+
     // kako ovde da dobijem id od tiketa?? i sta cemo ako bude vise tiketa odjednom??
       this.ticketService.finishBuyingProcess(paymentId, token, PayerID).subscribe(
         res => {
@@ -35,7 +40,7 @@ export class PaypalComponent implements OnInit {
         },
         err => {
           console.log(err.message);
-          this.state = 'something went wrong';
+          this.state = 'something went wrong go back to home page';
           this.ticketService.removeTicketIdsFromLocalStorage();
         }
       );

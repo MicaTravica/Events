@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.app.events.dto.TicketBuyReservationDTO;
 import com.app.events.dto.TicketDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.TicketMapper;
@@ -40,17 +41,13 @@ public class TicketController {
 
 	@GetMapping(value = "/api/ticketsForEvent/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Collection<TicketDTO>> getTicketForSector(@PathVariable("id") Long eventId) throws ResourceNotFoundException {
-		
-		
+	
 		Collection<Ticket> tickets = ticketService.findAllByEventId(eventId);
 		List<TicketDTO> retVal = tickets.stream().map(
 										ticket -> TicketMapper.toDTO(ticket)
 									).collect(Collectors.toList());
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
-
-
-
 
 	// @PostMapping(value = "/api/tickets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	// public ResponseEntity<TicketDTO> createTicket(TicketDTO ticketDTO) throws Exception {
@@ -66,28 +63,32 @@ public class TicketController {
 
 	@PutMapping(value = "/api/reserveTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
-	public ResponseEntity<TicketDTO> reserveTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Ticket updatedTicket = ticketService.reserveTicket(ticketDTO.getId(), ticketDTO.getUserId(), ticketDTO.getVersion());
-		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
+	public ResponseEntity<Collection<TicketDTO>> reserveTicket(@RequestBody TicketBuyReservationDTO ticketDTO) throws Exception {
+		Collection<Ticket> tickets = ticketService.reserveTicket(ticketDTO.getTicketIDs(), ticketDTO.getUserId());
+		List<TicketDTO> retVal = tickets.stream().map(
+										ticket -> TicketMapper.toDTO(ticket)
+									).collect(Collectors.toList());
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
 	@PutMapping(value = "/api/ticketPaymentCreation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
-	public ResponseEntity<Map<String, Object>> ticketPaymentCreation(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Map<String, Object> res = ticketService.ticketPaymentCreation(ticketDTO.getId(), ticketDTO.getUserId());
+	public ResponseEntity<Map<String, Object>> ticketPaymentCreation(@RequestBody TicketBuyReservationDTO ticketDTO) throws Exception {
+		Map<String, Object> res = ticketService.ticketPaymentCreation(ticketDTO.getTicketIDs(), ticketDTO.getUserId());
 		return new ResponseEntity<>(res, HttpStatus.OK);
 	}
 
-	
-
 	@PutMapping(value = "/api/buyTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
-	public ResponseEntity<TicketDTO> buyTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Ticket updatedTicket = ticketService.buyTicket(
-								ticketDTO.getId(), ticketDTO.getUserId(),
+	public ResponseEntity<List<TicketDTO>> buyTicket(@RequestBody TicketBuyReservationDTO ticketDTO) throws Exception {
+		Collection<Ticket> tickets = ticketService.buyTickets(
+								ticketDTO.getTicketIDs(), ticketDTO.getUserId(),
 								ticketDTO.getPayPalPaymentID(), ticketDTO.getPayPalPayerID());
 
-		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
+		List<TicketDTO> retVal = tickets.stream().map(
+										ticket -> TicketMapper.toDTO(ticket)
+									).collect(Collectors.toList());
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/tickets/{id}")
