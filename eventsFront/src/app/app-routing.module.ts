@@ -21,7 +21,8 @@ const routes: Routes = [
   { path: 'event/:id', component: EventDetailsComponent },
   { path: 'reservation/:id' , component: ReservationComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
-  { path: 'successPayPal' , component: PaypalComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
+  { path: 'successPayPal' , component: PaypalComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
+  { path: 'failPayPal', component: PaypalComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}}
 ];
 
 @NgModule({
