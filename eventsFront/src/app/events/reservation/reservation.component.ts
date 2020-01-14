@@ -91,9 +91,9 @@ export class ReservationComponent implements OnInit {
     this.ticketService.startBuyingProcess(ticket).subscribe(
       (res: {status: string, redirect_url: string }) => {
         if (res.status === 'success') {
+          this.ticketService.setTicketIdsToLocalStorage([ticket.id]);
           this.ticketService.redirectPayPal(res.redirect_url);
         }
-        console.log(res);
       },
       (err: HttpErrorResponse)  => {
         console.log(err.message);

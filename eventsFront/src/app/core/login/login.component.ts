@@ -4,6 +4,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from 'src/app/services/user-service/user.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private formBuilder: FormBuilder,
     private router: Router,
     // private toastr: ToastrService
@@ -31,10 +33,12 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.authService.login({ username: this.loginForm.value.username, password: this.loginForm.value.password }).subscribe(
       result => {
-        console.log(result);
         // this.toastr.success('Successful login!');
-        localStorage.setItem('token', result);
-        this.router.navigate(['/events']);
+        this.userService.me(result).subscribe(user => {
+          localStorage.setItem('token', result);
+          localStorage.setItem('user', JSON.stringify(user));
+          this.router.navigate(['/events']);
+        });
       },
       error => {
         // this.toastr.error(error.error);
