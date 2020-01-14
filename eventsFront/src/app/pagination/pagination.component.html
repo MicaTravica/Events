@@ -4,7 +4,7 @@
       <td>
         <button mat-raised-button *ngIf="activePage > 1" color="accent" (click)="selected(activePage-1)">Previous</button>
       </td>
-      <td *ngFor="let i of pages" [ngClass]="{'active': i==activePage}">
+      <td *ngFor="let i of pages">
         <button mat-raised-button *ngIf="activePage != i" color="accent" (click)="selected(i)">{{i}}</button>
         <button mat-raised-button *ngIf="activePage == i" color="primary" (click)="selected(i)">{{i}}</button>
       </td>
