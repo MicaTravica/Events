@@ -100,7 +100,7 @@ public class UserController extends BaseController {
 	
 	@GetMapping(value = "/userme", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
+	// @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
 	public ResponseEntity<UserDTO> getMyData(Principal user) throws UserNotFoundByUsernameException {
 		return new ResponseEntity<>(UserMapper.toDTO(userService.findOneByUsername(user.getName())), HttpStatus.OK);
 	}

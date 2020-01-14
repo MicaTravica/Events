@@ -28,6 +28,9 @@ import { PlaceService } from './services/place-service/place.service';
 import { DateFormatPipe } from './pipes/date-format.pipe';
 import { EventSearchComponent } from './events/event-search/event-search.component';
 import { PaginationComponent } from './pagination/pagination.component';
+import { ReservationComponent } from './events/reservation/reservation.component';
+import { ToastrModule } from 'ngx-toastr';
+import { PaypalComponent } from './paypal/paypal.component';
 
 
 
@@ -45,14 +48,17 @@ import { PaginationComponent } from './pagination/pagination.component';
     AddEventComponent,
     DateFormatPipe,
     EventSearchComponent,
-    PaginationComponent
+    PaginationComponent,
+    ReservationComponent,
+    PaypalComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     UserService,

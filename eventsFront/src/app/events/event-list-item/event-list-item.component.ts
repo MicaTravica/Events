@@ -23,6 +23,6 @@ export class EventListItemComponent implements OnInit {
   }
 
   buyReserve() {
-    console.log('tickets');
+    this.router.navigate(['/reservation/' + this.event.id]);
   }
 }

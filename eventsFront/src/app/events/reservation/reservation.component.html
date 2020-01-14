@@ -1,0 +1,28 @@
+<h4>Select hall</h4>
+<mat-form-field>
+    <mat-label>Hall</mat-label>
+    <mat-select>
+    <mat-option (click)="chooseHall(-1)">None</mat-option>
+    <mat-option *ngFor="let hall of event.halls" [value]="hall.id" (click)="chooseHall(hall.id)">
+        {{hall.name}}
+    </mat-option>
+    </mat-select>
+</mat-form-field>
+
+
+<h4 *ngIf="hallChoosen"> Select sector</h4>
+<mat-form-field *ngIf="hallChoosen">
+    <mat-label>Sector</mat-label>
+    <mat-select>
+    <mat-option (click)="chooseSector(-1)">None</mat-option>
+    <mat-option *ngFor="let sector of hall.sectors" [value]="sector.id" (click)="chooseSector(sector.id)">
+        {{sector.name}}
+    </mat-option>
+    </mat-select>
+</mat-form-field>
+
+<div *ngFor="let ticket of ticketsFiltered">    
+        <div>{{ticket.seatRow}}, {{ticket.seatColumn}}</div>
+        <button mat-raised-button (click)="buyTicket(ticket)" color="accent">Buy</button>
+        <button mat-raised-button (click)="reserveTicket(ticket)" color="accent">Reserve</button>
+</div>
