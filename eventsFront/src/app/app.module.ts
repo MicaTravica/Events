@@ -32,6 +32,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { AddressFormatPipe } from './pipes/address-format.pipe';
 import { ReservationComponent } from './tickets/reservation/reservation.component';
 import { PaypalComponent } from './tickets/paypal/paypal.component';
+import { ReservationListComponent } from './tickets/reservation-list/reservation-list.component';
 
 
 
@@ -52,7 +53,8 @@ import { PaypalComponent } from './tickets/paypal/paypal.component';
     PaginationComponent,
     ReservationComponent,
     PaypalComponent,
-    AddressFormatPipe
+    AddressFormatPipe,
+    ReservationListComponent
   ],
   imports: [
     BrowserModule,

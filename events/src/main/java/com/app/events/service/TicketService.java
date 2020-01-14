@@ -31,4 +31,6 @@ public interface TicketService {
 
 	Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException;
 
+	Collection<Ticket> findAllReservationsByUserId(Long userId);
+
 }

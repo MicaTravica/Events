@@ -35,7 +35,6 @@ import com.app.events.service.SectorCapacityService;
 import com.app.events.service.SectorService;
 import com.app.events.service.TicketService;
 import com.app.events.service.UserService;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter.FixedSpaceIndenter;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -64,7 +63,6 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private PriceListService priceListService;
 
-
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
 		return ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket"));
@@ -72,8 +70,10 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException {
-		Collection<Ticket> tickets  = ticketRepository.findAllByEventId(eventId);
-		if(tickets.size() == 0){ throw new ResourceNotFoundException("Tickets for Event");}
+		Collection<Ticket> tickets = ticketRepository.findAllByEventId(eventId);
+		if (tickets.size() == 0) {
+			throw new ResourceNotFoundException("Tickets for Event");
+		}
 		return tickets;
 	}
 
@@ -97,43 +97,37 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public Map<String,Object> ticketPaymentCreation(Long id, Long userId) throws Exception{
+	public Map<String, Object> ticketPaymentCreation(Long id, Long userId) throws Exception {
 
 		Ticket ticketToUpdate = findOne(id);
 		if (ticketToUpdate.getTicketState().equals(TicketState.RESERVED)
 				&& ticketToUpdate.getUser().getId() != userId) {
 			throw new TicketReservationException("Ticket already reserved by other user");
 		}
-		if(ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))
-		{
+		if (ticketToUpdate.getTicketState().equals(TicketState.BOUGHT)) {
 			throw new TicketIsBoughtException("Ticket is already bought");
 		}
 		return payPalService.startPayment(ticketToUpdate.getId(), ticketToUpdate.getPrice());
 	}
 
 	@Override
-	public Ticket buyTicket(Long ticketID, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception {
+	public Ticket buyTicket(Long ticketID, Long ticketUserID, String payPalPaymentId, String payPalPayerId)
+			throws Exception {
 		Ticket ticketToUpdate = findOne(ticketID);
 		ticketToUpdate.setTicketState(TicketState.BOUGHT);
-		if(ticketToUpdate.getUser() == null || 
-				(ticketToUpdate.getUser().getId() == ticketUserID &&
-				!ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))
-			)
-		{
+		if (ticketToUpdate.getUser() == null || (ticketToUpdate.getUser().getId() == ticketUserID
+				&& !ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))) {
 			User user = null;
-			if(ticketToUpdate.getUser() == null)
-			{
+			if (ticketToUpdate.getUser() == null) {
 				user = userService.findOne(ticketUserID);
 				ticketToUpdate.setUser(user);
 			}
 			boolean payed = payPalService.completedPayment(payPalPaymentId, payPalPayerId);
-			if(payed)
-			{
+			if (payed) {
 				return ticketRepository.save(ticketToUpdate);
 			}
 			throw new PayPalException("Not enough money on card for ticket purchuse");
-		}
-		else{
+		} else {
 			throw new TicketIsBoughtException("Ticket is already bought by other user");
 		}
 	}
@@ -144,7 +138,8 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception {
+	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update)
+			throws Exception {
 		Event savedEvent = eventService.findOne(eventId);
 		Map<Long, PriceList> priceListMap = priceLists.stream()
 				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
@@ -163,7 +158,7 @@ public class TicketServiceImpl implements TicketService {
 				} else {
 					int capacity = s.getSectorCapacities().iterator().next().getCapacity();
 					if (capacity < 1) {
-						if(!update)
+						if (!update)
 							eventService.delete(eventId);
 						throw new SectorCapacatyMustBePositiveNumberException();
 					}
@@ -193,6 +188,11 @@ public class TicketServiceImpl implements TicketService {
 			ticket.setSeat(null);
 		}
 		ticketRepository.deleteAll(tickets);
+	}
+
+	@Override
+	public Collection<Ticket> findAllReservationsByUserId(Long userId) {
+		return this.ticketRepository.findAllReservationsByUserId(userId);
 	}
 
 }

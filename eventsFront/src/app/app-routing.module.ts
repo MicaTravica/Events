@@ -12,6 +12,7 @@ import { AddEventComponent } from './core/add-event/add-event.component';
 import { EventDetailsComponent } from './events/event-details/event-details.component';
 import { ReservationComponent } from './tickets/reservation/reservation.component';
 import { PaypalComponent } from './tickets/paypal/paypal.component';
+import { ReservationListComponent } from './tickets/reservation-list/reservation-list.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'event/:id', component: EventDetailsComponent },
   { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
   { path: 'reservation/:id' , component: ReservationComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
+  { path: 'reservations' , component: ReservationListComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'successPayPal' , component: PaypalComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
 ];
 
