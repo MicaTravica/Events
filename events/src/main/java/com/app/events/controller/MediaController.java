@@ -1,5 +1,6 @@
 package com.app.events.controller;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.events.dto.MediaDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.MediaMapper;
+import com.app.events.model.Media;
 import com.app.events.service.MediaService;
 
 @RestController
@@ -42,6 +44,13 @@ public class MediaController extends BaseController {
 									.collect(Collectors.toList()),HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/media/event/one/{id}", 
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<MediaDTO> getMediaOneForEvent(@PathVariable("id") Long id) {
+		ArrayList<Media> medias = (ArrayList<Media>) mediaService.findAllForEvent(id);
+		MediaDTO media = medias.isEmpty() ? null : MediaMapper.toDTO(medias.get(0));
+		return new ResponseEntity<>(media, HttpStatus.OK);
+	}
 	@PostMapping(value = "/media", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE, 
 				 produces = MediaType.APPLICATION_JSON_VALUE)

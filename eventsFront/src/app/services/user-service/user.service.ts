@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { User } from '../../models/user-model/user.model'
+import { User } from '../../models/user-model/user.model';
 import { Router } from '@angular/router';
 import {httpOptions, authHttpOptions} from '../../util/http-util';
-import { LoginComponent } from 'src/app/core/login/login.component';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-service/auth.service';
 
@@ -27,6 +26,8 @@ export class UserService {
   }
 
   public save(user: User) {
+    // izmeni ovo djoleeeeeeeeeeeee
+    // subscribe se ne radi ovde!
     console.log(user);
     console.log(httpOptions);
     return this.http.post<User>(this.usersUrl + '/registration', user, httpOptions)
@@ -36,16 +37,11 @@ export class UserService {
   }
 
   public getUserFromLocalStorage() {
-    let user: User = new User();
+    let user: User = null;
     const u = localStorage.getItem('user');
-    if (!u) {
-      const token = this.authService.getToken();
-      this.me(token).subscribe(
-      data => {
-        localStorage.setItem('user', JSON.stringify(data));
-      });
+    if (u) {
+      user = JSON.parse(localStorage.getItem('user'));
     }
-    user = user.deserialize(u);
     return user;
   }
 }

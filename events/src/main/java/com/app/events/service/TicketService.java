@@ -1,5 +1,6 @@
 package com.app.events.service;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,5 +28,7 @@ public interface TicketService {
 	public void deleteTicketsByEventId(Long id);
 
 	void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception;
+
+	Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException;
 
 }

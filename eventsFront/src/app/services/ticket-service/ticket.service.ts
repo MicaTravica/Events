@@ -15,32 +15,41 @@ export class TicketService {
               private userService: UserService,
               private authService: AuthService) {}
 
-  makeReservation(ticketId: number) {
+  getAllByEventId(eventId: number) {
+    const token = this.authService.getToken();
+    return this.http.get(environment.restPath + '/ticketsForEvent/' + eventId, authHttpOptions(token));
+  }
+
+  makeReservation(ticket: Ticket) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
-    const payload = new Ticket();
+    const payload = ticket;
     payload.userId = user.id;
-    payload.id = ticketId;
     return this.http.put(environment.restPath + '/reserveTicket', payload, authHttpOptions(token));
   }
 
   // kad klikne na buy dugme ova se pozove
   // kad vrati rediretkuje ga na odredjenu stranicu da potvrdi kupovinu
 
-  startBuyingProcess(ticketId: number) {
+  startBuyingProcess(ticket: Ticket) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
-    const payload = new Ticket();
+    const payload = ticket;
     payload.userId = user.id;
-    payload.id = ticketId;
     return this.http.put(environment.restPath + '/ticketPaymentCreation', payload, authHttpOptions(token));
   }
 
-  finishBuyingProcess(ticketId: number, payPalPaymentId: string,
+  redirectPayPal(url: string) {
+    window.open(url, '_blank');
+  }
+
+  finishBuyingProcess(payPalPaymentId: string,
                       payPalToken: string, payPalPayerId: string) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
     const payload = new Ticket();
+    const ticketId: number = this.getTicketIdsFromLocalStorage()[0];
+
     payload.userId = user.id;
     payload.id = ticketId;
     payload.payPalPaymentID = payPalPaymentId;
@@ -49,5 +58,18 @@ export class TicketService {
     return this.http.put(environment.restPath + '/buyTicket', payload, authHttpOptions(token));
   }
 
+
+  // Helper functions
+  setTicketIdsToLocalStorage(ids: number[]) {
+    localStorage.setItem('ticketIds', JSON.stringify(ids));
+  }
+
+  getTicketIdsFromLocalStorage() {
+    JSON.parse(localStorage.getItem('ticketIds'));
+  }
+
+  removeTicketIdsFromLocalStorage() {
+    localStorage.removeItem('ticketIds');
+  }
 
 }

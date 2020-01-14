@@ -7,7 +7,7 @@ export const httpOptions = {
     })
 };
 
-export const authHttpOptions = (token) => {
+export const authHttpOptions = (token: string) => {
     return {
         headers: new HttpHeaders({
         'Content-Type': 'application/json',

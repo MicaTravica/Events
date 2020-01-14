@@ -27,7 +27,7 @@ export class RoleGuard implements CanActivate {
     const roles: string[] = expectedRoles.split('|', 2);
 
     if (roles.indexOf(info.role[0].authority) === -1) {
-      this.router.navigate(['/homepage']);
+      this.router.navigate(['/events']);
       return false;
     }
     return true;

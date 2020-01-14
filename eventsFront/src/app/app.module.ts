@@ -12,13 +12,27 @@ import { MenuComponent } from './core/menu/menu.component';
 import { LoginComponent } from './core/login/login.component';
 import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
+import { AddEventComponent } from './core/add-event/add-event.component';
 
 import { UserService } from './services/user-service/user.service';
-import { HomepageComponent } from './core/homepage/homepage.component'
 import { LoginGuard } from './guards/login.service';
 import { RoleGuard } from './guards/role.service';
 import { AuthService } from './services/auth-service/auth.service';
 import { TicketService } from './services/ticket-service/ticket.service';
+import { EventsListComponent } from './events/events-list/events-list.component';
+import { EventDetailsComponent } from './events/event-details/event-details.component';
+import { EventListItemComponent } from './events/event-list-item/event-list-item.component';
+import { EventService } from './services/event-service/event.service';
+import { HallService } from './services/hall-service/hall.service';
+import { PlaceService } from './services/place-service/place.service';
+import { DateFormatPipe } from './pipes/date-format.pipe';
+import { EventSearchComponent } from './events/event-search/event-search.component';
+import { PaginationComponent } from './pagination/pagination.component';
+import { ToastrModule } from 'ngx-toastr';
+import { AddressFormatPipe } from './pipes/address-format.pipe';
+import { ReservationComponent } from './tickets/reservation/reservation.component';
+import { PaypalComponent } from './tickets/paypal/paypal.component';
+
 
 
 @NgModule({
@@ -29,19 +43,33 @@ import { TicketService } from './services/ticket-service/ticket.service';
     LoginComponent,
     RegisterComponent,
     ProfileComponent,
-    HomepageComponent
+    EventsListComponent,
+    EventDetailsComponent,
+    EventListItemComponent,
+    AddEventComponent,
+    DateFormatPipe,
+    EventSearchComponent,
+    PaginationComponent,
+    ReservationComponent,
+    PaypalComponent,
+    AddressFormatPipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MaterialModule,
-    HttpClientModule
+    HttpClientModule,
+    ToastrModule.forRoot()
   ],
   providers: [
     UserService,
+    EventService,
     AuthService,
     TicketService,
+    EventService,
+    HallService,
+    PlaceService,
     LoginGuard,
     RoleGuard
   ],
