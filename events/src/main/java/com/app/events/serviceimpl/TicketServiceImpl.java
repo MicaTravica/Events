@@ -84,52 +84,86 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	@Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-	public Ticket reserveTicket(Long id, Long userId, Long ticketVersion) throws Exception {
-		Ticket ticketToUpdate = findOne(id);
-
-		if (!(ticketToUpdate.getVersion() == ticketVersion && ticketToUpdate.getUser() == null)) {
-			throw new TicketReservationException("Ticket already reserved");
-		}
+	public Collection<Ticket> reserveTicket(Collection<Long> ticketIDs, Long userId) throws Exception {
+		
+		Collection<Ticket> retVal = new ArrayList<>();
+		Collection<Ticket> reservedTickets = new ArrayList<>();
 		User user = userService.findOne(userId);
-		ticketToUpdate.setTicketState(TicketState.RESERVED);
-		ticketToUpdate.setUser(user);
-		return ticketRepository.save(ticketToUpdate);
+		for(Long ticketID: ticketIDs) {
+			Ticket ticketToUpdate = findOne(ticketID);
+
+			if (!(ticketToUpdate.getUser() == null)) {
+				throw new TicketReservationException("Ticket already reserved");
+			}
+			reservedTickets.add(ticketToUpdate);
+		}
+		for(Ticket t: reservedTickets){
+			t.setTicketState(TicketState.RESERVED);
+			t.setUser(user);
+			retVal.add(ticketRepository.save(t));
+		}
+		return retVal;
 	}
 
 	@Override
-	public Map<String, Object> ticketPaymentCreation(Long id, Long userId) throws Exception {
-
-		Ticket ticketToUpdate = findOne(id);
-		if (ticketToUpdate.getTicketState().equals(TicketState.RESERVED)
+	public Map<String,Object> ticketPaymentCreation(Collection<Long> ticketIDs, Long userId) throws Exception{
+		
+		Double amout = 0.0;
+		for(Long ticketID: ticketIDs) {
+			Ticket ticketToUpdate = findOne(ticketID);
+			if (ticketToUpdate.getTicketState().equals(TicketState.RESERVED)
 				&& ticketToUpdate.getUser().getId() != userId) {
 			throw new TicketReservationException("Ticket already reserved by other user");
+			}
+			if(ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))
+			{
+				throw new TicketIsBoughtException("Ticket is already bought");
+			}
+			amout += ticketToUpdate.getPrice();
 		}
-		if (ticketToUpdate.getTicketState().equals(TicketState.BOUGHT)) {
-			throw new TicketIsBoughtException("Ticket is already bought");
-		}
-		return payPalService.startPayment(ticketToUpdate.getId(), ticketToUpdate.getPrice());
+		
+		return payPalService.startPayment(amout);
 	}
 
 	@Override
-	public Ticket buyTicket(Long ticketID, Long ticketUserID, String payPalPaymentId, String payPalPayerId)
-			throws Exception {
-		Ticket ticketToUpdate = findOne(ticketID);
-		ticketToUpdate.setTicketState(TicketState.BOUGHT);
-		if (ticketToUpdate.getUser() == null || (ticketToUpdate.getUser().getId() == ticketUserID
-				&& !ticketToUpdate.getTicketState().equals(TicketState.BOUGHT))) {
-			User user = null;
-			if (ticketToUpdate.getUser() == null) {
-				user = userService.findOne(ticketUserID);
-				ticketToUpdate.setUser(user);
+	public Collection<Ticket> buyTickets(Collection<Long> ticketIDs, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception {
+		Collection<Ticket> retVal = new ArrayList<>();
+		Collection<Ticket> boughtTickets = new ArrayList<>();
+		for(Long ticketID: ticketIDs){
+			
+			Ticket ticketToUpdate = findOne(ticketID);
+			ticketToUpdate.setTicketState(TicketState.BOUGHT);
+			if(ticketToUpdate.getUser() == null || 
+					(ticketToUpdate.getUser().getId() == ticketUserID &&
+					ticketToUpdate.getTicketState().equals(TicketState.RESERVED))
+			)
+			{
+				User user = null;
+				if(ticketToUpdate.getUser() == null)
+				{
+					user = userService.findOne(ticketUserID);
+					ticketToUpdate.setUser(user);
+				}
+				boughtTickets.add(ticketToUpdate);
 			}
-			boolean payed = payPalService.completedPayment(payPalPaymentId, payPalPayerId);
-			if (payed) {
-				return ticketRepository.save(ticketToUpdate);
+			else {
+				throw new TicketIsBoughtException("Ticket is already bought by other user");
 			}
-			throw new PayPalException("Not enough money on card for ticket purchuse");
-		} else {
-			throw new TicketIsBoughtException("Ticket is already bought by other user");
 		}
+		// kad je prosao sve tikete da moze da ih kupi
+		// vrsi se transakcija ako prodje transakcija
+		// onda za svaku kartu update da je on sada vlasnik karte
+		boolean payed = payPalService.completedPayment(payPalPaymentId, payPalPayerId);
+		if(!payed)
+		{
+			throw new PayPalException("Not enough money on card for ticket purchuse");
+		}
+		boughtTickets.stream().forEach(
+			ticket-> {
+				Ticket savedTicket = ticketRepository.save(ticket);
+				retVal.add(savedTicket);
+			});
+		return retVal;
 	}
 
 	@Override

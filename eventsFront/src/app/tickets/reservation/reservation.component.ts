@@ -79,7 +79,7 @@ export class ReservationComponent implements OnInit {
     this.ticketService.makeReservation(ticket).subscribe(
       (res: any) => {
         this.toastr.success('reservation successfully made');
-        // this.updateTicketInLists(res);
+        this.updateTicketInLists(res);
       },
       (err: HttpErrorResponse)  => {
         console.log(err.message);

@@ -1,5 +1,6 @@
 package com.app.events.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -15,11 +16,11 @@ public interface TicketService {
 
 	public Ticket create(Ticket ticket) throws Exception;
 
-	public Ticket reserveTicket(Long id, Long userId, Long ticketVersion) throws Exception;
+	Collection<Ticket> reserveTicket(Collection<Long> ticketIDs, Long userId) throws Exception;
 
-	public Map<String,Object> ticketPaymentCreation(Long id, Long userId) throws Exception;
+	public Map<String,Object> ticketPaymentCreation(Collection<Long> ticketIDs, Long userId) throws Exception;
 
-	public Ticket  buyTicket(Long ticketID, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception;
+	public Collection<Ticket> buyTickets(Collection<Long> ticketID, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception;
 	
 	public void delete(Long id);
 

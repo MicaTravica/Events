@@ -58,26 +58,25 @@ public class TicketController {
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
-	// @PostMapping(value = "/api/tickets", consumes =
-	// MediaType.APPLICATION_JSON_VALUE, produces =
-	// MediaType.APPLICATION_JSON_VALUE)
-	// public ResponseEntity<TicketDTO> createTicket(TicketDTO ticketDTO) throws
-	// Exception {
+	// @PostMapping(value = "/api/tickets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	// public ResponseEntity<TicketDTO> createTicket(TicketDTO ticketDTO) throws Exception {
 
-	// try {
-	// TicketDTO savedTicket = ticketService.create(ticket);
-	// return new ResponseEntity<TicketDTO>(savedTicket, HttpStatus.CREATED);
-	// } catch (Exception e) {
-	// return new ResponseEntity<TicketDTO>(HttpStatus.BAD_REQUEST);
-	// }
+	// 	try {
+	// 		TicketDTO savedTicket = ticketService.create(ticket);
+	// 		return new ResponseEntity<TicketDTO>(savedTicket, HttpStatus.CREATED);
+	// 	} catch (Exception e) {
+	// 		return new ResponseEntity<TicketDTO>(HttpStatus.BAD_REQUEST);
+	// 	}
 	// }
 
 	@PutMapping(value = "/api/reserveTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
-	public ResponseEntity<TicketDTO> reserveTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Ticket updatedTicket = ticketService.reserveTicket(ticketDTO.getId(), ticketDTO.getUserId(),
-				ticketDTO.getVersion());
-		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
+	public ResponseEntity<Collection<TicketDTO>> reserveTicket(@RequestBody TicketBuyReservationDTO ticketDTO) throws Exception {
+		Collection<Ticket> tickets = ticketService.reserveTicket(ticketDTO.getTicketIDs(), ticketDTO.getUserId());
+		List<TicketDTO> retVal = tickets.stream().map(
+										ticket -> TicketMapper.toDTO(ticket)
+									).collect(Collectors.toList());
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
 	@PutMapping(value = "/api/ticketPaymentCreation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -90,11 +89,15 @@ public class TicketController {
 
 	@PutMapping(value = "/api/buyTicket", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
-	public ResponseEntity<TicketDTO> buyTicket(@RequestBody TicketDTO ticketDTO) throws Exception {
-		Ticket updatedTicket = ticketService.buyTicket(ticketDTO.getId(), ticketDTO.getUserId(),
-				ticketDTO.getPayPalPaymentID(), ticketDTO.getPayPalPayerID());
+	public ResponseEntity<List<TicketDTO>> buyTicket(@RequestBody TicketBuyReservationDTO ticketDTO) throws Exception {
+		Collection<Ticket> tickets = ticketService.buyTickets(
+								ticketDTO.getTicketIDs(), ticketDTO.getUserId(),
+								ticketDTO.getPayPalPaymentID(), ticketDTO.getPayPalPayerID());
 
-		return new ResponseEntity<>(TicketMapper.toDTO(updatedTicket), HttpStatus.OK);
+		List<TicketDTO> retVal = tickets.stream().map(
+										ticket -> TicketMapper.toDTO(ticket)
+									).collect(Collectors.toList());
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/api/tickets/{id}")
