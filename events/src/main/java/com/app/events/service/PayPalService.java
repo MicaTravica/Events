@@ -8,9 +8,9 @@ import com.paypal.api.payments.Payment;
  */
 public interface PayPalService {
 
-    Payment createPaymentObject(long TicketId, double price, String currency);
+    Payment createPaymentObject(double price, String currency);
 
-    public Map<String, Object> startPayment(long TicketId, double price);
+    public Map<String, Object> startPayment(double price);
     
     public boolean completedPayment(String paymentId, String payerId) throws Exception;
 

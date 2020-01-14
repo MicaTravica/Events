@@ -1,9 +1,11 @@
 package com.app.events.serviceimpl;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.app.events.service.PayPalService;
 import com.paypal.api.payments.Amount;
@@ -43,12 +45,19 @@ public class PayPalServiceImpl implements PayPalService {
     private String frontEndPayPalFailRoute;
 
     @Override
-    public Payment createPaymentObject(long TicketId, double price, String currency) {
+    public Payment createPaymentObject(double price, String currency) {
         Amount amount = new Amount();
         amount.setCurrency(currency);
         amount.setTotal(String.valueOf(price));
 
-        Item item = new Item(String.valueOf(TicketId), QUANTITY, String.valueOf(price), currency);
+        // generate item name
+        byte[] array = new byte[7]; // length is bounded by 7
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+        System.out.println(generatedString);
+        //
+
+        Item item = new Item(generatedString, QUANTITY, String.valueOf(price), currency);
         item.setDescription("KTSNVT - Reservation");
         
         Transaction transaction = new Transaction();
@@ -81,9 +90,9 @@ public class PayPalServiceImpl implements PayPalService {
         return payment;
     }
 
-    public Map<String, Object> startPayment(long TicketId, double price)
+    public Map<String, Object> startPayment(double price)
     {
-        Payment payment = createPaymentObject(TicketId, price, CURRENCY);
+        Payment payment = createPaymentObject(price, CURRENCY);
         Map<String, Object> response = new HashMap<String, Object>();
         Payment createdPayment;
         try {

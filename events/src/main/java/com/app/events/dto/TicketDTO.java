@@ -27,9 +27,4 @@ public class TicketDTO {
 
 	private EventDTO event;
 
-	private String payPalPaymentID;
-	private String payPalToken;
-	private String payPalPayerID;
-
-
 }
