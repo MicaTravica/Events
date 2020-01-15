@@ -238,10 +238,10 @@ public class TicketServiceImpl implements TicketService {
 						else{ 
 							for(int i = 0; i < nubmerOfDays;i++) {
 								DateTime startDate1 = new DateTime(fromDate);
-								startDate1.plusDays(i);
+								startDate1 = startDate1.plusDays(i);
 
 								DateTime endDate1 = new DateTime(toDate);
-								endDate1.minusDays((nubmerOfDays-i-1));
+								endDate1 = endDate1.minusDays((nubmerOfDays-i-1));
 
 								tickets.add(
 									new Ticket(null, null, savedPriceList.getPrice(),
@@ -269,21 +269,22 @@ public class TicketServiceImpl implements TicketService {
 										savedEvent, null, sc, new Long(0)));
 						}
 						else{
-							for(int i = 0; i < nubmerOfDays;i++) {
+							for(int j = 0; j < nubmerOfDays;j++) {
 								DateTime startDate1 = new DateTime(fromDate);
-								startDate1.plusDays(i);
+								startDate1 =  startDate1.plusDays(j);
 								DateTime endDate1 = new DateTime(toDate);
-								endDate1.minusDays((nubmerOfDays-i-1));
+								endDate1 = endDate1.minusDays((nubmerOfDays-j-1));
 
 								new Ticket(null, null, savedPriceList.getPrice(),
 										startDate1.toDate(), endDate1.toDate(),
 										TicketState.AVAILABLE, null,
-										savedEvent, null, sc, new Long(0)));
+										savedEvent, null, sc, new Long(0));
 						}
 					}
 				}
 			}
 		}
+	}
 		ticketRepository.saveAll(tickets);
 
 	}
