@@ -16,10 +16,10 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 	Collection<Ticket> findAllByEventId(Long id);
 
-	@Query("SELECT t FROM Ticket t inner join t.user u where u.id = ?1 and t.ticketState = 'RESERVED'")
-	Collection<Ticket> findAllReservationsByUserId(Long userId);
+	@Query("SELECT t FROM Ticket t inner join t.user u where u.username = ?1 and t.ticketState = 'RESERVED'")
+	Collection<Ticket> findAllReservationsByUserId(String username);
 
-	@Query("SELECT t FROM Ticket t inner join t.user u where u.id = ?1 and t.ticketState = 'BOUGHT'")
-	Page<Ticket> findAllTicketsByUserId(Long userId, Pageable pageable);
+	@Query("SELECT t FROM Ticket t inner join t.user u where u.username = ?1 and t.ticketState = 'BOUGHT'")
+	Page<Ticket> findAllTicketsByUserId(String username, Pageable pageable);
 
 }

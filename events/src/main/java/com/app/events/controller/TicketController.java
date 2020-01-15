@@ -1,5 +1,6 @@
 package com.app.events.controller;
 
+import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -52,22 +53,22 @@ public class TicketController {
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/api/ticket/reservationsUser/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/api/ticket/reservationsUser", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
-	public ResponseEntity<Collection<TicketDTO>> getTicketReservationsUser(@PathVariable("id") Long userId)
+	public ResponseEntity<Collection<TicketDTO>> getTicketReservationsUser(Principal user)
 			throws ResourceNotFoundException {
-		Collection<Ticket> tickets = ticketService.findAllReservationsByUserId(userId);
+		Collection<Ticket> tickets = ticketService.findAllReservationsByUserId(user.getName());
 		List<TicketDTO> retVal = tickets.stream().map(ticket -> TicketMapper.toDTO(ticket))
 				.collect(Collectors.toList());
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/api/ticket/user/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/api/ticket/user", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
-	public ResponseEntity<Page<TicketDTO>> getTicketUser(@PathVariable("id") Long userId,
+	public ResponseEntity<Page<TicketDTO>> getTicketUser(Principal user,
 			@RequestParam(value = "num", required = true) int numOfPage,
 			@RequestParam(value = "size", required = true) int sizeOfPage) throws ResourceNotFoundException {
-		Page<Ticket> result = ticketService.findAllTicketsByUserId(userId, numOfPage, sizeOfPage);
+		Page<Ticket> result = ticketService.findAllTicketsByUserId(user.getName(), numOfPage, sizeOfPage);
 		Page<TicketDTO> tickets = new PageImpl<TicketDTO>(
 				result.get().map(TicketMapper::toDTO).collect(Collectors.toList()), result.getPageable(),
 				result.getTotalElements());

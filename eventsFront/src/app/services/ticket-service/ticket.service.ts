@@ -76,11 +76,11 @@ export class TicketService {
   }
 
   getReservationByUserId(id: number) {
-    return this.http.get(environment.restPath + '/ticket/reservationsUser/' + id, authHttpOptions(this.authService.getToken()));
+    return this.http.get(environment.restPath + '/ticket/reservationsUser', authHttpOptions(this.authService.getToken()));
   }
 
   getTicketByUserId(id: number, numOfPage: number, sizeOfPage: number) {
-    return this.http.get(environment.restPath + '/ticket/user/' + id + '?num=' + numOfPage + '&size=' + sizeOfPage,
+    return this.http.get(environment.restPath + '/ticket/user?num=' + numOfPage + '&size=' + sizeOfPage,
       authHttpOptions(this.authService.getToken()));
   }
 }

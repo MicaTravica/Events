@@ -33,8 +33,8 @@ public interface TicketService {
 
 	Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException;
 
-	Collection<Ticket> findAllReservationsByUserId(Long userId);
+	Collection<Ticket> findAllReservationsByUserId(String username);
 
-	Page<Ticket> findAllTicketsByUserId(Long userId, int numOfPage, int sizeOfPage);
+	Page<Ticket> findAllTicketsByUserId(String username, int numOfPage, int sizeOfPage);
 
 }
