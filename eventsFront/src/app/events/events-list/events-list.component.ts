@@ -13,7 +13,7 @@ import { MediaService } from 'src/app/services/media-service/media.service';
 export class EventsListComponent implements OnInit {
 
   events: EventEntity[];
-  eventSearch = new EventSearch(0, 8, '', '', null, null, null, null, null);
+  eventSearch = new EventSearch(0, 8, '', true, '', null, null, null, null, null);
   totalElements = 0;
   size = 8;
 
@@ -57,8 +57,10 @@ export class EventsListComponent implements OnInit {
   doSearch(es: EventSearch) {
     this.eventSearch = es;
     this.size = es.sizeOfPage;
+    this.totalElements = 0;
     this.search();
   }
+
   pageChanged(num: number) {
     this.eventSearch.numOfPage = num - 1;
     this.search();

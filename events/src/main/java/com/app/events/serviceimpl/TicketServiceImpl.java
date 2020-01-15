@@ -8,6 +8,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +67,6 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private PriceListService priceListService;
 
-
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
 		return ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket"));
@@ -71,8 +74,10 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException {
-		Collection<Ticket> tickets  = ticketRepository.findAllByEventId(eventId);
-		if(tickets.size() == 0){ throw new ResourceNotFoundException("Tickets for Event");}
+		Collection<Ticket> tickets = ticketRepository.findAllByEventId(eventId);
+		if (tickets.size() == 0) {
+			throw new ResourceNotFoundException("Tickets for Event");
+		}
 		return tickets;
 	}
 
@@ -171,7 +176,8 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception {
+	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update)
+			throws Exception {
 		Event savedEvent = eventService.findOne(eventId);
 		Map<Long, PriceList> priceListMap = priceLists.stream()
 				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
@@ -190,7 +196,7 @@ public class TicketServiceImpl implements TicketService {
 				} else {
 					int capacity = s.getSectorCapacities().iterator().next().getCapacity();
 					if (capacity < 1) {
-						if(!update)
+						if (!update)
 							eventService.delete(eventId);
 						throw new SectorCapacatyMustBePositiveNumberException();
 					}
@@ -220,6 +226,18 @@ public class TicketServiceImpl implements TicketService {
 			ticket.setSeat(null);
 		}
 		ticketRepository.deleteAll(tickets);
+	}
+
+	@Override
+	public Collection<Ticket> findAllReservationsByUserId(String username) {
+		return this.ticketRepository.findAllReservationsByUserId(username);
+	}
+	
+	@Override
+	public Page<Ticket> findAllTicketsByUserId(String username, int numOfPage, int sizeOfPage) {
+		Pageable pageable = PageRequest.of(numOfPage, sizeOfPage,
+					Sort.by("event.fromDate").descending());
+		return this.ticketRepository.findAllTicketsByUserId(username, pageable);
 	}
 
 }

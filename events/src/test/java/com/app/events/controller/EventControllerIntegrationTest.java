@@ -821,7 +821,7 @@ public class EventControllerIntegrationTest {
 		URI uri = new URI(EventConstants.URL_PREFIX + "/search");
 
 		String param = "UTAK";
-		SearchParamsEvent params = new SearchParamsEvent(0, 10, "", param, null, null, null, null, null);
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "", true, param, null, null, null, null, null);
 
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<SearchParamsEvent> req = new HttpEntity<>(params, headers);
@@ -846,7 +846,7 @@ public class EventControllerIntegrationTest {
 		Date toDate = new GregorianCalendar(2020, Calendar.JANUARY, 3).getTime();
 		EventState state = EventState.AVAILABLE;
 		EventType type = EventType.SPORT;
-		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", "UT", fromDate, toDate, state, type, 1L);
+		SearchParamsEvent params = new SearchParamsEvent(0, 10, "name", true, "UT", fromDate, toDate, state, type, 1L);
 
 		HttpHeaders headers = new HttpHeaders();
 		HttpEntity<SearchParamsEvent> req = new HttpEntity<>(params, headers);

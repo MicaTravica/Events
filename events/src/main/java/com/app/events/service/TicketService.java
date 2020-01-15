@@ -1,9 +1,10 @@
 package com.app.events.service;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+
+import org.springframework.data.domain.Page;
 
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
@@ -31,5 +32,9 @@ public interface TicketService {
 	void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception;
 
 	Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException;
+
+	Collection<Ticket> findAllReservationsByUserId(String username);
+
+	Page<Ticket> findAllTicketsByUserId(String username, int numOfPage, int sizeOfPage);
 
 }

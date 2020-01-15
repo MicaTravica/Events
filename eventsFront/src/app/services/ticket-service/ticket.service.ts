@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user-service/user.service';
-import {httpOptions, authHttpOptions} from '../../util/http-util';
+import { authHttpOptions} from '../../util/http-util';
 import { AuthService } from '../auth-service/auth.service';
 import { Ticket } from 'src/app/models/ticket-model/ticket.model';
 import { TicketBuyReservation } from 'src/app/models/ticket-buy-reservation-model/ticket.buy.reservation.model';
@@ -75,4 +75,12 @@ export class TicketService {
     localStorage.removeItem('ticketIds');
   }
 
+  getReservationByUserId(id: number) {
+    return this.http.get(environment.restPath + '/ticket/reservationsUser', authHttpOptions(this.authService.getToken()));
+  }
+
+  getTicketByUserId(id: number, numOfPage: number, sizeOfPage: number) {
+    return this.http.get(environment.restPath + '/ticket/user?num=' + numOfPage + '&size=' + sizeOfPage,
+      authHttpOptions(this.authService.getToken()));
+  }
 }

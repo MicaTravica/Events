@@ -27,4 +27,16 @@ export class MenuComponent implements OnInit {
   showEvents() {
     this.router.navigate(['/events']);
   }
+
+  showPlaces() {
+    this.router.navigate(['/places']);
+  }
+
+  showReservations() {
+    this.router.navigate(['/reservations']);
+  }
+
+  showTickets() {
+    this.router.navigate(['/tickets']);
+  }
 }

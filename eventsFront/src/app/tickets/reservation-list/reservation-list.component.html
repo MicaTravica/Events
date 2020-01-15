@@ -1,0 +1,32 @@
+<div class="main">
+    <div class="card-header">
+        <h1>My reservations</h1>
+        <p>
+            <button mat-raised-button (click)="selectAll()" color="accent" style="margin-right: 5px;">Select all</button>
+            <button mat-raised-button (click)="cancled()" color="accent" style="margin-right: 5px;">Cancled selected</button>
+            <button mat-raised-button (click)="buy()" color="accent">Buy selected</button>
+        </p>
+    </div>
+    <mat-card class="card" *ngFor="let res of reservations">
+        <mat-card-header class="card-header">
+            <mat-card-title>{{res.event.name}}</mat-card-title>
+            <mat-card-subtitle>{{res.event.halls[0].place.name}}</mat-card-subtitle>
+            <mat-checkbox [(ngModel)]="checked[res.id]"></mat-checkbox>
+        </mat-card-header>
+        <mat-card-content class="card-container">
+            <mat-card-content>
+                <p>From: {{res.event.fromDate | dateFormat}}</p>
+                <p>Sector: {{res.sectorName}}</p>
+            </mat-card-content>
+            <mat-card-content>
+                <p>To: {{res.event.toDate | dateFormat}}</p>
+                <p *ngIf='res.seatRow'>Seat: {{res.seatRow}} | {{res.seatColumn}}</p>
+            </mat-card-content>
+        </mat-card-content>
+        <mat-card-actions class="card-actions">
+            <button mat-raised-button (click)="showDetails(res.event.id)" color="accent">Event details</button>
+            <button mat-raised-button (click)="cancledOne(res.id)" color="accent">Cancled</button>
+            <button mat-raised-button (click)="buyOne(res.id)" color="accent">Buy</button>
+        </mat-card-actions>
+    </mat-card>
+</div>

@@ -177,9 +177,9 @@ public class EventServiceImplUnitTest {
 		EVENT_UPDATE10 = new Event(5L, "Dogadjaj10", "Jako lepo", new Date(), new Date(), EventState.AVAILABLE,
 				EventType.SPORT, halls3, priceList, new HashSet<>());
 
-		PARAMS1 = new SearchParamsEvent(0, 10, "", "", null, null, null, null, null);
-		PARAMS2 = new SearchParamsEvent(0, 10, "name", "", null, null, null, null, null);
-		PARAMS3 = new SearchParamsEvent(0, 2, "", "", new Date(), new Date(), EventState.AVAILABLE, EventType.SPORT,
+		PARAMS1 = new SearchParamsEvent(0, 10, "", true, "", null, null, null, null, null);
+		PARAMS2 = new SearchParamsEvent(0, 10, "name", true, "", null, null, null, null, null);
+		PARAMS3 = new SearchParamsEvent(0, 2, "", true, "", new Date(), new Date(), EventState.AVAILABLE, EventType.SPORT,
 				1L);
 
 		ArrayList<Event> content = new ArrayList<>();
