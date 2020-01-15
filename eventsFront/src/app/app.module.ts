@@ -28,12 +28,13 @@ import { PlaceService } from './services/place-service/place.service';
 import { DateFormatPipe } from './pipes/date-format.pipe';
 import { EventSearchComponent } from './events/event-search/event-search.component';
 import { PaginationComponent } from './pagination/pagination.component';
-import { ToastrModule } from 'ngx-toastr';
 import { AddressFormatPipe } from './pipes/address-format.pipe';
 import { ReservationComponent } from './tickets/reservation/reservation.component';
 import { PaypalComponent } from './tickets/paypal/paypal.component';
 import { ReservationListComponent } from './tickets/reservation-list/reservation-list.component';
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
+import { PlacesListComponent } from './places/places-list/places-list.component';
+import { ToastrModule } from 'ngx-toastr';
 
 
 
@@ -56,7 +57,8 @@ import { TicketListComponent } from './tickets/ticket-list/ticket-list.component
     PaypalComponent,
     AddressFormatPipe,
     ReservationListComponent,
-    TicketListComponent
+    TicketListComponent,
+    PlacesListComponent
   ],
   imports: [
     BrowserModule,

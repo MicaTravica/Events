@@ -14,12 +14,14 @@ import { ReservationComponent } from './tickets/reservation/reservation.componen
 import { PaypalComponent } from './tickets/paypal/paypal.component';
 import { ReservationListComponent } from './tickets/reservation-list/reservation-list.component';
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
+import { PlacesListComponent } from './places/places-list/places-list.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
   { path: 'profile', component: ProfileComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
   { path: 'events', component: EventsListComponent },
+  { path: 'places', component: PlacesListComponent },
   { path: 'event/:id', component: EventDetailsComponent },
   { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
   { path: 'reservation/:id' , component: ReservationComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},

@@ -1,0 +1,25 @@
+<div class="main">
+    <mat-form-field>
+        <input matInput [(ngModel)]="name" placeholder="Place name" (change)='doSearch()'>
+    </mat-form-field>
+    <mat-form-field class="details">
+        <mat-label>Size of page</mat-label>
+        <mat-select [(ngModel)]="size" (selectionChange)='doSearch()'>
+            <mat-option *ngFor="let s of sizes" [value]="s">{{s}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-grid-list *ngIf="totalElements > 0" cols="4" rowHeight="160px">
+        <mat-grid-tile *ngFor="let p of places" >
+            <mat-card class="card">
+                <mat-card-header>
+                    <mat-card-title>{{p.name}}</mat-card-title>
+                    <mat-card-subtitle>{{p.address}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-actions>
+                    <button mat-raised-button (click)="showDetails(p.id)" color="accent">Details</button>
+                </mat-card-actions>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+    <app-pagination *ngIf="totalElements > 0" [totalItems]='totalElements' [pageSize]='size' (pageSelected)='pageChanged($event)'></app-pagination>
+</div>
