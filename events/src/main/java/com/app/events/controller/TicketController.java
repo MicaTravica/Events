@@ -95,6 +95,16 @@ public class TicketController {
 		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
+	@PutMapping(value = "/api/cancelReservations", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_REGULAR')")
+	public ResponseEntity<Collection<TicketDTO>> cancelReservations(@RequestBody TicketBuyReservationDTO ticketDTO) throws Exception {
+		Collection<Ticket> canceledTickets = ticketService.cancelReservations(ticketDTO.getTicketIDs(), ticketDTO.getUserId());
+		List<TicketDTO> retVal = canceledTickets.stream().map(
+										ticket -> TicketMapper.toDTO(ticket)
+									).collect(Collectors.toList());
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
+	}
+
 	@PutMapping(value = "/api/ticketPaymentCreation", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_REGULAR')")
 	public ResponseEntity<Map<String, Object>> ticketPaymentCreation(@RequestBody TicketBuyReservationDTO ticketDTO) throws Exception {
