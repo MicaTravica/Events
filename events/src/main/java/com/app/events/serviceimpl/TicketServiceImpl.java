@@ -255,15 +255,15 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public Collection<Ticket> findAllReservationsByUserId(Long userId) {
-		return this.ticketRepository.findAllReservationsByUserId(userId);
+	public Collection<Ticket> findAllReservationsByUserId(String username) {
+		return this.ticketRepository.findAllReservationsByUserId(username);
 	}
 	
 	@Override
-	public Page<Ticket> findAllTicketsByUserId(Long userId, int numOfPage, int sizeOfPage) {
+	public Page<Ticket> findAllTicketsByUserId(String username, int numOfPage, int sizeOfPage) {
 		Pageable pageable = PageRequest.of(numOfPage, sizeOfPage,
 					Sort.by("event.fromDate").descending());
-		return this.ticketRepository.findAllTicketsByUserId(userId, pageable);
+		return this.ticketRepository.findAllTicketsByUserId(username, pageable);
 	}
 
 }

@@ -18,8 +18,11 @@ export class PaypalComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
+      // tslint:disable-next-line: no-string-literal
       const paymentId = params['paymentId'];
+      // tslint:disable-next-line: no-string-literal
       const token = params['token'];
+      // tslint:disable-next-line: no-string-literal
       const PayerID = params['PayerID'];
 
       console.log(paymentId);

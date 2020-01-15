@@ -3,6 +3,8 @@ package com.app.events.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Place;
@@ -22,4 +24,6 @@ public interface PlaceService {
 	public void coordinatesCheckReserved(Place place) throws ResourceExistsException;
 
 	public Place setPlaceFields(Place placeToUpdate, Place place);
+
+	public Page<Place> searchPlaces(int numOfPage, int sizeOfPage, String name);
 }

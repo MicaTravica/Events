@@ -60,6 +60,7 @@ export class EventsListComponent implements OnInit {
     this.totalElements = 0;
     this.search();
   }
+
   pageChanged(num: number) {
     this.eventSearch.numOfPage = num - 1;
     this.search();
