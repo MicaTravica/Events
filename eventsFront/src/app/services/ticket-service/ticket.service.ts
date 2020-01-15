@@ -30,20 +30,29 @@ export class TicketService {
     return this.http.put(environment.restPath + '/reserveTicket', payload, authHttpOptions(token));
   }
 
-  // kad klikne na buy dugme ova se pozove
-  // kad vrati rediretkuje ga na odredjenu stranicu da potvrdi kupovinu
-
-  startBuyingProcess(ticket: Ticket) {
+  cancelReservations(ticketIDs: number[]) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
     const payload = new TicketBuyReservation();
     payload.userId = user.id;
-    payload.ticketIDs = [ticket.id];
+    payload.ticketIDs = ticketIDs;
+    return this.http.put(environment.restPath + '/cancelReservations', payload, authHttpOptions(token));
+  }
+
+  // kad klikne na buy dugme ova se pozove
+  // kad vrati rediretkuje ga na odredjenu stranicu da potvrdi kupovinu
+
+  startBuyingProcess(ticketIDs: number[]) {
+    const user = this.userService.getUserFromLocalStorage();
+    const token = this.authService.getToken();
+    const payload = new TicketBuyReservation();
+    payload.userId = user.id;
+    payload.ticketIDs = ticketIDs;
     return this.http.put(environment.restPath + '/ticketPaymentCreation', payload, authHttpOptions(token));
   }
 
   redirectPayPal(url: string) {
-    window.open(url, '_blank');
+    window.open(url, '_self');
   }
 
   finishBuyingProcess(payPalPaymentId: string,

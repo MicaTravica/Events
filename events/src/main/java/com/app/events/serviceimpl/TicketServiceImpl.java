@@ -95,7 +95,6 @@ public class TicketServiceImpl implements TicketService {
 		User user = userService.findOne(userId);
 		for(Long ticketID: ticketIDs) {
 			Ticket ticketToUpdate = findOne(ticketID);
-
 			if (!(ticketToUpdate.getUser() == null)) {
 				throw new TicketReservationException("Ticket already reserved");
 			}
@@ -104,6 +103,33 @@ public class TicketServiceImpl implements TicketService {
 		for(Ticket t: reservedTickets){
 			t.setTicketState(TicketState.RESERVED);
 			t.setUser(user);
+			retVal.add(ticketRepository.save(t));
+		}
+		return retVal;
+	}
+
+	@Override
+	public Collection<Ticket> cancelReservations(Collection<Long> ticketIDs, Long userId) throws Exception {
+		
+		Collection<Ticket> retVal = new ArrayList<>();
+		Collection<Ticket> reservedTickets = new ArrayList<>();
+		User user = userService.findOne(userId);
+		for(Long ticketID: ticketIDs) {
+			Ticket ticketToUpdate = findOne(ticketID);
+			if (	(ticketToUpdate.getUser() == null) ||
+					(ticketToUpdate.getUser().getId() != user.getId())
+				) {
+				throw new TicketReservationException("Ticket was not reserved by this user");
+			}
+			if (!ticketToUpdate.getTicketState().equals(TicketState.RESERVED)) {
+				throw new TicketReservationException("Ticket was not in reserved state");
+			}
+			// TODO: check ticket Start and End date with current date...
+			reservedTickets.add(ticketToUpdate);
+		}
+		for(Ticket t: reservedTickets){
+			t.setTicketState(TicketState.AVAILABLE);
+			t.setUser(null);
 			retVal.add(ticketRepository.save(t));
 		}
 		return retVal;
@@ -136,7 +162,6 @@ public class TicketServiceImpl implements TicketService {
 		for(Long ticketID: ticketIDs){
 			
 			Ticket ticketToUpdate = findOne(ticketID);
-			ticketToUpdate.setTicketState(TicketState.BOUGHT);
 			if(ticketToUpdate.getUser() == null || 
 					(ticketToUpdate.getUser().getId() == ticketUserID &&
 					ticketToUpdate.getTicketState().equals(TicketState.RESERVED))
@@ -148,6 +173,7 @@ public class TicketServiceImpl implements TicketService {
 					user = userService.findOne(ticketUserID);
 					ticketToUpdate.setUser(user);
 				}
+				ticketToUpdate.setTicketState(TicketState.BOUGHT);
 				boughtTickets.add(ticketToUpdate);
 			}
 			else {

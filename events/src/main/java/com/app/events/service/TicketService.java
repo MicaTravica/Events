@@ -19,6 +19,8 @@ public interface TicketService {
 
 	Collection<Ticket> reserveTicket(Collection<Long> ticketIDs, Long userId) throws Exception;
 
+	public Collection<Ticket> cancelReservations(Collection<Long> ticketIDs, Long userId) throws Exception;
+
 	public Map<String,Object> ticketPaymentCreation(Collection<Long> ticketIDs, Long userId) throws Exception;
 
 	public Collection<Ticket> buyTickets(Collection<Long> ticketID, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception;
