@@ -1,12 +1,17 @@
 package com.app.events.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -214,12 +219,40 @@ public class TicketServiceImpl implements TicketService {
 				PriceList priceList = priceListMap.get(sector.getId());
 				PriceList savedPriceList = priceListService
 						.create(new PriceList(null, priceList.getPrice(), savedEvent, sector));
+				
+				Date toDate = savedEvent.getToDate();
+				Date fromDate = savedEvent.getFromDate();
+				DateTime startDate = new DateTime(fromDate);
+				DateTime endDate = new DateTime(toDate);
+				int nubmerOfDays = Days.daysBetween(startDate, endDate).getDays();
+				
 				if (sector.getSeats().size() > 0) {
+					
 					for (Seat seat : seatService.findSeatFromSector(sector.getId())) {
-						tickets.add(new Ticket(null, null, savedPriceList.getPrice(), TicketState.AVAILABLE, null,
+						// ako traje samo 1 dan
+						if(nubmerOfDays == 0) {
+							tickets.add(new Ticket(null, null, savedPriceList.getPrice(),
+							fromDate, toDate, TicketState.AVAILABLE, null,
+							savedEvent, seat, null, new Long(0)));
+						}
+						else{ 
+							for(int i = 0; i < nubmerOfDays;i++) {
+								DateTime startDate1 = new DateTime(fromDate);
+								startDate1 = startDate1.plusDays(i);
+
+								DateTime endDate1 = new DateTime(toDate);
+								endDate1 = endDate1.minusDays((nubmerOfDays-i-1));
+
+								tickets.add(
+									new Ticket(null, null, savedPriceList.getPrice(),
+									startDate1.toDate(), endDate1.toDate(),
+									TicketState.AVAILABLE, null,
 								savedEvent, seat, null, new Long(0)));
+							}
+						}						
 					}
 				} else {
+					// parter
 					int capacity = s.getSectorCapacities().iterator().next().getCapacity();
 					if (capacity < 1) {
 						if (!update)
@@ -229,12 +262,29 @@ public class TicketServiceImpl implements TicketService {
 					SectorCapacity sc = sectorCapacityService
 							.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
 					for (int i = 0; i < sc.getCapacity(); i++) {
-						tickets.add(new Ticket(null, null, savedPriceList.getPrice(), TicketState.AVAILABLE, null,
-								savedEvent, null, sc, new Long(0)));
+						if(nubmerOfDays == 0) {
+							tickets.add(
+								new Ticket(null, null, savedPriceList.getPrice(),
+										fromDate, toDate, TicketState.AVAILABLE, null,
+										savedEvent, null, sc, new Long(0)));
+						}
+						else{
+							for(int j = 0; j < nubmerOfDays;j++) {
+								DateTime startDate1 = new DateTime(fromDate);
+								startDate1 =  startDate1.plusDays(j);
+								DateTime endDate1 = new DateTime(toDate);
+								endDate1 = endDate1.minusDays((nubmerOfDays-j-1));
+
+								new Ticket(null, null, savedPriceList.getPrice(),
+										startDate1.toDate(), endDate1.toDate(),
+										TicketState.AVAILABLE, null,
+										savedEvent, null, sc, new Long(0));
+						}
 					}
 				}
 			}
 		}
+	}
 		ticketRepository.saveAll(tickets);
 
 	}
