@@ -31,6 +31,7 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { AddressFormatPipe } from './pipes/address-format.pipe';
 import { ReservationComponent } from './tickets/reservation/reservation.component';
 import { PaypalComponent } from './tickets/paypal/paypal.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ReservationListComponent } from './tickets/reservation-list/reservation-list.component';
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
 import { PlacesListComponent } from './places/places-list/places-list.component';
@@ -56,6 +57,7 @@ import { ToastrModule } from 'ngx-toastr';
     ReservationComponent,
     PaypalComponent,
     AddressFormatPipe,
+    PageNotFoundComponent,
     ReservationListComponent,
     TicketListComponent,
     PlacesListComponent
