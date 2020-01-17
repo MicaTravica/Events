@@ -36,6 +36,9 @@ import { ReservationListComponent } from './tickets/reservation-list/reservation
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
 import { PlacesListComponent } from './places/places-list/places-list.component';
 import { ToastrModule } from 'ngx-toastr';
+import { TimeReportComponent } from './reports/time-report/time-report.component';
+import { EventReportComponent } from './reports/event-report/event-report.component';
+import { ReportsComponent } from './reports/reports/reports.component';
 
 
 
@@ -60,7 +63,10 @@ import { ToastrModule } from 'ngx-toastr';
     PageNotFoundComponent,
     ReservationListComponent,
     TicketListComponent,
-    PlacesListComponent
+    PlacesListComponent,
+    TimeReportComponent,
+    EventReportComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
