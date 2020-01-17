@@ -1,0 +1,60 @@
+.example-headers-align .mat-expansion-panel-header-title,
+.example-headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-form-field {
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.details {
+    width: 32%;
+}
+
+
+// for tickets
+.example-small-box, .example-large-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.example-small-box {
+  height: 400px;
+  width: 400px;
+}
+
+.example-large-box {
+  height: 400px;
+  width: 800px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+// mat-grid-tile {
+//   background: green($color: #000000);
+// }
+
+.available-ticket {
+  background: blue;
+}
+
+.selected-ticket {
+  background:lightblue;
+}
+
+.reserved-ticket {
+  background: gray;
+}

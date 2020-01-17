@@ -1,6 +1,7 @@
 package com.app.events.service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -39,4 +40,5 @@ public interface TicketService {
 
 	Page<Ticket> findAllTicketsByUserId(String username, int numOfPage, int sizeOfPage);
 
+	Collection<Ticket> findTicketsByDateAndHallAndSector(Long eventId, Long sectorId ,Date fromDate, Date toDate) throws ResourceNotFoundException;
 }

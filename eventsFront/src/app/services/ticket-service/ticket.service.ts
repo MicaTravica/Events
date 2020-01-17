@@ -21,12 +21,17 @@ export class TicketService {
     return this.http.get(environment.restPath + '/ticketsForEvent/' + eventId, authHttpOptions(token));
   }
 
-  makeReservation(ticket: Ticket) {
+  getTicketsByDateAndHallAndSector(payload: any) {
+    const token = this.authService.getToken();
+    return this.http.post(environment.restPath + '/ticketsByDateAndHallAndSector', payload, authHttpOptions(token));
+  }
+
+  makeReservation(ticketIds: number[]) {
     const user = this.userService.getUserFromLocalStorage();
     const token = this.authService.getToken();
     const payload = new TicketBuyReservation();
     payload.userId = user.id;
-    payload.ticketIDs = [ticket.id];
+    payload.ticketIDs = ticketIds;
     return this.http.put(environment.restPath + '/reserveTicket', payload, authHttpOptions(token));
   }
 

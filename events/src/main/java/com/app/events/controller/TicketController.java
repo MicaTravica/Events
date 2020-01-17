@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.events.dto.TicketBuyReservationDTO;
 import com.app.events.dto.TicketDTO;
+import com.app.events.dto.TicketFindByDateSectorEventDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.TicketMapper;
 import com.app.events.model.Ticket;
@@ -73,6 +75,19 @@ public class TicketController {
 				result.get().map(TicketMapper::toDTO).collect(Collectors.toList()), result.getPageable(),
 				result.getTotalElements());
 		return new ResponseEntity<>(tickets, HttpStatus.OK);
+	}
+
+	@PostMapping(value = "/api/ticketsByDateAndHallAndSector",
+		produces = MediaType.APPLICATION_JSON_VALUE , consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PreAuthorize("hasRole('ROLE_REGULAR')")
+	public ResponseEntity<Collection<TicketDTO>> ticketsByDateAndHallAndSector(@RequestBody TicketFindByDateSectorEventDTO findDTO)
+			throws ResourceNotFoundException {
+		Collection<Ticket> tickets =
+			ticketService.findTicketsByDateAndHallAndSector(
+				findDTO.getEventId(), findDTO.getSectorId(), findDTO.getFromDate(), findDTO.getToDate());
+		List<TicketDTO> retVal = tickets.stream().map(ticket -> TicketMapper.toDTO(ticket))
+				.collect(Collectors.toList());
+		return new ResponseEntity<>(retVal, HttpStatus.OK);
 	}
 
 	// @PostMapping(value = "/api/tickets", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

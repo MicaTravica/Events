@@ -316,4 +316,28 @@ public class TicketServiceImpl implements TicketService {
 		return this.ticketRepository.findAllTicketsByUserId(username, pageable);
 	}
 
+	@Override
+	public Collection<Ticket> findTicketsByDateAndHallAndSector(Long eventId, Long sectorId, Date fromDate, Date toDate)
+			throws ResourceNotFoundException {
+		Collection<Ticket> retVal = new ArrayList<>();
+		this.ticketRepository.findTicketsByDatesAndEventId(eventId, fromDate, toDate)
+				.forEach( t ->{
+					if(t.getSeat() != null)
+					{
+						if (t.getSeat().getSector().getId() == sectorId) {
+							retVal.add(t);
+						}
+					}
+					else if (t.getSectorCapacity() != null) {
+						if (t.getSectorCapacity().getSector().getId() == sectorId) { 
+							retVal.add(t);
+						}
+					}
+				});
+		if(retVal.size() < 1) {
+			throw new ResourceNotFoundException("Desired tickets");
+		}
+		return retVal;
+	}
+
 }
