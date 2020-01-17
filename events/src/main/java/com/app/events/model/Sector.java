@@ -43,16 +43,16 @@ public class Sector {
 	@NotNull(message = "sector must be asociated with hall")
 	@ManyToOne
 	@JoinColumn(name="hall_id", referencedColumnName="id")
-	private Hall hall = new Hall();
+	private Hall hall;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<PriceList> priceLists = new HashSet<PriceList>();
+	private Set<PriceList> priceLists;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<SectorCapacity> sectorCapacities = new HashSet<SectorCapacity>();
+	private Set<SectorCapacity> sectorCapacities;
 	
 	@OneToMany(mappedBy = "id", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private Set<Seat> seats = new HashSet<Seat>();
+	private Set<Seat> seats;
 
 	public Sector(String name, int sectorRows, int sectorColumns){
 		this.name = name;

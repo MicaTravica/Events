@@ -1,12 +1,10 @@
 package com.app.events.serviceimpl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,9 +61,7 @@ public class EventServiceImpl implements EventService {
 		event.setHalls(halls);
 
 		for(Hall h: halls) {
-			Set<Sector> sectors = new HashSet<>();
-			this.sectorService.findAllByHall(h.getId()).forEach(x-> sectors.add(x));
-			h.setSectors(sectors);
+			h.setSectors(this.sectorService.findAllByHallAndEvent(h.getId(), event.getId()).stream().collect(Collectors.toSet()));
 		}
 		return event;
 	}

@@ -156,6 +156,8 @@ export class ReservationComponent implements OnInit {
     const indx = this.tickets.findIndex(t => t === ticket.id);
     if (indx === -1 && ticket.ticketState === 'AVAILABLE') {
       this.tickets.push(ticket.id);
+    } else {
+      this.tickets.splice(indx, 1);
     }
   }
 
