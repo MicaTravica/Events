@@ -61,7 +61,7 @@
 
 <mat-tab-group dynamicHeight>
     <mat-tab *ngFor="let d of dates" [label]="d | dateFormat">
-            <mat-grid-list cols="sector.sectorColumns" rowHeight="100px" class="example-large-box mat-elevation-z4">
+            <mat-grid-list [cols]="sector.sectorColumns"  rowHeight="50" class="example-large-box mat-elevation-z4">
                 <mat-grid-tile *ngFor="let t of ticketMap[d]"
                     (click)="selectedTicket(t)"
                     [ngClass]="setClass(t)"> 
