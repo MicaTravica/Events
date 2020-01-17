@@ -1,28 +1,79 @@
-<h4>Select hall</h4>
-<mat-form-field>
-    <mat-label>Hall</mat-label>
-    <mat-select>
-    <mat-option (click)="chooseHall(-1)">None</mat-option>
-    <mat-option *ngFor="let hall of event.halls" [value]="hall.id" (click)="chooseHall(hall.id)">
-        {{hall.name}}
-    </mat-option>
-    </mat-select>
-</mat-form-field>
+<mat-accordion>
+    <mat-expansion-panel>
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+        Search
+        </mat-panel-title>
+        <mat-panel-description>
+            Input parameras for seat search
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-form-field class="example-full-width">
+        <input matInput 
+            [min] = "event.fromDate" [max] = "event.toDate"
+            [matDatepicker]="picker3" placeholder="From date" [(ngModel)]="fromDate">
+        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+        <mat-datepicker #picker3></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput 
+        [min] = "event.fromDate" [max] = "event.toDate"
+        [matDatepicker]="picker4" placeholder="To date" [(ngModel)]="toDate">
+        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+        <mat-datepicker #picker4></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Choose hall</mat-label>
+        <mat-select>
+            <mat-option (click)="chooseHall(-1)">None</mat-option>
+            <mat-option *ngFor="let hall of event.halls" [value]="hall.id" (click)="chooseHall(hall.id)">
+            {{hall.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Choose sector</mat-label>
+        <mat-select [disabled]="!hallChoosen">
+            <mat-option (click)="chooseSector(-1)">None</mat-option>
+            <mat-option *ngFor="let sector of hall.sectors" [value]="sector.id" (click)="chooseSector(sector.id)">
+                {{sector.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-action-row>
+        <button mat-raised-button [disabled]="!sectorChoosen" color="accent" (click)="search()">Search</button>
+    </mat-action-row>
+    </mat-expansion-panel>
+</mat-accordion>
+
+<mat-divider></mat-divider>
+<div class="card-header">
+        <h1>Selected tickets</h1>
+        <p>
+            <label>{{tickets.length}}</label>
+            <button mat-raised-button (click)="canceled()" color="accent" style="margin-right: 5px;">Cancel selected</button>
+            <button mat-raised-button (click)="reserveTickets()" color="accent" style="margin-right: 5px;">Reserve selected</button>
+            <button mat-raised-button (click)="buyTickets()" color="accent">Buy selected</button>
+        </p>
+</div>
+<mat-divider></mat-divider>
+
+<mat-tab-group dynamicHeight>
+    <mat-tab *ngFor="let d of dates" [label]="d | dateFormat">
+            <mat-grid-list cols="sector.sectorColumns" rowHeight="100px" class="example-large-box mat-elevation-z4">
+                <mat-grid-tile *ngFor="let t of ticketMap[d]"
+                    (click)="selectedTicket(t)"
+                    [ngClass]="setClass(t)"> 
+                    {{t.seatRow}}, {{t.seatColumn}}
+                </mat-grid-tile>
+            </mat-grid-list>
+    </mat-tab>
+</mat-tab-group>
 
 
-<h4 *ngIf="hallChoosen"> Select sector</h4>
-<mat-form-field *ngIf="hallChoosen">
-    <mat-label>Sector</mat-label>
-    <mat-select>
-    <mat-option (click)="chooseSector(-1)">None</mat-option>
-    <mat-option *ngFor="let sector of hall.sectors" [value]="sector.id" (click)="chooseSector(sector.id)">
-        {{sector.name}}
-    </mat-option>
-    </mat-select>
-</mat-form-field>
-
-<div *ngFor="let ticket of ticketsFiltered">    
+<!-- <div *ngFor="let ticket of ticketsFiltered">    
         <div>{{ticket.seatRow}}, {{ticket.seatColumn}}</div>
         <button mat-raised-button (click)="buyTicket(ticket)" color="accent">Buy</button>
         <button mat-raised-button (click)="reserveTicket(ticket)" color="accent">Reserve</button>
-</div>
+</div> -->
