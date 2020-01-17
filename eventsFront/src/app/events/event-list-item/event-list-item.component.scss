@@ -1,5 +1,5 @@
 .card {
-  width: 100%;
+  width: 90%;
   height: 100%;
   margin-left: auto;
   margin-right: auto;
@@ -10,6 +10,10 @@ img {
   width: 90%;
   max-height: 200px;
   height: 90%;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 4%;
+  margin-right: 4%;
+}
+
+mat-card-actions {
+  text-align: right;
 }

@@ -11,11 +11,12 @@ import { PlaceService } from 'src/app/services/place-service/place.service';
 })
 export class EventSearchComponent implements OnInit {
 
-  eventSearch = new EventSearch(0, 8, 'fromDate', '', null, null, null, null, null);
+  eventSearch = new EventSearch(0, 8, 'fromDate', true, '', null, null, null, null, null);
   eventStates = [null, EventState.AVAILABLE, EventState.NOT_AVAILABLE, EventState.SOLD_OUT, EventState.FINISHED, EventState.CANCELED];
   eventTypes = [null, EventType.SPORT, EventType.BALLET, EventType.CONCERT, EventType.DRAMA, EventType.OPERA];
   places = [{ id: null, name: null }];
   sorts = [{ id: 'name', name: 'Name' }, { id: 'fromDate', name: 'From date' }, { id: 'toDate', name: 'To date' }];
+  orders = [{ id: true, name: 'Ascending' }, { id: false, name: 'Descending' }];
   sizes = [8, 16, 32];
   @Output() public searchParams = new EventEmitter<EventSearch>();
 
@@ -33,6 +34,7 @@ export class EventSearchComponent implements OnInit {
   }
 
   search() {
+    this.eventSearch.numOfPage = 0;
     this.searchParams.emit(this.eventSearch);
   }
 }

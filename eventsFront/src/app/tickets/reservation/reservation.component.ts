@@ -88,7 +88,7 @@ export class ReservationComponent implements OnInit {
   }
 
   buyTicket(ticket: Ticket) {
-    this.ticketService.startBuyingProcess(ticket).subscribe(
+    this.ticketService.startBuyingProcess([ticket.id]).subscribe(
       (res: {status: string, redirect_url: string }) => {
         if (res.status === 'success') {
           this.ticketService.setTicketIdsToLocalStorage([ticket.id]);

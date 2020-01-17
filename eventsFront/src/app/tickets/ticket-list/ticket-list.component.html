@@ -1,0 +1,35 @@
+<div class="main">
+    <div class="container">
+        <h1>My tickets</h1>
+        <p>
+            <mat-form-field>
+                <mat-label>Size of page</mat-label>
+                <mat-select [(ngModel)]="size" (selectionChange)='sizeChanged()'>
+                    <mat-option *ngFor="let size of sizes" [value]="size">
+                        {{size}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </p>
+    </div>
+    <mat-card class="card" *ngFor="let ticket of tickets">
+        <mat-card-header>
+            <mat-card-title>{{ticket.event.name}}</mat-card-title>
+            <mat-card-subtitle>{{ticket.event.halls[0].place.name}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content class="card-container">
+            <mat-card-content>
+                <p>From: {{ticket.event.fromDate | dateFormat}}</p>
+                <p>Sector: {{ticket.sectorName}}</p>
+            </mat-card-content>
+            <mat-card-content>
+                <p>To: {{ticket.event.toDate | dateFormat}}</p>
+                <p *ngIf='ticket.seatRow'>Seat: {{ticket.seatRow}} | {{ticket.seatColumn}}</p>
+            </mat-card-content>
+        </mat-card-content>
+        <mat-card-actions class="card-actions">
+            <button mat-raised-button (click)="showDetails(ticket.event.id)" color="accent">Event details</button>
+        </mat-card-actions>
+    </mat-card>
+    <app-pagination [totalItems]='totalElements' [pageSize]='size' (pageSelected)='pageChanged($event)'></app-pagination>
+</div>

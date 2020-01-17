@@ -1,8 +1,8 @@
 <mat-toolbar color="accent">
-        <button mat-button (click)='showEvents()' color="primary">Events</button>
-        <button mat-button color="primary">Places</button>
+        <button mat-button (click)="showEvents()" color="primary">Events</button>
+        <button mat-button (click)="showPlaces()" color="primary">Places</button>
         <button *ngIf="role=='ROLE_ADMIN'" mat-button color="primary">New event</button>
         <button *ngIf="role=='ROLE_ADMIN'" mat-button color="primary">New place</button>
-        <button *ngIf="role=='ROLE_REGULAR'" mat-button color="primary">My reservations</button>
-        <button *ngIf="role=='ROLE_REGULAR'" mat-button color="primary">My tickets</button>
+        <button *ngIf="role=='ROLE_REGULAR'" mat-button (click)="showReservations()" color="primary">My reservations</button>
+        <button *ngIf="role=='ROLE_REGULAR'" mat-button (click)="showTickets()" color="primary">My tickets</button>
 </mat-toolbar>

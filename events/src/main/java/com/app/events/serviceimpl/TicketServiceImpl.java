@@ -1,13 +1,22 @@
 package com.app.events.serviceimpl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,7 +72,6 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private PriceListService priceListService;
 
-
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
 		return ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket"));
@@ -71,8 +79,10 @@ public class TicketServiceImpl implements TicketService {
 
 	@Override
 	public Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException {
-		Collection<Ticket> tickets  = ticketRepository.findAllByEventId(eventId);
-		if(tickets.size() == 0){ throw new ResourceNotFoundException("Tickets for Event");}
+		Collection<Ticket> tickets = ticketRepository.findAllByEventId(eventId);
+		if (tickets.size() == 0) {
+			throw new ResourceNotFoundException("Tickets for Event");
+		}
 		return tickets;
 	}
 
@@ -90,7 +100,6 @@ public class TicketServiceImpl implements TicketService {
 		User user = userService.findOne(userId);
 		for(Long ticketID: ticketIDs) {
 			Ticket ticketToUpdate = findOne(ticketID);
-
 			if (!(ticketToUpdate.getUser() == null)) {
 				throw new TicketReservationException("Ticket already reserved");
 			}
@@ -99,6 +108,33 @@ public class TicketServiceImpl implements TicketService {
 		for(Ticket t: reservedTickets){
 			t.setTicketState(TicketState.RESERVED);
 			t.setUser(user);
+			retVal.add(ticketRepository.save(t));
+		}
+		return retVal;
+	}
+
+	@Override
+	public Collection<Ticket> cancelReservations(Collection<Long> ticketIDs, Long userId) throws Exception {
+		
+		Collection<Ticket> retVal = new ArrayList<>();
+		Collection<Ticket> reservedTickets = new ArrayList<>();
+		User user = userService.findOne(userId);
+		for(Long ticketID: ticketIDs) {
+			Ticket ticketToUpdate = findOne(ticketID);
+			if (	(ticketToUpdate.getUser() == null) ||
+					(ticketToUpdate.getUser().getId() != user.getId())
+				) {
+				throw new TicketReservationException("Ticket was not reserved by this user");
+			}
+			if (!ticketToUpdate.getTicketState().equals(TicketState.RESERVED)) {
+				throw new TicketReservationException("Ticket was not in reserved state");
+			}
+			// TODO: check ticket Start and End date with current date...
+			reservedTickets.add(ticketToUpdate);
+		}
+		for(Ticket t: reservedTickets){
+			t.setTicketState(TicketState.AVAILABLE);
+			t.setUser(null);
 			retVal.add(ticketRepository.save(t));
 		}
 		return retVal;
@@ -131,7 +167,6 @@ public class TicketServiceImpl implements TicketService {
 		for(Long ticketID: ticketIDs){
 			
 			Ticket ticketToUpdate = findOne(ticketID);
-			ticketToUpdate.setTicketState(TicketState.BOUGHT);
 			if(ticketToUpdate.getUser() == null || 
 					(ticketToUpdate.getUser().getId() == ticketUserID &&
 					ticketToUpdate.getTicketState().equals(TicketState.RESERVED))
@@ -143,6 +178,7 @@ public class TicketServiceImpl implements TicketService {
 					user = userService.findOne(ticketUserID);
 					ticketToUpdate.setUser(user);
 				}
+				ticketToUpdate.setTicketState(TicketState.BOUGHT);
 				boughtTickets.add(ticketToUpdate);
 			}
 			else {
@@ -171,7 +207,8 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception {
+	public void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update)
+			throws Exception {
 		Event savedEvent = eventService.findOne(eventId);
 		Map<Long, PriceList> priceListMap = priceLists.stream()
 				.collect(Collectors.toMap(x -> x.getSector().getId(), x -> x));
@@ -182,27 +219,72 @@ public class TicketServiceImpl implements TicketService {
 				PriceList priceList = priceListMap.get(sector.getId());
 				PriceList savedPriceList = priceListService
 						.create(new PriceList(null, priceList.getPrice(), savedEvent, sector));
+				
+				Date toDate = savedEvent.getToDate();
+				Date fromDate = savedEvent.getFromDate();
+				DateTime startDate = new DateTime(fromDate);
+				DateTime endDate = new DateTime(toDate);
+				int nubmerOfDays = Days.daysBetween(startDate, endDate).getDays();
+				
 				if (sector.getSeats().size() > 0) {
+					
 					for (Seat seat : seatService.findSeatFromSector(sector.getId())) {
-						tickets.add(new Ticket(null, null, savedPriceList.getPrice(), TicketState.AVAILABLE, null,
+						// ako traje samo 1 dan
+						if(nubmerOfDays == 0) {
+							tickets.add(new Ticket(null, null, savedPriceList.getPrice(),
+							fromDate, toDate, TicketState.AVAILABLE, null,
+							savedEvent, seat, null, new Long(0)));
+						}
+						else{ 
+							for(int i = 0; i < nubmerOfDays;i++) {
+								DateTime startDate1 = new DateTime(fromDate);
+								startDate1 = startDate1.plusDays(i);
+
+								DateTime endDate1 = new DateTime(toDate);
+								endDate1 = endDate1.minusDays((nubmerOfDays-i-1));
+
+								tickets.add(
+									new Ticket(null, null, savedPriceList.getPrice(),
+									startDate1.toDate(), endDate1.toDate(),
+									TicketState.AVAILABLE, null,
 								savedEvent, seat, null, new Long(0)));
+							}
+						}						
 					}
 				} else {
+					// parter
 					int capacity = s.getSectorCapacities().iterator().next().getCapacity();
 					if (capacity < 1) {
-						if(!update)
+						if (!update)
 							eventService.delete(eventId);
 						throw new SectorCapacatyMustBePositiveNumberException();
 					}
 					SectorCapacity sc = sectorCapacityService
 							.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
 					for (int i = 0; i < sc.getCapacity(); i++) {
-						tickets.add(new Ticket(null, null, savedPriceList.getPrice(), TicketState.AVAILABLE, null,
-								savedEvent, null, sc, new Long(0)));
+						if(nubmerOfDays == 0) {
+							tickets.add(
+								new Ticket(null, null, savedPriceList.getPrice(),
+										fromDate, toDate, TicketState.AVAILABLE, null,
+										savedEvent, null, sc, new Long(0)));
+						}
+						else{
+							for(int j = 0; j < nubmerOfDays;j++) {
+								DateTime startDate1 = new DateTime(fromDate);
+								startDate1 =  startDate1.plusDays(j);
+								DateTime endDate1 = new DateTime(toDate);
+								endDate1 = endDate1.minusDays((nubmerOfDays-j-1));
+
+								new Ticket(null, null, savedPriceList.getPrice(),
+										startDate1.toDate(), endDate1.toDate(),
+										TicketState.AVAILABLE, null,
+										savedEvent, null, sc, new Long(0));
+						}
 					}
 				}
 			}
 		}
+	}
 		ticketRepository.saveAll(tickets);
 
 	}
@@ -220,6 +302,18 @@ public class TicketServiceImpl implements TicketService {
 			ticket.setSeat(null);
 		}
 		ticketRepository.deleteAll(tickets);
+	}
+
+	@Override
+	public Collection<Ticket> findAllReservationsByUserId(String username) {
+		return this.ticketRepository.findAllReservationsByUserId(username);
+	}
+	
+	@Override
+	public Page<Ticket> findAllTicketsByUserId(String username, int numOfPage, int sizeOfPage) {
+		Pageable pageable = PageRequest.of(numOfPage, sizeOfPage,
+					Sort.by("event.fromDate").descending());
+		return this.ticketRepository.findAllTicketsByUserId(username, pageable);
 	}
 
 }

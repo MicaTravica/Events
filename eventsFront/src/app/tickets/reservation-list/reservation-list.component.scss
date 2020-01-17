@@ -1,0 +1,30 @@
+.main {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.card {
+  margin-bottom: 10px;
+  border: 2px solid #E0F2F1;
+}
+
+.card-container {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+p {
+    font-size: 16px;
+}
+
+.card-actions {
+    text-align: right;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+
+}

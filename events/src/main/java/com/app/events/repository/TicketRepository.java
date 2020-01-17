@@ -2,6 +2,8 @@ package com.app.events.repository;
 
 import java.util.Collection;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,5 +15,11 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	boolean ticketForEventIsSale(Long id);
 
 	Collection<Ticket> findAllByEventId(Long id);
+
+	@Query("SELECT t FROM Ticket t inner join t.user u where u.username = ?1 and t.ticketState = 'RESERVED'")
+	Collection<Ticket> findAllReservationsByUserId(String username);
+
+	@Query("SELECT t FROM Ticket t inner join t.user u where u.username = ?1 and t.ticketState = 'BOUGHT'")
+	Page<Ticket> findAllTicketsByUserId(String username, Pageable pageable);
 
 }

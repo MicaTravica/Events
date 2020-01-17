@@ -3,14 +3,18 @@ package com.app.events.serviceimpl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Place;
 import com.app.events.repository.PlaceRepository;
 import com.app.events.service.PlaceService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Service
 public class PlaceServiceImpl implements PlaceService{
@@ -70,7 +74,13 @@ public class PlaceServiceImpl implements PlaceService{
         return placeToUpdate;
     }
 
-
+	@Override
+	public Page<Place> searchPlaces(int numOfPage, int sizeOfPage, String name) {
+		Pageable pageable = PageRequest.of(numOfPage, sizeOfPage,
+				Sort.by("name").ascending());
+		return placeRepository.searchPlaces(name, pageable);
+	}
+	
 }
 
 

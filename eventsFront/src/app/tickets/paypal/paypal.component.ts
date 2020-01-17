@@ -18,8 +18,11 @@ export class PaypalComponent implements OnInit {
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
+      // tslint:disable-next-line: no-string-literal
       const paymentId = params['paymentId'];
+      // tslint:disable-next-line: no-string-literal
       const token = params['token'];
+      // tslint:disable-next-line: no-string-literal
       const PayerID = params['PayerID'];
 
       console.log(paymentId);
@@ -37,6 +40,7 @@ export class PaypalComponent implements OnInit {
           console.log(res);
           this.state = 'successfully bought ticket';
           this.ticketService.removeTicketIdsFromLocalStorage();
+          this.router.navigate(['/reservations']);
         },
         err => {
           console.log(err.message);
