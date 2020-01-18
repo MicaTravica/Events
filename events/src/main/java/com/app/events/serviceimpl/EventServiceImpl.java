@@ -54,6 +54,11 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
+	public Collection<Event> findAllNotFinished() {
+		return this.eventRepository.findAllNotFinished();
+	}
+
+	@Override
 	public Event create(Event event) throws Exception {
 		event.setId(null);
 		if (event.getFromDate() == null || event.getToDate() == null || event.getFromDate().after(event.getToDate()))
@@ -81,6 +86,12 @@ public class EventServiceImpl implements EventService {
 		event.setHalls(halls);
 		event.setMediaList(new HashSet<>());
 		event.setPriceLists(new HashSet<>());
+		return eventRepository.save(event);
+	}
+
+	@Override
+	public Event updateEventState(Event event, EventState state) {
+		event.setEventState(state);
 		return eventRepository.save(event);
 	}
 
@@ -208,4 +219,6 @@ public class EventServiceImpl implements EventService {
 				params.getEventState(), params.getEventType(), params.getPlaceId(), pageable);
 		return found;
 	}
+
+	
 }

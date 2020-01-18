@@ -16,6 +16,6 @@ public interface MailService {
 
 	void ticketsBought(ArrayList<Ticket> tickets) throws MessagingException;
 
-	void buyReservedTickets(Ticket ticket) throws MessagingException;
+	void buyReservedTickets(String email, ArrayList<Ticket> tickets) throws MessagingException;
 
 }

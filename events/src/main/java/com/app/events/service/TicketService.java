@@ -16,6 +16,8 @@ public interface TicketService {
 
 	public Ticket findOne(Long id) throws ResourceNotFoundException;
 
+	public Collection<Ticket> findAllForNotification();
+
 	public Ticket create(Ticket ticket) throws Exception;
 
 	Collection<Ticket> reserveTicket(Collection<Long> ticketIDs, Long userId) throws Exception;

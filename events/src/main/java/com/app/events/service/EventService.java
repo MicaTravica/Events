@@ -2,17 +2,24 @@ package com.app.events.service;
 
 import org.springframework.data.domain.Page;
 
+import java.util.Collection;
+
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Event;
+import com.app.events.model.EventState;
 import com.app.events.model.SearchParamsEvent;
 
 public interface EventService {
 
 	Event findOne(Long id) throws ResourceNotFoundException;
 
+	Collection<Event> findAllNotFinished();
+
 	Event create(Event event) throws Exception;
 
 	Event update(Event event) throws Exception;
+
+	Event updateEventState(Event event, EventState state);
 
 	Event prepareEventFields(Event toUpdate, Event newEvent);
 
@@ -21,4 +28,5 @@ public interface EventService {
 	Event updateHall(Event event) throws Exception;
 
 	Page<Event> search(SearchParamsEvent search);
+
 }

@@ -78,6 +78,13 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
+	public Collection<Ticket> findAllForNotification() {
+		DateTime dt = new DateTime();
+		dt = dt.plusDays(3);
+		return this.ticketRepository.findAllForNotification(dt.toDate(), new Date());
+	}
+
+	@Override
 	public Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException {
 		Collection<Ticket> tickets = ticketRepository.findAllByEventId(eventId);
 		if (tickets.size() == 0) {
