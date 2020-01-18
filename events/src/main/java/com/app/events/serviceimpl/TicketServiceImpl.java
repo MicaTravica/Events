@@ -255,22 +255,34 @@ public class TicketServiceImpl implements TicketService {
 		// nzm sto doda jedan sat pa da bude kako treba
 		startDate = startDate.minusHours(1);
 		endDate = endDate.minusHours(1);
-		int nubmerOfDays = Days.daysBetween(startDate, endDate).getDays();
+		int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
 		// ako traje samo 1 dan
 		if (nubmerOfDays == 0) {
 			tickets.add(new Ticket(null, null, priceList.getPrice(), fromDate, toDate,
 					TicketState.AVAILABLE, null, event, seat, null, new Long(0)));
 		} else {
+			if(endDate.getHourOfDay() > startDate.getHourOfDay()) {
 				for (int i = 0; i <= nubmerOfDays; i++) {
 					DateTime startDate1 = new DateTime(fromDate);
 					startDate1 = startDate1.plusDays(i);
-
 					DateTime endDate1 = new DateTime(toDate);
 					endDate1 = endDate1.minusDays((nubmerOfDays - i));
 					tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
 							endDate1.toDate(), TicketState.AVAILABLE, null, event, seat, null,
 							new Long(0)));
 				}
+			}
+			else {
+				for (int i = 0; i < nubmerOfDays; i++) {
+					DateTime startDate1 = new DateTime(fromDate);
+					startDate1 = startDate1.plusDays(i);
+					DateTime endDate1 = new DateTime(toDate);
+					endDate1 = endDate1.minusDays((nubmerOfDays - i - 1));
+					tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
+							endDate1.toDate(), TicketState.AVAILABLE, null, event, seat, null,
+							new Long(0)));
+				}
+			}
 		}
 		return tickets;
 	}
@@ -281,23 +293,35 @@ public class TicketServiceImpl implements TicketService {
 			ArrayList<Ticket> tickets = new ArrayList<>();
 			DateTime startDate = new DateTime(fromDate);
 			DateTime endDate = new DateTime(toDate);
-			int nubmerOfDays = Days.daysBetween(startDate, endDate).getDays();
+			int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
 			if (nubmerOfDays == 0) {
 				for (int i = 0; i < sc.getCapacity(); i++) {
 					tickets.add(new Ticket(null, null, priceList.getPrice(), fromDate, toDate,
 							TicketState.AVAILABLE, null, event, null, sc, new Long(0)));
 				}
 			} else {
-				for (int j = 0; j <= nubmerOfDays; j++) {
-					DateTime startDate1 = new DateTime(fromDate);
-					startDate1 = startDate1.plusDays(j);
-					DateTime endDate1 = new DateTime(toDate);
-					endDate1 = endDate1.minusDays((nubmerOfDays - j));
-					for (int i = 0; i < sc.getCapacity(); i++) {
+				if(endDate.getHourOfDay() > startDate.getHourOfDay()){
+					for (int j = 0; j <= nubmerOfDays; j++) {
+						DateTime startDate1 = new DateTime(fromDate);
+						startDate1 = startDate1.plusDays(j);
+						DateTime endDate1 = new DateTime(toDate);
+						endDate1 = endDate1.minusDays((nubmerOfDays - j));
+						for (int i = 0; i < sc.getCapacity(); i++) {
+							tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
+									endDate1.toDate(), TicketState.AVAILABLE, null, event, null, sc,
+									new Long(0)));
+							}
+					}
+				} else {
+					for (int i = 0; i < nubmerOfDays; i++) {
+						DateTime startDate1 = new DateTime(fromDate);
+						startDate1 = startDate1.plusDays(i);
+						DateTime endDate1 = new DateTime(toDate);
+						endDate1 = endDate1.minusDays((nubmerOfDays - i - 1));
 						tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
 								endDate1.toDate(), TicketState.AVAILABLE, null, event, null, sc,
 								new Long(0)));
-						}
+					}
 				}
 			}
 		return tickets;
@@ -352,6 +376,14 @@ public class TicketServiceImpl implements TicketService {
 			throw new ResourceNotFoundException("Desired tickets");
 		}
 		return retVal;
+	}
+
+	int calculateNubmerOfDaysBetween(DateTime startDate, DateTime endDate) {
+		DateTime d = startDate.minusHours(startDate.getHourOfDay());
+		d = d.minusMinutes(d.getMinuteOfHour());
+		DateTime d2 = endDate.minusHours(endDate.getHourOfDay());
+		d2 = d2.minusMinutes(d2.getMinuteOfHour());
+		return Days.daysBetween(d, d2).getDays();
 	}
 
 }
