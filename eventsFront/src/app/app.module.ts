@@ -36,11 +36,8 @@ import { ReservationListComponent } from './tickets/reservation-list/reservation
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
 import { PlacesListComponent } from './places/places-list/places-list.component';
 import { ToastrModule } from 'ngx-toastr';
-import { TimeReportComponent } from './reports/time-report/time-report.component';
-import { EventReportComponent } from './reports/event-report/event-report.component';
-import { ReportsComponent } from './reports/reports/reports.component';
-
-
+import { ReportsComponent } from './reports/reports.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -64,8 +61,6 @@ import { ReportsComponent } from './reports/reports/reports.component';
     ReservationListComponent,
     TicketListComponent,
     PlacesListComponent,
-    TimeReportComponent,
-    EventReportComponent,
     ReportsComponent
   ],
   imports: [
@@ -74,7 +69,8 @@ import { ReportsComponent } from './reports/reports/reports.component';
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    ChartsModule
   ],
   providers: [
     UserService,
