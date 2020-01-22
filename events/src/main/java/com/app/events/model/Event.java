@@ -41,10 +41,10 @@ public class Event {
 	@NotBlank(message = "Description can not be empty string")
 	private String description;
 	
-	@Future(message="From date must be in future")
+	// @Future(message="From date must be in future")
 	private Date fromDate;
 
-	@Future(message="To date must be in future")
+	// @Future(message="To date must be in future")
 	private Date toDate;
 	
 	@NotNull(message="Event must have event state")

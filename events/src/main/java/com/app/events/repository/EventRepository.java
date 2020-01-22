@@ -1,5 +1,6 @@
 package com.app.events.repository;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.data.domain.Page;
@@ -27,5 +28,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 			+ " (e.eventState = ?4 or ?4 = null) and (e.eventType = ?5 or ?5 = null) and (p.id = ?6 or ?6 = null)")
 	Page<Event> search(String name, Date fromDate, Date toDate, EventState eventState, EventType eventType,
 			Long placeId, Pageable pageable);
+
+	@Query("SELECT e FROM Event e WHERE e.eventState != 'FINISHED'")
+	Collection<Event> findAllNotFinished();
 	
 }
