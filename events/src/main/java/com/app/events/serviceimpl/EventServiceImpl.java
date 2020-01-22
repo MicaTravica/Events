@@ -54,6 +54,11 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
+	public Collection<Event> findAllNotFinished() {
+		return this.eventRepository.findAllNotFinished();
+  }
+  
+  @Override
 	public Event findOneAndLoadHalls(Long id) throws ResourceNotFoundException {
 		Event event = this.eventRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Event"));
 		Set<Hall> halls = this.hallService.findHallByEventId(id)
@@ -94,6 +99,12 @@ public class EventServiceImpl implements EventService {
 		event.setHalls(halls);
 		event.setMediaList(new HashSet<>());
 		event.setPriceLists(new HashSet<>());
+		return eventRepository.save(event);
+	}
+
+	@Override
+	public Event updateEventState(Event event, EventState state) {
+		event.setEventState(state);
 		return eventRepository.save(event);
 	}
 
@@ -221,4 +232,6 @@ public class EventServiceImpl implements EventService {
 				params.getEventState(), params.getEventType(), params.getPlaceId(), pageable);
 		return found;
 	}
+
+	
 }
