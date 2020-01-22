@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PlaceService } from 'src/app/services/place-service/place.service';
 import { ChartDataSets, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
+import { ReportService } from '../services/report-service/report.service';
 
 @Component({
   selector: 'app-reports',
@@ -23,7 +24,8 @@ export class ReportsComponent implements OnInit {
   lineChartLabels: Label[];
 
   constructor(
-    private placeService: PlaceService
+    private placeService: PlaceService,
+    private reportService: ReportService
   ) { }
 
   ngOnInit() {
@@ -39,11 +41,21 @@ export class ReportsComponent implements OnInit {
       this.initChart();
       if (this.by === 'Time') {
         if (this.fromDate && this.toDate) {
-          console.log('time');
-          // ovde treba da se radi poziv ka bekendu, ondnosno servicu, subscribe
-          // na osnovu about vidis da li je zarada ili posecenost
-          // na osnovu by vidis da li je vremenski ili po dogadjaju
-          // posto je vremenski ovd je potrebno da su datumi uneseni i moras i njih da saljes
+          if (this.about === 'Profit') {
+              this.reportService.getProfitTime(this.id, this.fromDate, this.toDate)
+                .subscribe(
+                  res => {
+                    console.log('time + profit');
+                  }
+                );
+          } else {
+            this.reportService.getAttendanceTime(this.id, this.fromDate, this.toDate)
+              .subscribe(
+                res => {
+                  console.log('time + attendace');
+                }
+              );
+          }
           this.lineChartData = [
             { data: [85, 72, 78, 75, 77, 75], label: this.about } // u data ce ici zarada ili posecenost
           ];
@@ -51,7 +63,21 @@ export class ReportsComponent implements OnInit {
           // toga sta je uneo, sad izaberi da li ces mesece ili godine ili sta, ili dodaj polje da bita da li ce po mesecima ili godina
         }
       } else {
-        console.log('event');
+        if (this.about === 'Profit') {
+            this.reportService.getProfitEvent(this.id)
+              .subscribe(
+                res => {
+                  console.log('event + profit');
+                }
+              );
+        } else {
+          this.reportService.getAttendanceEvent(this.id)
+            .subscribe(
+              res => {
+                console.log('event + attendace');
+              }
+            );
+        }
         // ovde treba da se radi poziv ka bekendu, ondnosno servicu, subscribe
         // na osnovu about vidis da li je zarada ili posecenost
         this.lineChartData = [

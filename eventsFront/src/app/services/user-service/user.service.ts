@@ -22,15 +22,14 @@ export class UserService {
   }
 
   public me(token: string) {
-    return this.http.get(this.usersUrl + '/userme', authHttpOptions(token));
+    return this.http.get(this.usersUrl + '/userme', { headers: authHttpOptions(token)});
   }
 
   public save(user: User) {
     // izmeni ovo djoleeeeeeeeeeeee
     // subscribe se ne radi ovde!
     console.log(user);
-    console.log(httpOptions);
-    return this.http.post<User>(this.usersUrl + '/registration', user, httpOptions)
+    return this.http.post<User>(this.usersUrl + '/registration', user, {headers: httpOptions()})
     .subscribe(() => {
       this.router.navigate(['/login']);
     });

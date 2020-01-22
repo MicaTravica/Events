@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { httpOptions } from 'src/app/util/http-util';
 import { environment } from 'src/environments/environment';
 
@@ -17,10 +17,19 @@ export class PlaceService {
   }
 
   public getPlaces() {
-    return this.http.get(this.url + 's', httpOptions);
+    return this.http.get(this.url + 's', {headers: httpOptions()});
   }
 
   public searchPlaces(name: string, numOfPage: number, sizeOfPage: number) {
-    return this.http.get(this.url + 's/search?name=' + name + '&num=' + numOfPage + '&size=' + sizeOfPage, httpOptions);
+    const param = new HttpParams()
+      .append('name', name)
+      .append('num', numOfPage.toString())
+      .append('size', sizeOfPage.toString());
+    return this.http.get(this.url + 's/search',
+      {
+        headers: httpOptions(),
+        params: param
+      }
+    );
   }
 }

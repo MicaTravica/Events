@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { UserService } from '../user-service/user.service';
 import { authHttpOptions} from '../../util/http-util';
 import { AuthService } from '../auth-service/auth.service';
@@ -18,12 +18,12 @@ export class TicketService {
 
   getAllByEventId(eventId: number) {
     const token = this.authService.getToken();
-    return this.http.get(environment.restPath + '/ticketsForEvent/' + eventId, authHttpOptions(token));
+    return this.http.get(environment.restPath + '/ticketsForEvent/' + eventId, {headers: authHttpOptions(token)});
   }
 
   getTicketsByDateAndHallAndSector(payload: any) {
     const token = this.authService.getToken();
-    return this.http.post(environment.restPath + '/ticketsByDateAndHallAndSector', payload, authHttpOptions(token));
+    return this.http.post(environment.restPath + '/ticketsByDateAndHallAndSector', payload, {headers: authHttpOptions(token)});
   }
 
   makeReservation(ticketIds: number[]) {
@@ -32,7 +32,7 @@ export class TicketService {
     const payload = new TicketBuyReservation();
     payload.userId = user.id;
     payload.ticketIDs = ticketIds;
-    return this.http.put(environment.restPath + '/reserveTicket', payload, authHttpOptions(token));
+    return this.http.put(environment.restPath + '/reserveTicket', payload, {headers: authHttpOptions(token)});
   }
 
   cancelReservations(ticketIDs: number[]) {
@@ -41,7 +41,7 @@ export class TicketService {
     const payload = new TicketBuyReservation();
     payload.userId = user.id;
     payload.ticketIDs = ticketIDs;
-    return this.http.put(environment.restPath + '/cancelReservations', payload, authHttpOptions(token));
+    return this.http.put(environment.restPath + '/cancelReservations', payload, {headers: authHttpOptions(token)});
   }
 
   // kad klikne na buy dugme ova se pozove
@@ -53,7 +53,7 @@ export class TicketService {
     const payload = new TicketBuyReservation();
     payload.userId = user.id;
     payload.ticketIDs = ticketIDs;
-    return this.http.put(environment.restPath + '/ticketPaymentCreation', payload, authHttpOptions(token));
+    return this.http.put(environment.restPath + '/ticketPaymentCreation', payload, {headers: authHttpOptions(token)});
   }
 
   redirectPayPal(url: string) {
@@ -72,7 +72,7 @@ export class TicketService {
     payload.payPalPaymentID = payPalPaymentId;
     payload.payPalToken = payPalToken;
     payload.payPalPayerID = payPalPayerId;
-    return this.http.put(environment.restPath + '/buyTicket', payload, authHttpOptions(token));
+    return this.http.put(environment.restPath + '/buyTicket', payload, {headers: authHttpOptions(token)});
   }
 
 
@@ -90,11 +90,18 @@ export class TicketService {
   }
 
   getReservationByUserId(id: number) {
-    return this.http.get(environment.restPath + '/ticket/reservationsUser', authHttpOptions(this.authService.getToken()));
+    return this.http.get(environment.restPath + '/ticket/reservationsUser',
+      {headers: authHttpOptions(this.authService.getToken())});
   }
 
   getTicketByUserId(id: number, numOfPage: number, sizeOfPage: number) {
-    return this.http.get(environment.restPath + '/ticket/user?num=' + numOfPage + '&size=' + sizeOfPage,
-      authHttpOptions(this.authService.getToken()));
+    const param = new HttpParams()
+      .append('num', numOfPage.toString())
+      .append('size', sizeOfPage.toString());
+    return this.http.get(environment.restPath + '/ticket/user',
+    {
+      headers: authHttpOptions(this.authService.getToken()),
+      params: param
+    });
   }
 }
