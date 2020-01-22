@@ -1,6 +1,7 @@
 package com.app.events.repository;
 
 import java.util.Collection;
+
 import java.util.Date;
 
 import org.springframework.data.domain.Page;
@@ -28,4 +29,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 	@Query("SELECT t FROM Ticket t WHERE t.toDate <= ?1 AND t.toDate >= ?2 AND t.ticketState = 'RESERVED'")
 	Collection<Ticket> findAllForNotification(Date date, Date currentDate);
+
+	@Query("SELECT SUM(t.price) FROM Ticket t where t.event.id = ?1 AND t.ticketState = 'BOUGHT'")
+	Double findProfitByEventId(Long eventId);
 }

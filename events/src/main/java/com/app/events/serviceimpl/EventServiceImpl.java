@@ -233,5 +233,10 @@ public class EventServiceImpl implements EventService {
 		return found;
 	}
 
+	@Override
+	public Collection<Event> findAllByPlaceId(Long placeId) {
+		return eventRepository.findAllByPlaceId(placeId);
+	}
+
 	
 }

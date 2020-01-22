@@ -51,4 +51,6 @@ public interface TicketService {
 	Page<Ticket> findAllTicketsByUserId(String username, int numOfPage, int sizeOfPage);
 
 	Collection<Ticket> findTicketsByDateAndHallAndSector(Long eventId, Long sectorId ,Date fromDate, Date toDate) throws ResourceNotFoundException;
+
+	Double findProfitByEventId(Long eventId);
 }

@@ -31,5 +31,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
 	@Query("SELECT e FROM Event e WHERE e.eventState != 'FINISHED'")
 	Collection<Event> findAllNotFinished();
+
+	@Query("SELECT e FROM Event e INNER JOIN e.halls h INNER JOIN h.place p WHERE p.id = ?1 AND e.eventState = 'FINISHED'")
+	Collection<Event> findAllByPlaceId(Long placeId);
 	
 }
