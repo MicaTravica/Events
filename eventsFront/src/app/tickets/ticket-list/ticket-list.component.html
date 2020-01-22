@@ -19,11 +19,11 @@
         </mat-card-header>
         <mat-card-content class="card-container">
             <mat-card-content>
-                <p>From: {{ticket.event.fromDate | dateFormat}}</p>
+                <p>From: {{ticket.fromDate | dateFormat}}</p>
                 <p>Sector: {{ticket.sectorName}}</p>
             </mat-card-content>
             <mat-card-content>
-                <p>To: {{ticket.event.toDate | dateFormat}}</p>
+                <p>To: {{ticket.toDate | dateFormat}}</p>
                 <p *ngIf='ticket.seatRow'>Seat: {{ticket.seatRow}} | {{ticket.seatColumn}}</p>
             </mat-card-content>
         </mat-card-content>

@@ -1,9 +1,15 @@
 package com.app.events.repository;
 
+import java.util.Collection;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.app.events.model.Sector;
 
 public interface SectorRepository extends JpaRepository<Sector, Long> {
 
+	@Query("SELECT s FROM Sector s LEFT JOIN PriceList pl ON pl.sector.id = s.id WHERE s.hall.id = ?1 AND pl.event.id = ?2")
+	public Collection<Sector> findAllByHallIdAndEventId(Long hallId, Long eventId);
+	
 }
