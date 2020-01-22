@@ -36,8 +36,9 @@ import { ReservationListComponent } from './tickets/reservation-list/reservation
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
 import { PlacesListComponent } from './places/places-list/places-list.component';
 import { ToastrModule } from 'ngx-toastr';
-
-
+import { ReportsComponent } from './reports/reports.component';
+import { ChartsModule } from 'ng2-charts';
+import { ReportService } from './services/report-service/report.service';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import { ToastrModule } from 'ngx-toastr';
     PageNotFoundComponent,
     ReservationListComponent,
     TicketListComponent,
-    PlacesListComponent
+    PlacesListComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,8 @@ import { ToastrModule } from 'ngx-toastr';
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    ChartsModule
   ],
   providers: [
     UserService,
@@ -79,7 +82,8 @@ import { ToastrModule } from 'ngx-toastr';
     HallService,
     PlaceService,
     LoginGuard,
-    RoleGuard
+    RoleGuard,
+    ReportService
   ],
   bootstrap: [AppComponent]
 })

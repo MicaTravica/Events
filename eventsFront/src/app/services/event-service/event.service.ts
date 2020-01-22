@@ -32,16 +32,19 @@ export class EventService {
 
     data.append('file', file);
 
-    const newRequest = new HttpRequest('POST', this.url + '/files', data, authHttpOptions(this.authService.getToken()));
-
+    const newRequest = new HttpRequest('POST', this.url + '/files', data,
+      {
+        headers: authHttpOptions(this.authService.getToken())
+      }
+    );
     return this.http.request(newRequest);
   }
 
   public search(params: EventSearch) {
-     return this.http.post(this.url + '/search', params, httpOptions);
+    return this.http.post(this.url + '/search', params, {headers: httpOptions()});
   }
 
   public getEvent(id: string) {
-     return this.http.get(this.url + '/' + id, httpOptions);
+    return this.http.get(this.url + '/' + id, {headers: httpOptions()});
   }
 }
