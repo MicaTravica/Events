@@ -54,6 +54,19 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
+	public Event findOneAndLoadHalls(Long id) throws ResourceNotFoundException {
+		Event event = this.eventRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Event"));
+		Set<Hall> halls = this.hallService.findHallByEventId(id)
+									.stream().collect(Collectors.toSet());
+		event.setHalls(halls);
+
+		for(Hall h: halls) {
+			h.setSectors(this.sectorService.findAllByHallAndEvent(h.getId(), event.getId()).stream().collect(Collectors.toSet()));
+		}
+		return event;
+	}
+
+	@Override
 	public Event create(Event event) throws Exception {
 		event.setId(null);
 		if (event.getFromDate() == null || event.getToDate() == null || event.getFromDate().after(event.getToDate()))

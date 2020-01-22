@@ -112,6 +112,7 @@ export class ReservationComponent implements OnInit {
   }
 
   search() {
+    console.log(this.sector);
     this.ticketMap = {};
     this.dates = [];
     this.adjustFromAndToDatesForDataPickers();
@@ -125,6 +126,14 @@ export class ReservationComponent implements OnInit {
                 this.dates.push(t.fromDate);
               }
               this.ticketMap[t.fromDate].push(t);
+              this.ticketMap[t.fromDate].sort(
+                (ticket1, ticket2) => {
+                  if (ticket1.seatRow > ticket2.seatRow) {return 1; }
+                  if (ticket1.seatRow < ticket2.seatRow) {return -1; }
+
+                  if (ticket1.seatColumn > ticket2.seatColumn) {return 1; }
+                  if (ticket1.seatColumn < ticket2.seatColumn) {return -1; }
+                });
           });
         },
         (err: HttpErrorResponse)  => {
@@ -147,6 +156,8 @@ export class ReservationComponent implements OnInit {
     const indx = this.tickets.findIndex(t => t === ticket.id);
     if (indx === -1 && ticket.ticketState === 'AVAILABLE') {
       this.tickets.push(ticket.id);
+    } else {
+      this.tickets.splice(indx, 1);
     }
   }
 

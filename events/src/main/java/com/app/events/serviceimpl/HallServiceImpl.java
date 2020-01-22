@@ -66,7 +66,6 @@ public class HallServiceImpl implements HallService {
 	public Collection<Hall> getHallsByPlaceId(Long id) {
 		return hallRepository.findAllByPlaceId(id);
 	}
-
 }
 
 

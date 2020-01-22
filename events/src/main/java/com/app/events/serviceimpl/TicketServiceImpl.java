@@ -1,7 +1,6 @@
 package com.app.events.serviceimpl;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -11,7 +10,6 @@ import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.Duration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -219,37 +217,15 @@ public class TicketServiceImpl implements TicketService {
 				PriceList priceList = priceListMap.get(sector.getId());
 				PriceList savedPriceList = priceListService
 						.create(new PriceList(null, priceList.getPrice(), savedEvent, sector));
-				
+
 				Date toDate = savedEvent.getToDate();
 				Date fromDate = savedEvent.getFromDate();
-				DateTime startDate = new DateTime(fromDate);
-				DateTime endDate = new DateTime(toDate);
-				int nubmerOfDays = Days.daysBetween(startDate, endDate).getDays();
 				
-				if (sector.getSeats().size() > 0) {
-					
+				if (sector.getSectorRows() > 0 && sector.getSectorColumns() > 0) {
 					for (Seat seat : seatService.findSeatFromSector(sector.getId())) {
-						// ako traje samo 1 dan
-						if(nubmerOfDays == 0) {
-							tickets.add(new Ticket(null, null, savedPriceList.getPrice(),
-							fromDate, toDate, TicketState.AVAILABLE, null,
-							savedEvent, seat, null, new Long(0)));
-						}
-						else{ 
-							for(int i = 0; i < nubmerOfDays;i++) {
-								DateTime startDate1 = new DateTime(fromDate);
-								startDate1 = startDate1.plusDays(i);
-
-								DateTime endDate1 = new DateTime(toDate);
-								endDate1 = endDate1.minusDays((nubmerOfDays-i-1));
-
-								tickets.add(
-									new Ticket(null, null, savedPriceList.getPrice(),
-									startDate1.toDate(), endDate1.toDate(),
-									TicketState.AVAILABLE, null,
-								savedEvent, seat, null, new Long(0)));
-							}
-						}						
+						this.createTicketsForSeat
+							(savedEvent,seat, savedPriceList, fromDate, toDate)
+								.forEach(x -> tickets.add(x));
 					}
 				} else {
 					// parter
@@ -260,33 +236,95 @@ public class TicketServiceImpl implements TicketService {
 						throw new SectorCapacatyMustBePositiveNumberException();
 					}
 					SectorCapacity sc = sectorCapacityService
-							.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
-					for (int i = 0; i < sc.getCapacity(); i++) {
-						if(nubmerOfDays == 0) {
-							tickets.add(
-								new Ticket(null, null, savedPriceList.getPrice(),
-										fromDate, toDate, TicketState.AVAILABLE, null,
-										savedEvent, null, sc, new Long(0)));
-						}
-						else{
-							for(int j = 0; j < nubmerOfDays;j++) {
-								DateTime startDate1 = new DateTime(fromDate);
-								startDate1 =  startDate1.plusDays(j);
-								DateTime endDate1 = new DateTime(toDate);
-								endDate1 = endDate1.minusDays((nubmerOfDays-j-1));
-
-								new Ticket(null, null, savedPriceList.getPrice(),
-										startDate1.toDate(), endDate1.toDate(),
-										TicketState.AVAILABLE, null,
-										savedEvent, null, sc, new Long(0));
-						}
-					}
+									.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
+					this.creatTicketsForParter(savedEvent, sc, savedPriceList, fromDate, toDate)
+						.forEach(t-> tickets.add(t));
 				}
 			}
 		}
-	}
 		ticketRepository.saveAll(tickets);
+	}
 
+	@Override
+	public ArrayList<Ticket> createTicketsForSeat(
+			Event event, Seat seat, PriceList priceList,Date fromDate, Date toDate) {
+
+		ArrayList<Ticket> tickets = new ArrayList<>();
+		DateTime startDate = new DateTime(fromDate);
+		DateTime endDate = new DateTime(toDate);
+		// nzm sto doda jedan sat pa da bude kako treba
+		startDate = startDate.minusHours(1);
+		endDate = endDate.minusHours(1);
+		int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
+		// ako traje samo 1 dan
+		if (nubmerOfDays == 0) {
+			tickets.add(new Ticket(null, null, priceList.getPrice(), fromDate, toDate,
+					TicketState.AVAILABLE, null, event, seat, null, new Long(0)));
+		} else {
+			if(endDate.getHourOfDay() > startDate.getHourOfDay()) {
+				for (int i = 0; i <= nubmerOfDays; i++) {
+					DateTime startDate1 = new DateTime(fromDate);
+					startDate1 = startDate1.plusDays(i);
+					DateTime endDate1 = new DateTime(toDate);
+					endDate1 = endDate1.minusDays((nubmerOfDays - i));
+					tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
+							endDate1.toDate(), TicketState.AVAILABLE, null, event, seat, null,
+							new Long(0)));
+				}
+			}
+			else {
+				for (int i = 0; i < nubmerOfDays; i++) {
+					DateTime startDate1 = new DateTime(fromDate);
+					startDate1 = startDate1.plusDays(i);
+					DateTime endDate1 = new DateTime(toDate);
+					endDate1 = endDate1.minusDays((nubmerOfDays - i - 1));
+					tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
+							endDate1.toDate(), TicketState.AVAILABLE, null, event, seat, null,
+							new Long(0)));
+				}
+			}
+		}
+		return tickets;
+	}
+
+	@Override
+	public ArrayList<Ticket> creatTicketsForParter
+		(Event event, SectorCapacity sc, PriceList priceList, Date fromDate, Date toDate) {
+			ArrayList<Ticket> tickets = new ArrayList<>();
+			DateTime startDate = new DateTime(fromDate);
+			DateTime endDate = new DateTime(toDate);
+			int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
+			if (nubmerOfDays == 0) {
+				for (int i = 0; i < sc.getCapacity(); i++) {
+					tickets.add(new Ticket(null, null, priceList.getPrice(), fromDate, toDate,
+							TicketState.AVAILABLE, null, event, null, sc, new Long(0)));
+				}
+			} else {
+				if(endDate.getHourOfDay() > startDate.getHourOfDay()){
+					for (int j = 0; j <= nubmerOfDays; j++) {
+						DateTime startDate1 = new DateTime(fromDate);
+						startDate1 = startDate1.plusDays(j);
+						DateTime endDate1 = new DateTime(toDate);
+						endDate1 = endDate1.minusDays((nubmerOfDays - j));
+						for (int i = 0; i < sc.getCapacity(); i++) {
+							tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
+									endDate1.toDate(), TicketState.AVAILABLE, null, event, null, sc,
+									new Long(0)));
+							}
+					}
+				} else {
+					for (int i = 0; i < nubmerOfDays; i++) {
+						DateTime startDate1 = new DateTime(fromDate);
+						startDate1 = startDate1.plusDays(i);
+						DateTime endDate1 = new DateTime(toDate);
+						endDate1 = endDate1.minusDays((nubmerOfDays - i - 1));
+						tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
+								endDate1.toDate(), TicketState.AVAILABLE, null, event, null, sc,
+								new Long(0)));
+					}
+				}
+			}
+		return tickets;
 	}
 
 	@Override
@@ -338,6 +376,14 @@ public class TicketServiceImpl implements TicketService {
 			throw new ResourceNotFoundException("Desired tickets");
 		}
 		return retVal;
+	}
+
+	int calculateNubmerOfDaysBetween(DateTime startDate, DateTime endDate) {
+		DateTime d = startDate.minusHours(startDate.getHourOfDay());
+		d = d.minusMinutes(d.getMinuteOfHour());
+		DateTime d2 = endDate.minusHours(endDate.getHourOfDay());
+		d2 = d2.minusMinutes(d2.getMinuteOfHour());
+		return Days.daysBetween(d, d2).getDays();
 	}
 
 }
