@@ -38,6 +38,7 @@ import { PlacesListComponent } from './places/places-list/places-list.component'
 import { ToastrModule } from 'ngx-toastr';
 import { ReportsComponent } from './reports/reports.component';
 import { ChartsModule } from 'ng2-charts';
+import { ReportService } from './services/report-service/report.service';
 
 @NgModule({
   declarations: [
@@ -81,7 +82,8 @@ import { ChartsModule } from 'ng2-charts';
     HallService,
     PlaceService,
     LoginGuard,
-    RoleGuard
+    RoleGuard,
+    ReportService
   ],
   bootstrap: [AppComponent]
 })

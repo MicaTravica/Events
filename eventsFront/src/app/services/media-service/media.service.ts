@@ -14,13 +14,13 @@ export class MediaService {
     private http: HttpClient,
   ) {
     this.url = environment.restPath + '/media';
-   }
+  }
 
   public getMediaForEvent(id: string) {
-     return this.http.get(this.url + '/event/' + id, httpOptions);
+    return this.http.get(this.url + '/event/' + id, {headers: httpOptions()});
   }
 
   public getOneMediaForEvent(id: number) {
-     return this.http.get(this.url + '/event/one/' + id, httpOptions);
+    return this.http.get(this.url + '/event/one/' + id, {headers: httpOptions()});
   }
 }

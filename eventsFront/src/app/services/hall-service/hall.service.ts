@@ -19,6 +19,10 @@ export class HallService {
   }
 
   public getHalls(placeID: number) {
-    return this.http.get(this.url + '/placeHalls/' + placeID, authHttpOptions(this.authService.getToken()));
+    return this.http.get(this.url + '/placeHalls/' + placeID,
+      {
+        headers: authHttpOptions(this.authService.getToken())
+      }
+    );
   }
 }
