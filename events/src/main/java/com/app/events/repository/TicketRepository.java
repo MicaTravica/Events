@@ -26,4 +26,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 	@Query("SELECT t FROM Ticket t WHERE t.fromDate >= ?2 AND t.toDate <= ?3 AND t.event.id = ?1")
 	Collection<Ticket> findTicketsByDatesAndEventId(Long eventId, Date fromDate, Date toDate);
 
+	@Query("SELECT t FROM Ticket t WHERE t.toDate <= ?1 AND t.toDate >= ?2 AND t.ticketState = 'RESERVED'")
+	Collection<Ticket> findAllForNotification(Date date, Date currentDate);
 }

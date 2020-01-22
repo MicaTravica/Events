@@ -1,5 +1,6 @@
 package com.app.events.service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -8,13 +9,18 @@ import java.util.Set;
 import org.springframework.data.domain.Page;
 
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.model.Event;
 import com.app.events.model.Hall;
 import com.app.events.model.PriceList;
+import com.app.events.model.Seat;
+import com.app.events.model.SectorCapacity;
 import com.app.events.model.Ticket;
 
 public interface TicketService {
 
 	public Ticket findOne(Long id) throws ResourceNotFoundException;
+
+	public Collection<Ticket> findAllForNotification();
 
 	public Ticket create(Ticket ticket) throws Exception;
 
@@ -33,6 +39,10 @@ public interface TicketService {
 	public void deleteTicketsByEventId(Long id);
 
 	void createTickets(Set<Hall> halls, Set<PriceList> priceLists, Long eventId, boolean update) throws Exception;
+
+	ArrayList<Ticket> createTicketsForSeat(Event event, Seat seat, PriceList priceList,Date fromDate, Date toDate);
+
+	ArrayList<Ticket> creatTicketsForParter(Event event, SectorCapacity sc, PriceList priceList, Date fromDate, Date toDate);
 
 	Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException;
 
