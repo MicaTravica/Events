@@ -32,4 +32,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 	@Query("SELECT SUM(t.price) FROM Ticket t where t.event.id = ?1 AND t.ticketState = 'BOUGHT'")
 	Double findProfitByEventId(Long eventId);
+
+	@Query("SELECT SUM(t.price) FROM Ticket t INNER JOIN t.event e INNER JOIN e.halls h INNER JOIN h.place p WHERE p.id = ?1 "
+			+ "AND e.eventState = 'FINISHED' AND t.fromDate >= ?2 AND t.fromDate < ?3 AND t.ticketState = 'BOUGHT'")
+	Double findProfitByTime(Long placeId, Date fromDate, Date toDate);
 }

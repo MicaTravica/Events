@@ -1,7 +1,7 @@
 package com.app.events.controller;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,30 +24,30 @@ public class ReportController extends BaseController {
 
 	@GetMapping(value = "/report/profit/event", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<HashMap<String, Double>> getProfitEvent(
+	public ResponseEntity<Map<String, Double>> getProfitEvent(
 			@RequestParam(value = "id", required = true) Long placeId) {
 		return new ResponseEntity<>(reportService.profitByEvent(placeId), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/report/profit/time", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<HashMap<String, Double>> getProfitTime(
+	public ResponseEntity<Map<String, Double>> getProfitTime(
 			@RequestParam(value = "id", required = true) Long placeId,
 			@RequestParam(value = "fromDate", required = true) Date fromDate,
-			@RequestParam(value = "toDate", required = true) Date toDate) {
+			@RequestParam(value = "toDate", required = true) Date toDate) throws Exception {
 		return new ResponseEntity<>(reportService.profitByTime(placeId, fromDate, toDate), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/report/attendance/event", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<HashMap<String, Double>> getAttendanceEvent(
+	public ResponseEntity<Map<String, Double>> getAttendanceEvent(
 			@RequestParam(value = "id", required = true) Long placeId) {
 		return new ResponseEntity<>(reportService.attendanceByEvent(placeId), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/report/attendance/time", produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public ResponseEntity<HashMap<String, Double>> getAttendanceTime(
+	public ResponseEntity<Map<String, Double>> getAttendanceTime(
 			@RequestParam(value = "id", required = true) Long placeId,
 			@RequestParam(value = "fromDate", required = true) Date fromDate,
 			@RequestParam(value = "toDate", required = true) Date toDate) {

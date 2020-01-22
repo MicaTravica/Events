@@ -22,12 +22,12 @@
     </p>
     <p *ngIf="by == 'Time'">
         <mat-form-field class="c2">
-            <input matInput [max]="toDate" [matDatepicker]="picker1" placeholder="From date" [(ngModel)]="fromDate" (dateChange)='search()'>
+            <input matInput [max]="picker1max()" [matDatepicker]="picker1" placeholder="From date" [(ngModel)]="fromDate" (dateChange)='search()'>
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="c2">
-            <input matInput [min]="fromDate" [max]="maxDate" [matDatepicker]="picker2" placeholder="To date" [(ngModel)]="toDate" (dateChange)='search()'>
+            <input matInput [min]="picker2min()" [max]="maxDate" [matDatepicker]="picker2" placeholder="To date" [(ngModel)]="toDate" (dateChange)='search()'>
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
         </mat-form-field>

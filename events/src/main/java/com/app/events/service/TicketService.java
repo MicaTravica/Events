@@ -53,4 +53,6 @@ public interface TicketService {
 	Collection<Ticket> findTicketsByDateAndHallAndSector(Long eventId, Long sectorId ,Date fromDate, Date toDate) throws ResourceNotFoundException;
 
 	Double findProfitByEventId(Long eventId);
+
+	Double findProfitByTime(Long placeId, Date fromDate, Date toDate);
 }

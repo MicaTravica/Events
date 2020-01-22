@@ -398,4 +398,9 @@ public class TicketServiceImpl implements TicketService {
 		return ticketRepository.findProfitByEventId(eventId);
 	}
 
+	@Override
+	public Double findProfitByTime(Long placeId, Date fromDate, Date toDate) {
+		return ticketRepository.findProfitByTime(placeId, fromDate, toDate);
+	}
+
 }
