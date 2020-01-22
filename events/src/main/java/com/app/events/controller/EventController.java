@@ -41,7 +41,6 @@ public class EventController extends BaseController {
 	@Autowired
 	private TicketService ticketService;
 
-	// dodati izvestaje
 	@GetMapping(value = "/api/event/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EventDTO> getEvent(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Event event = eventService.findOneAndLoadHalls(id);
