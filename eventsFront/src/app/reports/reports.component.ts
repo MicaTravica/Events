@@ -3,6 +3,7 @@ import { PlaceService } from 'src/app/services/place-service/place.service';
 import { ChartDataSets, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { ReportService } from '../services/report-service/report.service';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-reports',
@@ -44,8 +45,8 @@ export class ReportsComponent implements OnInit {
           if (this.about === 'Profit') {
               this.reportService.getProfitTime(this.id, this.fromDate, this.toDate)
                 .subscribe(
-                  res => {
-                    console.log('time + profit');
+                  (data: Map<string, number>) => {
+                    this.putData(data);
                   }
                 );
           } else {
@@ -64,12 +65,12 @@ export class ReportsComponent implements OnInit {
         }
       } else {
         if (this.about === 'Profit') {
-            this.reportService.getProfitEvent(this.id)
-              .subscribe(
-                res => {
-                  console.log('event + profit');
-                }
-              );
+          this.reportService.getProfitEvent(this.id)
+            .subscribe(
+              (data: Map<string, number>) => {
+                this.putData(data);
+              }
+            );
         } else {
           this.reportService.getAttendanceEvent(this.id)
             .subscribe(
@@ -78,12 +79,6 @@ export class ReportsComponent implements OnInit {
               }
             );
         }
-        // ovde treba da se radi poziv ka bekendu, ondnosno servicu, subscribe
-        // na osnovu about vidis da li je zarada ili posecenost
-        this.lineChartData = [
-          { data: [85, 72, 78, 75, 77, 75], label: this.about } // u data ce ici zarada ili posecenost
-        ];
-        this.lineChartLabels = ['January', 'February', 'March', 'April', 'May', 'June']; // ove ce ici naziv dogadjaja
       }
     }
   }
@@ -91,5 +86,29 @@ export class ReportsComponent implements OnInit {
   initChart() {
     this.lineChartData = undefined;
     this.lineChartLabels = undefined;
+  }
+
+  putData(data: Map<string, number>) {
+    this.lineChartLabels = [];
+    const values = [];
+    // tslint:disable-next-line: forin
+    for (const key in data) {
+      this.lineChartLabels.push(key);
+      values.push(data[key]);
+    }
+    this.lineChartData = [{ data: values, label: this.about }];
+  }
+
+  picker1max() {
+    if (this.toDate) {
+      return new Date(this.toDate.getFullYear(), this.toDate.getMonth(), this.toDate.getDate() - 1);
+    }
+    return new Date(this.maxDate.getFullYear(), this.maxDate.getMonth(), this.maxDate.getDate() - 1);
+  }
+  picker2min() {
+    if (this.fromDate) {
+      return new Date(this.fromDate.getFullYear(), this.fromDate.getMonth(), this.fromDate.getDate() + 1);
+    }
+    return null;
   }
 }

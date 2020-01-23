@@ -31,4 +31,6 @@ public interface EventService {
 
 	Page<Event> search(SearchParamsEvent search);
 
+	Collection<Event> findAllByPlaceId(Long placeIds);
+
 }

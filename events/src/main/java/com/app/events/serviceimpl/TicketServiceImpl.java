@@ -393,4 +393,14 @@ public class TicketServiceImpl implements TicketService {
 		return Days.daysBetween(d, d2).getDays();
 	}
 
+	@Override
+	public Double findProfitByEventId(Long eventId) {
+		return ticketRepository.findProfitByEventId(eventId);
+	}
+
+	@Override
+	public Double findProfitByTime(Long placeId, Date fromDate, Date toDate) {
+		return ticketRepository.findProfitByTime(placeId, fromDate, toDate);
+	}
+
 }
