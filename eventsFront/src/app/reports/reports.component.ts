@@ -52,16 +52,11 @@ export class ReportsComponent implements OnInit {
           } else {
             this.reportService.getAttendanceTime(this.id, this.fromDate, this.toDate)
               .subscribe(
-                res => {
-                  console.log('time + attendace');
+                (data: Map<string, number>) => {
+                  this.putData(data);
                 }
               );
           }
-          this.lineChartData = [
-            { data: [85, 72, 78, 75, 77, 75], label: this.about } // u data ce ici zarada ili posecenost
-          ];
-          this.lineChartLabels = ['January', 'February', 'March', 'April', 'May', 'June']; // ove ce ici vreme, u zavisnsit od
-          // toga sta je uneo, sad izaberi da li ces mesece ili godine ili sta, ili dodaj polje da bita da li ce po mesecima ili godina
         }
       } else {
         if (this.about === 'Profit') {
@@ -74,8 +69,8 @@ export class ReportsComponent implements OnInit {
         } else {
           this.reportService.getAttendanceEvent(this.id)
             .subscribe(
-              res => {
-                console.log('event + attendace');
+              (data: Map<string, number>) => {
+                this.putData(data);
               }
             );
         }

@@ -13,5 +13,5 @@ public interface ReportService {
 
 	Map<String, Double> profitByTime(Long placeId, Date fromDate, Date toDate) throws DateException;
 
-	Map<String, Double> attendanceByTime(Long placeId, Date fromDate, Date toDate);
+	Map<String, Double> attendanceByTime(Long placeId, Date fromDate, Date toDate) throws DateException;
 }

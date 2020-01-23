@@ -50,7 +50,7 @@ public class ReportController extends BaseController {
 	public ResponseEntity<Map<String, Double>> getAttendanceTime(
 			@RequestParam(value = "id", required = true) Long placeId,
 			@RequestParam(value = "fromDate", required = true) Date fromDate,
-			@RequestParam(value = "toDate", required = true) Date toDate) {
+			@RequestParam(value = "toDate", required = true) Date toDate) throws Exception{
 		return new ResponseEntity<>(reportService.attendanceByTime(placeId, fromDate, toDate), HttpStatus.OK);
 	}
 }

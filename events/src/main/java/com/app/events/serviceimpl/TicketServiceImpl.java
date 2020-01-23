@@ -259,9 +259,6 @@ public class TicketServiceImpl implements TicketService {
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		DateTime startDate = new DateTime(fromDate);
 		DateTime endDate = new DateTime(toDate);
-		// nzm sto doda jedan sat pa da bude kako treba
-		startDate = startDate.minusHours(1);
-		endDate = endDate.minusHours(1);
 		int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
 		// ako traje samo 1 dan
 		if (nubmerOfDays == 0) {
@@ -401,6 +398,16 @@ public class TicketServiceImpl implements TicketService {
 	@Override
 	public Double findProfitByTime(Long placeId, Date fromDate, Date toDate) {
 		return ticketRepository.findProfitByTime(placeId, fromDate, toDate);
+	}
+
+	@Override
+	public Double findAttendanceByEventId(Long eventId) {
+		return ticketRepository.findAttendanceByEventId(eventId);
+	}
+
+	@Override
+	public Double findAttendanceByTime(Long placeId, Date fromDate, Date toDate) {
+		return ticketRepository.findAttendanceByTime(placeId, fromDate, toDate);
 	}
 
 }

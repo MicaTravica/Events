@@ -55,4 +55,8 @@ public interface TicketService {
 	Double findProfitByEventId(Long eventId);
 
 	Double findProfitByTime(Long placeId, Date fromDate, Date toDate);
+
+	Double findAttendanceByEventId(Long eventId);
+
+	Double findAttendanceByTime(Long placeId, Date fromDate, Date toDate);
 }
