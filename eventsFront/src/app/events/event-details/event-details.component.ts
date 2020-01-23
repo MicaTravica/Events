@@ -23,7 +23,8 @@ export class EventDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
+    // tslint:disable-next-line: no-string-literal
+    const id = this.route.snapshot.params['id'];
     if (id) {
       this.eventService.getEvent(id).subscribe(
         (data: EventEntity) => {

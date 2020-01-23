@@ -39,6 +39,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { ReportsComponent } from './reports/reports.component';
 import { ChartsModule } from 'ng2-charts';
 import { ReportService } from './services/report-service/report.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ReportService } from './services/report-service/report.service';
     MaterialModule,
     HttpClientModule,
     ToastrModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    FormsModule
   ],
   providers: [
     UserService,
