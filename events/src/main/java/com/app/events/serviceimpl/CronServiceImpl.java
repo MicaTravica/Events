@@ -24,46 +24,53 @@ import org.springframework.stereotype.Component;
 @Component
 public class CronServiceImpl implements CronService {
 
-    @Autowired
-    private EventService eventService;
+	@Autowired
+	private EventService eventService;
 
-    @Autowired
-    private TicketService ticketService;
+	@Autowired
+	private TicketService ticketService;
 
-    @Autowired
-    MailService mailService;
+	@Autowired
+	MailService mailService;
 
-    @Scheduled(cron = "0 0 12 * * ?")
-    @Override
-    public void notifyUsersForReservations() {
-        HashMap<String, ArrayList<Ticket>> notifList = new HashMap<>();
-        Collection<Ticket> tickets = ticketService.findAllForNotification();
-        tickets.forEach(t -> {
-                String email = t.getUser().getEmail();
-                if(!notifList.keySet().contains(email)) {
-                    notifList.put(email, new ArrayList<>());
-                }
-                notifList.get(t.getUser().getEmail()).add(t);
-        });
-        for(String email: notifList.keySet()) {
-            try {
-                mailService.buyReservedTickets(email, notifList.get(email));
-            } catch (MessagingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
+	@Scheduled(cron = "0 0 12 * * ?")
+	@Override
+	public void notifyUsersForReservations() {
+		HashMap<String, ArrayList<Ticket>> notifList = new HashMap<>();
+		Collection<Ticket> tickets = ticketService.findAllForNotification(4);
+		tickets.forEach(t -> {
+			String email = t.getUser().getEmail();
+			if (!notifList.keySet().contains(email)) {
+				notifList.put(email, new ArrayList<>());
+			}
+			notifList.get(t.getUser().getEmail()).add(t);
+		});
+		for (String email : notifList.keySet()) {
+			try {
+				mailService.buyReservedTickets(email, notifList.get(email));
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
-    // svakog dana u 12:00 proveri za sve nezavrsene evente da li su se zavrsili
-    @Scheduled(cron = "0 0 12 * * ?")
-    @Override
-    public void markEventAsFinished() throws Exception {
-        Date d = new Date();
-        eventService.findAllNotFinished().forEach(e-> {
-            if(e.getToDate().before(d)) {
-                eventService.updateEventState(e, EventState.FINISHED);
-            }
-        });
-    }
+	@Scheduled(cron = "0 0 12 * * ?")
+	@Override
+	public void cancleReservations() throws Exception {
+		Collection<Ticket> tickets = ticketService.findAllForNotification(3);
+		ticketService.cancelReservationsCron(tickets);
+	}
+
+	// svakog dana u 12:00 proveri za sve nezavrsene evente da li su se zavrsili
+	@Scheduled(cron = "0 0 12 * * ?")
+	@Override
+	public void markEventAsFinished() throws Exception {
+		Date d = new Date();
+		eventService.findAllNotFinished().forEach(e -> {
+			if (e.getToDate().before(d)) {
+				eventService.updateEventState(e, EventState.FINISHED);
+			}
+		});
+	}
 }

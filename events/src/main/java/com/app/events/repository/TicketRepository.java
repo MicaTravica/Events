@@ -44,4 +44,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 			+ "AND e.eventState = 'FINISHED' AND t.fromDate >= ?2 AND t.fromDate < ?3 AND t.ticketState = 'BOUGHT'")
 	Double findAttendanceByTime(Long placeId, Date fromDate, Date toDate);
 
+	@Query("SELECT COUNT(t) FROM Ticket t WHERE t.event.id = ?1 AND (t.ticketState = 'AVAILABLE' OR t.ticketState = 'RESERVED')")
+	int availableTikcketsByEventId(Long eId);
+
 }
