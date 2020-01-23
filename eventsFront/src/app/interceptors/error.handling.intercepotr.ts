@@ -14,15 +14,15 @@ import { catchError, retry } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ErrorDialogService } from '../services/error-dialog-service/error-dialog.service';
 import { ErrorDialogData } from '../models/error-dialog-model/error-dialog-data';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class ErrorHandlingInterceptor implements HttpInterceptor {
 
     constructor(private router: Router,
-                public errorDialogService: ErrorDialogService) {}
+                private toastr: ToastrService) {}
 
     handleError(error: HttpErrorResponse) {
-        let showDialog = true;
         let errorData: ErrorDialogData = null;
         if (error.error instanceof ErrorEvent) {
         // client-side error
@@ -32,23 +32,23 @@ export class ErrorHandlingInterceptor implements HttpInterceptor {
             switch (error.status) {
                 case 400:
                     // neki od nasih excepitona..
+                    // console.log(error.error);
+
+                    ErrorDialogService.get('1').emit(error.error);
                     break;
                 case 401:
-                    this.router.navigate(['/login']);
-                    showDialog = false;
+                    ErrorDialogService.get('2').emit('/login');
                     break;
-                case 403:     //forbidden
-                    this.router.navigate(['/login']);
-                    showDialog = false;
+                case 403:     // forbidden
+                    ErrorDialogService.get('2').emit('/login');
                     break;
                 case 404:
-                    this.router.navigate(['/notFoundPage']);
+                    ErrorDialogService.get('2').emit(error.error);
+                    break;
+                default:
                     break;
             }
             errorData = new ErrorDialogData(error.status.toString(), error.message);
-        }
-        if (showDialog) {
-            this.errorDialogService.openDialog(errorData);
         }
         return throwError(errorData);
     }
