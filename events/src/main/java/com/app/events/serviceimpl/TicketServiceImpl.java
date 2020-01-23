@@ -259,9 +259,6 @@ public class TicketServiceImpl implements TicketService {
 		ArrayList<Ticket> tickets = new ArrayList<>();
 		DateTime startDate = new DateTime(fromDate);
 		DateTime endDate = new DateTime(toDate);
-		// nzm sto doda jedan sat pa da bude kako treba
-		startDate = startDate.minusHours(1);
-		endDate = endDate.minusHours(1);
 		int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
 		// ako traje samo 1 dan
 		if (nubmerOfDays == 0) {
