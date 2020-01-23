@@ -25,6 +25,7 @@ import com.app.events.exception.SectorCapacatyMustBePositiveNumberException;
 import com.app.events.exception.TicketIsBoughtException;
 import com.app.events.exception.TicketReservationException;
 import com.app.events.model.Event;
+import com.app.events.model.EventState;
 import com.app.events.model.Hall;
 import com.app.events.model.PriceList;
 import com.app.events.model.Seat;
@@ -76,9 +77,9 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public Collection<Ticket> findAllForNotification() {
+	public Collection<Ticket> findAllForNotification(int day) {
 		DateTime dt = new DateTime();
-		dt = dt.plusDays(3);
+		dt = dt.plusDays(day);
 		return this.ticketRepository.findAllForNotification(dt.toDate(), new Date());
 	}
 
@@ -114,7 +115,14 @@ public class TicketServiceImpl implements TicketService {
 			t.setTicketState(TicketState.RESERVED);
 			t.setUser(user);
 			retVal.add(ticketRepository.save(t));
+			if(t.getSectorCapacity() != null) {
+				SectorCapacity sc = sectorCapacityService.findOne(t.getSectorCapacity().getId());
+				sc.setFree(sc.getFree() - 1);
+				sectorCapacityService.update(sc);
+			}
 		}
+
+		System.out.println(ticketRepository.availableTikcketsByEventId(15L));
 		return retVal;
 	}
 
@@ -141,8 +149,26 @@ public class TicketServiceImpl implements TicketService {
 			t.setTicketState(TicketState.AVAILABLE);
 			t.setUser(null);
 			retVal.add(ticketRepository.save(t));
+			if (t.getSectorCapacity() != null) {
+				SectorCapacity sc = sectorCapacityService.findOne(t.getSectorCapacity().getId());
+				sc.setFree(sc.getFree() + 1);
+				sectorCapacityService.update(sc);
+			}
 		}
 		return retVal;
+	}
+	
+	@Override
+	public void cancelReservationsCron(Collection<Ticket> tickets) throws Exception {
+		for(Ticket t: tickets){
+			t.setTicketState(TicketState.AVAILABLE);
+			t.setUser(null);
+			if (t.getSectorCapacity() != null) {
+				SectorCapacity sc = sectorCapacityService.findOne(t.getSectorCapacity().getId());
+				sc.setFree(sc.getFree() + 1);
+				sectorCapacityService.update(sc);
+			}
+		}
 	}
 
 	@Override
@@ -169,6 +195,8 @@ public class TicketServiceImpl implements TicketService {
 	public Collection<Ticket> buyTickets(Collection<Long> ticketIDs, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception {
 		Collection<Ticket> retVal = new ArrayList<>();
 		Collection<Ticket> boughtTickets = new ArrayList<>();
+		Collection<Long> sc = new ArrayList<>();
+		Set<Long> events = new HashSet<>();
 		for(Long ticketID: ticketIDs){
 			
 			Ticket ticketToUpdate = findOne(ticketID);
@@ -183,8 +211,13 @@ public class TicketServiceImpl implements TicketService {
 					user = userService.findOne(ticketUserID);
 					ticketToUpdate.setUser(user);
 				}
+
+				if(ticketToUpdate.getSectorCapacity() != null && ticketToUpdate.getTicketState() == TicketState.AVAILABLE) {
+					sc.add(ticketToUpdate.getSectorCapacity().getId());
+				}
 				ticketToUpdate.setTicketState(TicketState.BOUGHT);
 				boughtTickets.add(ticketToUpdate);
+				events.add(ticketToUpdate.getEvent().getId());
 			}
 			else {
 				throw new TicketIsBoughtException("Ticket is already bought by other user");
@@ -203,6 +236,16 @@ public class TicketServiceImpl implements TicketService {
 				Ticket savedTicket = ticketRepository.save(ticket);
 				retVal.add(savedTicket);
 			});
+		for (Long scId : sc) {
+			SectorCapacity scu = sectorCapacityService.findOne(scId);
+			scu.setFree(scu.getFree() - 1);
+			sectorCapacityService.update(scu);
+		}
+		for(Long eId: events) {
+			if(ticketRepository.availableTikcketsByEventId(eId) == 0) {
+				eventService.updateEventState(eventService.findOne(eId), EventState.SOLD_OUT);
+			}
+		}
 		return retVal;
 	}
 
@@ -242,9 +285,7 @@ public class TicketServiceImpl implements TicketService {
 							eventService.delete(eventId);
 						throw new SectorCapacatyMustBePositiveNumberException();
 					}
-					SectorCapacity sc = sectorCapacityService
-									.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
-					this.creatTicketsForParter(savedEvent, sc, savedPriceList, fromDate, toDate)
+					this.creatTicketsForParter(savedEvent, s, capacity, savedPriceList, fromDate, toDate)
 						.forEach(t-> tickets.add(t));
 				}
 			}
@@ -292,42 +333,48 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public ArrayList<Ticket> creatTicketsForParter
-		(Event event, SectorCapacity sc, PriceList priceList, Date fromDate, Date toDate) {
-			ArrayList<Ticket> tickets = new ArrayList<>();
-			DateTime startDate = new DateTime(fromDate);
-			DateTime endDate = new DateTime(toDate);
-			int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
-			if (nubmerOfDays == 0) {
-				for (int i = 0; i < sc.getCapacity(); i++) {
-					tickets.add(new Ticket(null, null, priceList.getPrice(), fromDate, toDate,
-							TicketState.AVAILABLE, null, event, null, sc, new Long(0)));
+	public ArrayList<Ticket> creatTicketsForParter(Event event, Sector s, int capacity, PriceList priceList,
+			Date fromDate, Date toDate) throws Exception {
+		ArrayList<Ticket> tickets = new ArrayList<>();
+		DateTime startDate = new DateTime(fromDate);
+		DateTime endDate = new DateTime(toDate);
+		int nubmerOfDays = this.calculateNubmerOfDaysBetween(startDate, endDate);
+		if (nubmerOfDays == 0) {
+			SectorCapacity sc = sectorCapacityService
+					.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
+			for (int i = 0; i < sc.getCapacity(); i++) {
+				tickets.add(new Ticket(null, null, priceList.getPrice(), fromDate, toDate, TicketState.AVAILABLE, null,
+						event, null, sc, new Long(0)));
+			}
+		} else {
+			if (endDate.getHourOfDay() > startDate.getHourOfDay()) {
+				for (int j = 0; j <= nubmerOfDays; j++) {
+					DateTime startDate1 = new DateTime(fromDate);
+					startDate1 = startDate1.plusDays(j);
+					DateTime endDate1 = new DateTime(toDate);
+					endDate1 = endDate1.minusDays((nubmerOfDays - j));
+					SectorCapacity sc = sectorCapacityService
+							.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
+					for (int i = 0; i < sc.getCapacity(); i++) {
+						tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(), endDate1.toDate(),
+								TicketState.AVAILABLE, null, event, null, sc, new Long(0)));
+					}
 				}
 			} else {
-				if(endDate.getHourOfDay() > startDate.getHourOfDay()){
-					for (int j = 0; j <= nubmerOfDays; j++) {
-						DateTime startDate1 = new DateTime(fromDate);
-						startDate1 = startDate1.plusDays(j);
-						DateTime endDate1 = new DateTime(toDate);
-						endDate1 = endDate1.minusDays((nubmerOfDays - j));
-						for (int i = 0; i < sc.getCapacity(); i++) {
-							tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
-									endDate1.toDate(), TicketState.AVAILABLE, null, event, null, sc,
-									new Long(0)));
-							}
-					}
-				} else {
-					for (int i = 0; i < nubmerOfDays; i++) {
-						DateTime startDate1 = new DateTime(fromDate);
-						startDate1 = startDate1.plusDays(i);
-						DateTime endDate1 = new DateTime(toDate);
-						endDate1 = endDate1.minusDays((nubmerOfDays - i - 1));
-						tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(),
-								endDate1.toDate(), TicketState.AVAILABLE, null, event, null, sc,
-								new Long(0)));
+				for (int i = 0; i < nubmerOfDays; i++) {
+					DateTime startDate1 = new DateTime(fromDate);
+					startDate1 = startDate1.plusDays(i);
+					DateTime endDate1 = new DateTime(toDate);
+					endDate1 = endDate1.minusDays((nubmerOfDays - i - 1));
+					SectorCapacity sc = sectorCapacityService
+							.create(new SectorCapacity(null, new HashSet<>(), s, capacity, capacity));
+					for (int j = 0; j < sc.getCapacity(); j++) {
+						tickets.add(new Ticket(null, null, priceList.getPrice(), startDate1.toDate(), endDate1.toDate(),
+								TicketState.AVAILABLE, null, event, null, sc, new Long(0)));
 					}
 				}
 			}
+		}
 		return tickets;
 	}
 

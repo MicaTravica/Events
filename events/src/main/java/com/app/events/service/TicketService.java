@@ -13,14 +13,14 @@ import com.app.events.model.Event;
 import com.app.events.model.Hall;
 import com.app.events.model.PriceList;
 import com.app.events.model.Seat;
-import com.app.events.model.SectorCapacity;
+import com.app.events.model.Sector;
 import com.app.events.model.Ticket;
 
 public interface TicketService {
 
 	public Ticket findOne(Long id) throws ResourceNotFoundException;
 
-	public Collection<Ticket> findAllForNotification();
+	public Collection<Ticket> findAllForNotification(int day);
 
 	public Ticket create(Ticket ticket) throws Exception;
 
@@ -42,8 +42,9 @@ public interface TicketService {
 
 	ArrayList<Ticket> createTicketsForSeat(Event event, Seat seat, PriceList priceList,Date fromDate, Date toDate);
 
-	ArrayList<Ticket> creatTicketsForParter(Event event, SectorCapacity sc, PriceList priceList, Date fromDate, Date toDate);
-
+	ArrayList<Ticket> creatTicketsForParter(Event event, Sector s, int capacity, PriceList priceList, Date fromDate,
+			Date toDate) throws Exception;
+	
 	Collection<Ticket> findAllByEventId(Long eventId) throws ResourceNotFoundException;
 
 	Collection<Ticket> findAllReservationsByUserId(String username);
@@ -59,4 +60,7 @@ public interface TicketService {
 	Double findAttendanceByEventId(Long eventId);
 
 	Double findAttendanceByTime(Long placeId, Date fromDate, Date toDate);
+
+	void cancelReservationsCron(Collection<Ticket> tickets) throws Exception;
+
 }
