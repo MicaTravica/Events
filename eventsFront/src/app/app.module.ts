@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,10 +35,13 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ReservationListComponent } from './tickets/reservation-list/reservation-list.component';
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
 import { PlacesListComponent } from './places/places-list/places-list.component';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ReportsComponent } from './reports/reports.component';
 import { ChartsModule } from 'ng2-charts';
 import { ReportService } from './services/report-service/report.service';
+import { ErrorHandlingInterceptor } from './interceptors/error.handling.intercepotr';
+import { ErrorDialogService } from './services/error-dialog-service/error-dialog.service';
+import { Router } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -74,6 +77,7 @@ import { ReportService } from './services/report-service/report.service';
     ChartsModule
   ],
   providers: [
+    ToastrService,
     UserService,
     EventService,
     AuthService,
@@ -83,7 +87,14 @@ import { ReportService } from './services/report-service/report.service';
     PlaceService,
     LoginGuard,
     RoleGuard,
-    ReportService
+    ReportService,
+    ErrorDialogService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorHandlingInterceptor,
+      multi: true,
+      deps: [ErrorDialogService, Router]
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -20,6 +20,7 @@ import {
   MatCheckboxModule,
   MatCheckbox,
   MatTabsModule,
+  MatDialogModule
 } from '@angular/material';
 
 @NgModule({
@@ -41,7 +42,8 @@ import {
     MatSelectModule,
     MatListModule,
     MatCheckboxModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDialogModule
   ],
   exports: [
     MatButtonModule,
@@ -62,6 +64,7 @@ import {
     MatListModule,
     MatCheckboxModule,
     MatTabsModule,
+    MatDialogModule
   ]
 })
 export class MaterialModule {}
