@@ -3,47 +3,41 @@ import { Injectable} from '@angular/core';
 import {
     HttpInterceptor,
     HttpRequest,
-    HttpResponse,
     HttpHandler,
     HttpEvent,
     HttpErrorResponse
 } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
-import { catchError, retry } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { catchError } from 'rxjs/operators';
 import { ErrorDialogService } from '../services/error-dialog-service/error-dialog.service';
 import { ErrorDialogData } from '../models/error-dialog-model/error-dialog-data';
-import { ToastrService } from 'ngx-toastr';
+import { EventChannels } from '../models/event-channels/eventChannels';
+
 
 @Injectable()
 export class ErrorHandlingInterceptor implements HttpInterceptor {
 
-    constructor(private router: Router,
-                private toastr: ToastrService) {}
+    constructor() {}
 
     handleError(error: HttpErrorResponse) {
         let errorData: ErrorDialogData = null;
         if (error.error instanceof ErrorEvent) {
-        // client-side error
             errorData = new ErrorDialogData('0', error.error.message);
         } else {
         // server-side error
             switch (error.status) {
                 case 400:
-                    // neki od nasih excepitona..
-                    // console.log(error.error);
-
-                    ErrorDialogService.get('1').emit(error.error);
+                    ErrorDialogService.get(EventChannels.ERROR_MESSAGE).emit(error.error);
                     break;
                 case 401:
-                    ErrorDialogService.get('2').emit('/login');
+                    ErrorDialogService.get(EventChannels.REDIRECT_EVENT).emit('/login');
                     break;
-                case 403:     // forbidden
-                    ErrorDialogService.get('2').emit('/login');
+                case 403:
+                    ErrorDialogService.get(EventChannels.REDIRECT_EVENT).emit('/login');
                     break;
                 case 404:
-                    ErrorDialogService.get('2').emit(error.error);
+                    ErrorDialogService.get(EventChannels.REDIRECT_EVENT).emit(error.error);
                     break;
                 default:
                     break;
