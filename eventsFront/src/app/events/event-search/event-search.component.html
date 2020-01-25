@@ -1,0 +1,76 @@
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Search
+      </mat-panel-title>
+      <mat-panel-description>
+        Input parameras for search
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-form-field>
+      <input matInput [(ngModel)]="eventSearch.name" placeholder="Event name">
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput [max]="eventSearch.toDate" [matDatepicker]="picker1" placeholder="From date" [(ngModel)]="eventSearch.fromDate">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="example-full-width">
+        <input matInput [min]="eventSearch.fromDate" [matDatepicker]="picker2" placeholder="To date" [(ngModel)]="eventSearch.toDate">
+        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Event state</mat-label>
+      <mat-select [(ngModel)]="eventSearch.eventState">
+        <mat-option *ngFor="let state of eventStates" [value]="state">
+          {{state}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Event type</mat-label>
+      <mat-select [(ngModel)]="eventSearch.eventType">
+        <mat-option *ngFor="let type of eventTypes" [value]="type">
+          {{type}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Place</mat-label>
+      <mat-select [(ngModel)]="eventSearch.placeId">
+        <mat-option *ngFor="let place of places" [value]="place.id">
+          {{place.name}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-action-row>
+      <button mat-raised-button color="accent" (click)="search()">Search</button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
+<mat-form-field class="details">
+  <mat-label>Sort by</mat-label>
+  <mat-select [(ngModel)]="eventSearch.sortBy" (selectionChange)='search()'>
+    <mat-option *ngFor="let sort of sorts" [value]="sort.id">
+      {{sort.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-form-field class="details">
+  <mat-label>Order</mat-label>
+  <mat-select [(ngModel)]="eventSearch.ascending" (selectionChange)='search()'>
+    <mat-option *ngFor="let order of orders" [value]="order.id">
+      {{order.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<mat-form-field class="details">
+  <mat-label>Size of page</mat-label>
+  <mat-select [(ngModel)]="eventSearch.sizeOfPage" (selectionChange)='search()'>
+    <mat-option *ngFor="let size of sizes" [value]="size">
+      {{size}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

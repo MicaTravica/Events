@@ -1,0 +1,32 @@
+mat-form-field {
+  margin-right: 1%;
+  margin-top: 5px;
+  width: 24%;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.available-ticket {
+  background: #B2DFDB;
+}
+
+.selected-ticket {
+  background: #004D40;
+}
+
+.reserved-ticket {
+  background: #B0BEC5;
+  pointer-events: none;
+}
+
+.main {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+mat-grid-list {
+  margin: 10px;
+}

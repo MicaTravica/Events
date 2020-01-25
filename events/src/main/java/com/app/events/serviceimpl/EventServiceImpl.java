@@ -54,6 +54,24 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
+	public Collection<Event> findAllNotFinished() {
+		return this.eventRepository.findAllNotFinished();
+  }
+  
+  @Override
+	public Event findOneAndLoadHalls(Long id) throws ResourceNotFoundException {
+		Event event = this.eventRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Event"));
+		Set<Hall> halls = this.hallService.findHallByEventId(id)
+									.stream().collect(Collectors.toSet());
+		event.setHalls(halls);
+
+		for(Hall h: halls) {
+			h.setSectors(this.sectorService.findAllByHallAndEvent(h.getId(), event.getId()).stream().collect(Collectors.toSet()));
+		}
+		return event;
+	}
+
+	@Override
 	public Event create(Event event) throws Exception {
 		event.setId(null);
 		if (event.getFromDate() == null || event.getToDate() == null || event.getFromDate().after(event.getToDate()))
@@ -81,6 +99,12 @@ public class EventServiceImpl implements EventService {
 		event.setHalls(halls);
 		event.setMediaList(new HashSet<>());
 		event.setPriceLists(new HashSet<>());
+		return eventRepository.save(event);
+	}
+
+	@Override
+	public Event updateEventState(Event event, EventState state) {
+		event.setEventState(state);
 		return eventRepository.save(event);
 	}
 
@@ -196,10 +220,23 @@ public class EventServiceImpl implements EventService {
 		if (params.getSortBy().equals("")) {
 			params.setSortBy("fromDate");
 		}
-		Pageable pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(),
-				Sort.by(params.getSortBy()).ascending());
+		Pageable pageable;
+		if(params.isAscending()) {
+			pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(),
+					Sort.by(params.getSortBy()).ascending());
+		} else {
+			pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(),
+					Sort.by(params.getSortBy()).descending());
+		}
 		Page<Event> found = eventRepository.search(params.getName(), params.getFromDate(), params.getToDate(),
 				params.getEventState(), params.getEventType(), params.getPlaceId(), pageable);
 		return found;
 	}
+
+	@Override
+	public Collection<Event> findAllByPlaceId(Long placeId) {
+		return eventRepository.findAllByPlaceId(placeId);
+	}
+
+	
 }

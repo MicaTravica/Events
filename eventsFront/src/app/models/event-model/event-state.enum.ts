@@ -1,0 +1,7 @@
+export enum EventState {
+    NOT_AVAILABLE = 'NOT_AVAILABLE',
+    AVAILABLE = 'AVAILABLE',
+    SOLD_OUT = 'SOLD_OUT',
+    FINISHED = 'FINISHED',
+    CANCELED = 'CANCELED'
+}

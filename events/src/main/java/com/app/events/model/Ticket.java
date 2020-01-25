@@ -1,5 +1,6 @@
 package com.app.events.model;
 
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -30,6 +31,9 @@ public class Ticket {
 	
 	private String barCode;
 	private double price;
+
+	private Date fromDate;
+	private Date toDate;
 
 	@NotNull(message="Ticket must have ticket state")
 	@Enumerated(EnumType.STRING)

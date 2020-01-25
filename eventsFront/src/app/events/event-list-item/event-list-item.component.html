@@ -1,0 +1,18 @@
+<mat-card class="card">
+  <mat-card-header>
+    <mat-card-title>{{event.name}}</mat-card-title>
+    <mat-card-subtitle>{{event.halls[0].place.name}}</mat-card-subtitle>
+  </mat-card-header>
+  <img *ngIf='event.mediaList.length > 0' mat-card-image src="{{event.mediaList[0].path}}" alt="Photo of a Shiba Inu">
+  <img *ngIf='event.mediaList.length == 0' mat-card-image src="http://getwebpromotions.com/wp-content/uploads/2019/09/Events.jpg" alt="Photo of a Shiba Inu">
+  <mat-card-content>
+    <p>
+      From: {{event.fromDate | dateFormat}}<br>
+      To: {{event.toDate | dateFormat}}<br>
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button (click)="showDetails()" color="accent">Details</button>
+    <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)="buyReserve()" color="accent">Buy\Reserve</button>
+  </mat-card-actions>
+</mat-card>

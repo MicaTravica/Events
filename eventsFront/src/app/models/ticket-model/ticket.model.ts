@@ -1,3 +1,5 @@
+import { EventEntity } from '../event-model/event.model';
+
 export class Ticket {
     public id: number;
     public barCode: string;
@@ -11,13 +13,15 @@ export class Ticket {
     public payPalPaymentID: string;
     public payPalToken: string;
     public payPalPayerID: string;
-    public event: any;          // treba da bude DTO od EVENTA!!!
+    public event: EventEntity;
+    public fromDate: string;
+    public toDate: string;
 
     public Ticket(  id: number, barCode: string,
                     ticketState: string, userId: number,
                     version: number, sectorName: string,
                     hallName: string, seatRow: number, seatColumn: number,
-                    event: any) {
+                    event: EventEntity) {
         this.id = id;
         this.barCode = barCode;
         this.ticketState = ticketState;

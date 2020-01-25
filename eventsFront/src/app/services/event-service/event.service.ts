@@ -1,26 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpEvent, HttpRequest } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { authHttpOptions, httpOptions } from 'src/app/util/http-util';
 import { AuthService } from '../auth-service/auth.service';
-
-const httpOptions = {
-  headers: new HttpHeaders({
-   'Content-Type': 'application/json',
-   'Accept': 'application/json'
-  })
-}
-
-const authHttpOptions = (token) => {
-  return {
-    headers: new HttpHeaders({
-    // 'Content-Type': 'application/json',
-    // 'Accept': 'application/json',
-    'Authorization': 'Bearer ' + token
-   })
-  }
-}
-
+import { environment } from 'src/environments/environment';
+import { EventSearch } from 'src/app/models/event-search-model/event-search.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +19,7 @@ export class EventService {
     private authService: AuthService,
     private router: Router
   ) { 
-    this.url = 'http://localhost:8080/api';
+    this.url = environment.restPath + '/event';
   }
 
   public save(addEventData, selectedSectors) {
@@ -64,7 +49,6 @@ export class EventService {
     .subscribe(data => {
       console.log(data);
     });
-
   }
 
   public uploadFile(file: File): Observable<HttpEvent<{}>> {
@@ -72,8 +56,19 @@ export class EventService {
 
     data.append('file', file);
 
-    const newRequest = new HttpRequest('POST', this.url + '/files', data, authHttpOptions(localStorage.getItem("token")));
-
+    const newRequest = new HttpRequest('POST', this.url + '/files', data,
+      {
+        headers: authHttpOptions(this.authService.getToken())
+      }
+    );
     return this.http.request(newRequest);
+  }
+
+  public search(params: EventSearch) {
+    return this.http.post(this.url + '/search', params, {headers: httpOptions()});
+  }
+
+  public getEvent(id: string) {
+    return this.http.get(this.url + '/' + id, {headers: httpOptions()});
   }
 }

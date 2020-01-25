@@ -1,5 +1,7 @@
 package com.app.events.dto;
 
+import java.util.Date;
+
 import com.app.events.model.TicketState;
 
 import lombok.AllArgsConstructor;
@@ -27,9 +29,6 @@ public class TicketDTO {
 
 	private EventDTO event;
 
-	private String payPalPaymentID;
-	private String payPalToken;
-	private String payPalPayerID;
-
-
+	private Date fromDate;
+	private Date toDate;
 }

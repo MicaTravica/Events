@@ -18,5 +18,6 @@ public interface SectorService {
 	public Sector prepareSectorFields(Sector toUpdate, Sector newSector);
 
 	public Collection<Sector> getSectorsByHallId(Long id);
+	Collection<Sector> findAllByHallAndEvent(Long hallId, Long eventId);
 
 }
