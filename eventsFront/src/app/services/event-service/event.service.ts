@@ -45,7 +45,9 @@ export class EventService {
     delete addEventData.place;
     delete addEventData.ticketPrice;
 
-    return this.http.post<any>(this.url + '/event', addEventData, authHttpOptions(localStorage.getItem("token")))
+    return this.http.post<any>(this.url + '/event', addEventData, {
+      headers: authHttpOptions(this.authService.getToken())
+    })
     .subscribe(data => {
       console.log(data);
     });

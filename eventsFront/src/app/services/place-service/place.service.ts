@@ -14,7 +14,6 @@ export class PlaceService {
   private url: string;
 
   constructor(
-<<<<<<< HEAD
     private http: HttpClient,
     private authService: AuthService,
     private router: Router
@@ -23,10 +22,12 @@ export class PlaceService {
   }
 
   public getPlaces() {
-    return this.http.get(this.url + "s", authHttpOptions(this.authService.getToken()))
+    return this.http.get(this.url + "s", {
+      headers: authHttpOptions(this.authService.getToken())
+    })
     .pipe(map(
       res => {
-        return res;this.http.get(this.url + 's', {headers: httpOptions()});
+        return res;
       }
       ))
     }
