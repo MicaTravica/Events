@@ -20,15 +20,15 @@
         </div>
 
         <div>
-            <label for="type"> Type </label><br/>
-            <select id="type" formControlName="type">
+            <label for="eventType"> Type </label><br/>
+            <select id="eventType" formControlName="eventType">
                 <option selected>Select event type...</option>
                 <option value="1">CONCERT</option>
                 <option value="2">DRAMA</option>
                 <option value="3">OPERA</option>
             </select>
-            <div *ngIf="submitted && form.type.errors">
-                <div *ngIf="form.type.errors.required">Type is required</div>
+            <div *ngIf="submitted && form.eventType.errors">
+                <div *ngIf="form.eventType.errors.required">Type is required</div>
             </div>
         </div>
 
@@ -58,9 +58,27 @@
             </div>
         </div>
 
-        <div *ngFor="let hall of selectedPlaceHalls">
-            <input type="checkbox" formControlName="halls">
+        <span *ngFor="let hall of selectedPlaceHalls">
+            <input value={{hall.id}} type="checkbox" name="halls[]" (change)="onCheckboxChange($event)">
             <label>{{hall.name}}</label>
+        </span>
+
+        <div>
+            <select id="place" formControlName="place" (change)="renderSectors($event)" *ngIf="currentPlace && selectedHalls && selectedHalls.length > 0">
+                <option value={{hall.id}} *ngFor="let hall of selectedHalls">{{hall.name}}</option>
+            </select>
+        </div>
+
+        Sectors
+        <div *ngFor="let sector of selectedHallSectors">
+            <div *ngIf="isSectorSelected(sector.id)">
+                <input value={{sector.id}} type="checkbox" name="sectors[]" (change)="onCheckboxChangeSector($event)"
+                checked>
+            </div>
+            <div *ngIf="!isSectorSelected(sector.id)">
+                <input value={{sector.id}} type="checkbox" name="sectors[]" (change)="onCheckboxChangeSector($event)">
+            </div>
+            <label>{{sector.name}}</label>
         </div>
 
         <input type="file" id="file" (change)="selectFile($event)">

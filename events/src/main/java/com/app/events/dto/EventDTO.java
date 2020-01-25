@@ -25,7 +25,7 @@ public class EventDTO {
 	private EventState eventState;
 	private EventType eventType;
 	private Set<HallDTO> halls;
-	private Set<PriceListDTO> priceLise;
+	private Set<PriceListDTO> priceList;
 	private Set<MediaDTO> mediaList;
 	
 }
