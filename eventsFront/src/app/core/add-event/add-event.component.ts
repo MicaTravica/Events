@@ -19,7 +19,7 @@ export class AddEventComponent implements OnInit {
   currentFileUpload: File;
   places;
   selectedPlaceHalls;
-  selectedHalls;
+  selectedHalls = [];
   selectedHallSectors;
   currentHall;
   selectedSectors = [];
@@ -43,19 +43,22 @@ export class AddEventComponent implements OnInit {
       videos: '', 
       ticketPrice: ['', Validators.required], 
       halls: this.formBuilder.array([]),
-      sectors: this.formBuilder.array([])
+      sectors: this.formBuilder.array([]),
+      priceList: this.formBuilder.array([]),
+      mediaList: this.formBuilder.array([])
     });
   }
 
   ngOnInit() {
     this.placeService.getPlaces().subscribe(places => {
-      if (places)
-      this.places = places;
+      if (places) {
+        this.places = places;
+      }
     });
   }
 
-  get form() { 
-    return this.addEventForm.controls; 
+  get form() {
+    return this.addEventForm.controls;
   }
 
   onSubmit(addEventData) {
@@ -64,16 +67,19 @@ export class AddEventComponent implements OnInit {
       return;
     }
 
-    this.eventService.save(addEventData, this.selectedSectors);
-    //this.upload();
+    this.eventService.save(addEventData, this.selectedSectors).subscribe(response => {
+      console.log(response);
+    });
+    // this.upload();
   }
 
   upload() {
-    if (this.selectedFiles) this.currentFileUpload = this.selectedFiles.item(0);
-    this.eventService.uploadFile(this.currentFileUpload).subscribe(() => {
-      this.selectedFiles = undefined;
+    if (this.selectedFiles) {
+      this.currentFileUpload = this.selectedFiles.item(0);
     }
-    );
+    this.eventService.uploadFile(this.currentFileUpload).subscribe((url: string ) => {
+      console.log(url);
+    });
   }
 
   selectFile(event) {
@@ -81,7 +87,7 @@ export class AddEventComponent implements OnInit {
   }
 
   renderHalls(event) {
-    const placeID = event.target.value;
+    const placeID = event.value;
     this.currentPlace = placeID;
     this.hallService.getHalls(placeID).subscribe(selectedPlaceHalls => {
       if (selectedPlaceHalls) {
@@ -109,57 +115,48 @@ export class AddEventComponent implements OnInit {
     return sectors.value.includes(sectorID.toString());
   }
 
-  onCheckboxChange(e) {
+  onHallsCheckboxChange(event, hall) {
     const halls: FormArray = this.addEventForm.get('halls') as FormArray;
-  
-    if (e.target.checked) {
-      halls.push(new FormControl(e.target.value));
+
+    if (event.checked) {
+      halls.push(new FormControl(hall.id));
+      this.selectedHalls.push(hall);
     } else {
-      let i: number = 0;
-      halls.controls.forEach((item: FormControl) => {
-        if (item.value == e.target.value) {
-          halls.removeAt(i);
-          return;
-        }
-        i++;
+      halls.controls = halls.controls.filter((item: FormControl) => {
+        return item.value !== hall.id;
+      });
+
+      this.selectedHalls = this.selectedHalls.filter(selectedHall => {
+        return selectedHall.id !== hall.id;
       });
     }
 
-    const selectedHalls = [];
-    halls.value.forEach((selectedHall) => {
-      this.selectedPlaceHalls.forEach((hall) => {
-        if (hall.id == selectedHall) {
-          selectedHalls.push(hall);
-        }
-      })
-    })
-
-    this.selectedHalls = selectedHalls;
+    console.log(this.selectedHalls.length > 0);
   }
 
   onCheckboxChangeSector(e) {
 
     const sectors: FormArray = this.addEventForm.get('sectors') as FormArray;
-  
+
     if (e.target.checked) {
       sectors.push(new FormControl(e.target.value));
       this.selectedSectors.push({
         id: e.target.value,
         hallID: this.currentHall
-      })
+      });
     } else {
-      let i: number = 0;
+      let i = 0;
       sectors.controls.forEach((item: FormControl) => {
-        if (item.value == e.target.value) {
+        if (item.value === e.target.value) {
           sectors.removeAt(i);
           return;
         }
         i++;
       });
 
-      let j: number = 0;
+      let j = 0;
       this.selectedSectors.forEach((sector) => {
-        if (sector.id == e.target.value) {
+        if (sector.id === e.target.value) {
           this.selectedSectors.splice(j, 1);
           return;
         }
@@ -168,4 +165,5 @@ export class AddEventComponent implements OnInit {
     }
 
   }
+
 }
