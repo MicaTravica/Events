@@ -25,7 +25,7 @@ export class EventService {
     this.url = environment.restPath + '/event';
   }
 
-  public save(addEventData, selectedSectors) {
+  public save(addEventData, selectedSectors, selectedMedia) {
     addEventData.eventState = 'AVAILABLE';
 
     const halls = addEventData.halls.map((hall) => {
@@ -50,15 +50,12 @@ export class EventService {
 
     addEventData.halls = updatedHalls;
     addEventData.priceList = priceList;
+    addEventData.mediaList = selectedMedia;
     delete addEventData.sectors;
-    delete addEventData.photos;
-    delete addEventData.videos;
     delete addEventData.place;
     delete addEventData.ticketPrice;
 
     const token = this.authService.getToken();
-
-    console.log(addEventData);
 
     return this.http.post<any>(this.url, addEventData, {
       headers: new HttpHeaders().set('Authorization',  `Bearer ${token}`)
@@ -66,15 +63,16 @@ export class EventService {
   }
 
   public uploadFile(file: File) {
-    const task = this.afStorage.upload('/eventID/image.png', file);
-    const storageRef = this.afStorage.ref('/eventID/image.png');
+    const name = Math.random().toString(36).substring(7);
+    const task = this.afStorage.upload(`/event_media/${name}.png`, file);
+    const storageRef = this.afStorage.ref(`/event_media/${name}.png`);
 
     return from(task).pipe(
       switchMap(() => storageRef.getDownloadURL()),
       tap(url => {
           return url;
       })
-    )
+    );
   }
 
   public search(params: EventSearch) {

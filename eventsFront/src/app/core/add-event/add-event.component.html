@@ -81,16 +81,16 @@
         Sectors
         <div *ngFor="let sector of selectedHallSectors">
             <div *ngIf="isSectorSelected(sector.id)">
-                <input value={{sector.id}} type="checkbox" name="sectors[]" (change)="onCheckboxChangeSector($event)"
+                <input value={{sector.id}} type="checkbox" name="sectors[]" (change)="onSectorCheckboxChange($event)"
                 checked>
             </div>
             <div *ngIf="!isSectorSelected(sector.id)">
-                <input value={{sector.id}} type="checkbox" name="sectors[]" (change)="onCheckboxChangeSector($event)">
+                <input value={{sector.id}} type="checkbox" name="sectors[]" (change)="onSectorCheckboxChange($event)">
             </div>
             <label>{{sector.name}}</label>
         </div>
 
-        <input type="file" id="file" (change)="selectFile($event)">
+        <input type="file" id="file" (change)="selectFile($event)" value="+">
 
         <div>
             <label for="ticketPrice"> Ticket price </label><br/>

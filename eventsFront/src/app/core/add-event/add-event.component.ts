@@ -24,6 +24,7 @@ export class AddEventComponent implements OnInit {
   currentHall;
   selectedSectors = [];
   currentPlace;
+  selectedMedia = [];
   
   constructor(
     private eventService: EventService,
@@ -39,8 +40,6 @@ export class AddEventComponent implements OnInit {
       place: ['', Validators.required],
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
-      photos: '',
-      videos: '', 
       ticketPrice: ['', Validators.required], 
       halls: this.formBuilder.array([]),
       sectors: this.formBuilder.array([]),
@@ -67,18 +66,17 @@ export class AddEventComponent implements OnInit {
       return;
     }
 
-    this.eventService.save(addEventData, this.selectedSectors).subscribe(response => {
-      console.log(response);
-    });
-    // this.upload();
-  }
-
-  upload() {
     if (this.selectedFiles) {
       this.currentFileUpload = this.selectedFiles.item(0);
     }
     this.eventService.uploadFile(this.currentFileUpload).subscribe((url: string ) => {
-      console.log(url);
+      this.selectedMedia.push({
+        path: url
+      });
+    });
+
+    this.eventService.save(addEventData, this.selectedSectors, this.selectedMedia).subscribe(response => {
+      console.log(response);
     });
   }
 
@@ -97,15 +95,15 @@ export class AddEventComponent implements OnInit {
   }
 
   renderSectors(event) {
-    const hallID = event.target.value;
+    const hallID = Number(event.target.value);
     this.currentHall = hallID;
 
     let sectors = [];
     this.selectedHalls.forEach((hall) => {
-      if (hall.id == hallID) {
+      if (hall.id === hallID) {
         sectors = hall.sectors;
       }
-    })
+    });
 
     this.selectedHallSectors = sectors;
   }
@@ -130,11 +128,9 @@ export class AddEventComponent implements OnInit {
         return selectedHall.id !== hall.id;
       });
     }
-
-    console.log(this.selectedHalls.length > 0);
   }
 
-  onCheckboxChangeSector(e) {
+  onSectorCheckboxChange(e) {
 
     const sectors: FormArray = this.addEventForm.get('sectors') as FormArray;
 
