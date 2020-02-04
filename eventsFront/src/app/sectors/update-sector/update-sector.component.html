@@ -1,0 +1,23 @@
+<div class="main" *ngIf="sector">
+  <form class="addPlace-form" [formGroup]="updateSector" (ngSubmit)="update()" >
+    <h1>Update sector:</h1>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="sector.name" name="name" placeholder="Place name" formControlName="name">
+    </mat-form-field>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="sector.sectorRows" name="sectorRows" placeholder="Sector rows" formControlName="sectorRows">
+    </mat-form-field>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="sector.sectorColumns" name="sectorColumns" placeholder="Sector columns" formControlName="sectorColumns">
+    </mat-form-field>
+    <div *ngIf="(updateSector.controls.name.touched && updateSector.controls.name.errors?.required) ||
+      (updateSector.controls.sectorRows.errors?.requrired) ||
+      (updateSector.controls.sectorColumns.errors?.requrired)
+      ">
+       Please enter your data!
+    </div>
+    <button mat-raised-button color="accent" type="submit" [disabled]="updateSector.invalid">Update sector</button>
+    <button mat-raised-button color="accent" (click)="cancel()">Back</button>
+  </form>
+</div>
+   

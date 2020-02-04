@@ -30,7 +30,7 @@ public class HallController extends BaseController {
 
 	@GetMapping(value = "/api/hall/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<HallDTO> getHall(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		Hall hall = hallService.findOne(id);
+		Hall hall = hallService.findOneAndLoadSectors(id);
 		return new ResponseEntity<>(HallMapper.toDTO(hall), HttpStatus.OK);
 	}
 

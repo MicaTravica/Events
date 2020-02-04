@@ -23,6 +23,7 @@ public class PlaceConstants {
     public static final double PERSISTED_PLACE_LONGITUDE = 1;
     
     public static final Long PLACE_ID = 1l;
+    public static final Long PLACE_ID_2 = 2l;
     public static final Long PLACE_ID_FAIL = 10l;
     public static final Long INVALID_PLACE_ID = -1l;
     

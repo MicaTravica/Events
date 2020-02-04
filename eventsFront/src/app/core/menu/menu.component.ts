@@ -33,6 +33,10 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['/places']);
   }
 
+  showAddPlace() {
+    this.router.navigate(['/add-place']);
+  }
+
   showReports() {
     this.router.navigate(['/reports']);
   }

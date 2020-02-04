@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PlaceService } from 'src/app/services/place-service/place.service';
+import { Place } from 'src/app/models/place-model/place.model';
+import { PlaceSearch } from 'src/app/models/place-search-model/place-search.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-places-list',
@@ -8,25 +11,21 @@ import { PlaceService } from 'src/app/services/place-service/place.service';
 })
 export class PlacesListComponent implements OnInit {
 
-  places: any[]; // zamenit sa place kad neko napravi
-  // eventSearch = new EventSearch(0, 8, '', true, '', null, null, null, null, null);
+  places: Place[];
+  placeSearch = new PlaceSearch(0, 8, '', true, '', '');
   totalElements = 0;
-  name = '';
-  numOfPage = 0;
   size = 8;
-  sizes = [8, 16, 32];
 
   constructor(
-    private placeService: PlaceService
-  ) {
+    private placeService: PlaceService,
+    ) { }
+
+  ngOnInit() {
     this.search();
   }
 
-  ngOnInit() {
-  }
-
   search() {
-    this.placeService.searchPlaces(this.name, this.numOfPage, this.size).subscribe(
+    this.placeService.search(this.placeSearch).subscribe(
       (data: Map<string, object>) => {
         // tslint:disable-next-line: no-string-literal
         this.places = data['content'];
@@ -34,22 +33,21 @@ export class PlacesListComponent implements OnInit {
         this.totalElements = data['totalElements'];
         // tslint:disable-next-line: no-string-literal
         this.size = data['size'];
+      }, (error: HttpErrorResponse) => {
+
       }
     );
   }
 
-  doSearch() {
-    this.numOfPage = 0;
+  doSearch(es: PlaceSearch) {
+    this.placeSearch = es;
+    this.size = es.sizeOfPage;
     this.totalElements = 0;
     this.search();
   }
 
   pageChanged(num: number) {
-    this.numOfPage = num - 1;
+    this.placeSearch.numOfPage = num - 1;
     this.search();
-  }
-
-  showDetails(id: number) {
-    console.log('place page' + id);
   }
 }
