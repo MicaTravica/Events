@@ -1,11 +1,5 @@
 import { AbstractControl, ValidatorFn, FormGroup, ValidationErrors } from '@angular/forms';
 
-export function matchCurrentPassowrd(currentPassword: string): ValidatorFn {
-     return (control: AbstractControl): {[key: string]: any} | null => {
-        const invalid = currentPassword !== control.value;
-        return invalid ? {'badOldPassword': true} : null;
-    };
-}
 
 export const newPasswordsMatch: ValidatorFn =
     (control: FormGroup): ValidationErrors | null => {

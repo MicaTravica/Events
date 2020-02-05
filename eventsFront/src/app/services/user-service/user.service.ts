@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import {httpOptions, authHttpOptions} from '../../util/http-util';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-service/auth.service';
+import { ChangePassword } from 'src/app/models/change-password-model/change.password.model';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +24,7 @@ export class UserService {
   }
 
   public me(token: string) {
+    // return of(new User('Dusan', 'Bucan', 'dusanbzr@gmail.com', '21-234', 'DusanB'));
     return this.http.get(this.usersUrl + '/userme', { headers: authHttpOptions(token)});
   }
 
@@ -42,5 +45,16 @@ export class UserService {
       user = JSON.parse(localStorage.getItem('user'));
     }
     return user;
+  }
+
+
+  public changePassword(changePassword: ChangePassword ) {
+    return this.http.put(this.usersUrl + '/password', changePassword,
+      {headers: authHttpOptions(this.authService.getToken())});
+  }
+
+  public updateMyData(user: User) {
+    return this.http.put(this.usersUrl, user,
+      {headers: authHttpOptions(this.authService.getToken())});
   }
 }

@@ -33,13 +33,10 @@ export class AuthService {
   getUserRole() {
     const token = this.getToken();
     const jwt: JwtHelperService = new JwtHelperService();
-
     if (!token) {
       return 'GUEST';
     }
-
     const info = jwt.decodeToken(token);
-
     return info.role[0].authority;
   }
 }

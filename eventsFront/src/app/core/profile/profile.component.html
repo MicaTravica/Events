@@ -3,34 +3,31 @@
         <div>
             <mat-form-field>
                 <input matInput placeholder="Name" type="text" formControlName="name">
+                <mat-error *ngIf="name.errors?.required">Name is required</mat-error>
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.name.errors">
-                <div *ngIf="form.name.errors.required">Name is required</div>
-            </div>
         </div>
         <div>
             <mat-form-field>
                 <input matInput placeholder="Surname" type="text" formControlName="surname">
+                <mat-error *ngIf="surname.errors?.required">Surname is required</mat-error>
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.surname.errors">
-                <div *ngIf="form.surname.errors.required">Surname is required</div>
-            </div>
+        </div>
+        <div>
+            <mat-form-field>
+                <input matInput type="text" placeholder="Username" formControlName="username">
+                <mat-error *ngIf="username.errors?.required">Username is required</mat-error>
+            </mat-form-field>
         </div>
         <div>
             <mat-form-field>
                 <input matInput type="email" placeholder="Email" formControlName="email">
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.email.errors">
-                <div *ngIf="form.email.errors.required">Email is required</div>
-            </div>
         </div>
         <div>
             <mat-form-field>
                 <input matInput placeholder="Phone" type="text" formControlName="phone">
+                <mat-error *ngIf="phone.errors?.required">Phone is required</mat-error>
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.phone.errors">
-                <div *ngIf="form.phone.errors.required">Phone is required</div>
-            </div>
         </div>
         <p>
             <button mat-raised-button color="accent" type="button" (click)='changePassword()'>
