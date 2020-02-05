@@ -6,6 +6,12 @@ export const httpOptions = (): HttpHeaders => {
         .append('Accept', 'application/json');
 };
 
+export const httpOptionsText = (): HttpHeaders => {
+    return new HttpHeaders()
+        .append('Content-Type', 'application/json')
+        .append('Accept', 'text/html')
+};
+
 export const authHttpOptions = (token: string): HttpHeaders => {
     return new HttpHeaders()
         .append('Content-Type', 'application/json')

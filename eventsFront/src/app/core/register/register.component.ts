@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-
-import { UserService } from '../../services/user-service/user.service'
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user-service/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,9 @@ export class RegisterComponent implements OnInit {
   
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService
   ) { 
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -39,7 +42,11 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    this.userService.save(registerData);
+    this.userService.save(registerData).subscribe(
+      (data: string) => {
+        this.toastr.success(data);
+        this.router.navigate(['/login']);
+    });
   }
 
   
