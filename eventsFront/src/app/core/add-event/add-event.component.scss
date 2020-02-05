@@ -1,0 +1,30 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container {
+    margin: 100px;
+    margin-top: 50px !important;
+}
+
+.hall-chooser {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.sectors-chooser {
+    padding: 20px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+}
+
+.sector-selection {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.input-field {
+    background-color: #E0F2F1;
+    padding: 10px;
+}

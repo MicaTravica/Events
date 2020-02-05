@@ -42,7 +42,8 @@ import { ReportService } from './services/report-service/report.service';
 import { ErrorHandlingInterceptor } from './interceptors/error.handling.intercepotr';
 import { ErrorDialogService } from './services/error-dialog-service/error-dialog.service';
 import { Router } from '@angular/router';
-
+import { AngularFireModule } from 'angularfire2'
+import { AngularFireStorageModule } from 'angularfire2/storage'
 @NgModule({
   declarations: [
     AppComponent,
@@ -74,7 +75,14 @@ import { Router } from '@angular/router';
     MaterialModule,
     HttpClientModule,
     ToastrModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    AngularFireModule.initializeApp({
+      apiKey: "AIzaSyDvlKsDLvsnyKJpHoBBEpqSA7aQbVqm7r4",
+      authDomain: "events-c8789.firebaseapp.com",
+      storageBucket: "events-c8789.appspot.com",
+      projectId: "events-c8789",
+    }),
+    AngularFireStorageModule
   ],
   providers: [
     ToastrService,
