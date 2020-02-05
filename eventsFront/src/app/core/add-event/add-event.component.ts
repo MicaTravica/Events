@@ -5,8 +5,7 @@ import { EventService } from '../../services/event-service/event.service';
 import { PlaceService } from 'src/app/services/place-service/place.service';
 import { HallService } from 'src/app/services/hall-service/hall.service';
 import { SectorService } from 'src/app/services/sector-service/sector.service';
-
-
+import { DomSanitizer } from '@angular/platform-browser'
 @Component({
   selector: 'app-add-event',
   templateUrl: './add-event.component.html',
@@ -15,23 +14,23 @@ import { SectorService } from 'src/app/services/sector-service/sector.service';
 export class AddEventComponent implements OnInit {
   addEventForm;
   submitted;
-  selectedFiles: FileList;
+  selectedFiles = [] as any;
   currentFileUpload: File;
   places;
   selectedPlaceHalls;
   selectedHalls = [];
-  selectedHallSectors;
+  selectedHallSectors = [];
   currentHall;
   selectedSectors = [];
   currentPlace;
   selectedMedia = [];
-  
+
   constructor(
     private eventService: EventService,
     private placeService: PlaceService,
     private hallService: HallService,
-    private sectorService: SectorService,
     private formBuilder: FormBuilder,
+    private sanitizer: DomSanitizer
   ) { 
     this.addEventForm = this.formBuilder.group({
       name: ['', Validators.required],
@@ -40,8 +39,9 @@ export class AddEventComponent implements OnInit {
       place: ['', Validators.required],
       fromDate: ['', Validators.required],
       toDate: ['', Validators.required],
-      ticketPrice: ['', Validators.required], 
+      ticketPrice: ['', Validators.required],
       halls: this.formBuilder.array([]),
+      currentHall: [],
       sectors: this.formBuilder.array([]),
       priceList: this.formBuilder.array([]),
       mediaList: this.formBuilder.array([])
@@ -67,21 +67,29 @@ export class AddEventComponent implements OnInit {
     }
 
     if (this.selectedFiles) {
-      this.currentFileUpload = this.selectedFiles.item(0);
+      this.currentFileUpload = this.selectedFiles[0];
     }
     this.eventService.uploadFile(this.currentFileUpload).subscribe((url: string ) => {
       this.selectedMedia.push({
         path: url
       });
+      this.saveEvent(addEventData);
     });
+  }
 
+  saveEvent(addEventData) {
     this.eventService.save(addEventData, this.selectedSectors, this.selectedMedia).subscribe(response => {
       console.log(response);
     });
   }
 
   selectFile(event) {
-    this.selectedFiles = event.target.files;
+    const [file] = event.target.files;
+    this.selectedFiles.unshift(file);
+  }
+
+  getLastFile() {
+    return this.selectedFiles[this.selectedFiles.length - 1];
   }
 
   renderHalls(event) {
@@ -95,12 +103,12 @@ export class AddEventComponent implements OnInit {
   }
 
   renderSectors(event) {
-    const hallID = Number(event.target.value);
+    const hallID = event.value;
     this.currentHall = hallID;
 
     let sectors = [];
     this.selectedHalls.forEach((hall) => {
-      if (hall.id === hallID) {
+      if (hall.id === Number(hallID)) {
         sectors = hall.sectors;
       }
     });
@@ -109,8 +117,8 @@ export class AddEventComponent implements OnInit {
   }
 
   isSectorSelected = (sectorID) => {
-    const sectors: FormArray = this.addEventForm.get('sectors') as FormArray;
-    return sectors.value.includes(sectorID.toString());
+    const selectedSectorsIds = this.selectedSectors.map(sector => sector.id);
+    return selectedSectorsIds.includes(sectorID);
   }
 
   onHallsCheckboxChange(event, hall) {
@@ -130,36 +138,24 @@ export class AddEventComponent implements OnInit {
     }
   }
 
-  onSectorCheckboxChange(e) {
-
+  onSectorCheckboxChange(event, sector) {
     const sectors: FormArray = this.addEventForm.get('sectors') as FormArray;
 
-    if (e.target.checked) {
-      sectors.push(new FormControl(e.target.value));
+    if (event.checked) {
+      sectors.push(new FormControl(sector.id));
       this.selectedSectors.push({
-        id: e.target.value,
+        id: sector.id,
         hallID: this.currentHall
       });
     } else {
-      let i = 0;
-      sectors.controls.forEach((item: FormControl) => {
-        if (item.value === e.target.value) {
-          sectors.removeAt(i);
-          return;
-        }
-        i++;
+      sectors.controls = sectors.controls.filter((item: FormControl) => {
+        return item.value !== sector.id;
       });
 
-      let j = 0;
-      this.selectedSectors.forEach((sector) => {
-        if (sector.id === e.target.value) {
-          this.selectedSectors.splice(j, 1);
-          return;
-        }
-        j++;
+      this.selectedSectors = this.selectedSectors.filter(selectedSector => {
+        return selectedSector.id !== sector.id;
       });
     }
-
   }
 
 }

@@ -34,7 +34,7 @@ export class EventService {
 
     const updatedHalls = halls.map((hall) => {
       selectedSectors.forEach(item => {
-        if (item.hallID === hall.id) {
+        if (Number(item.hallID) === Number(hall.id)) {
           hall.sectors.push({id: item.id});
         }
       });
@@ -54,6 +54,7 @@ export class EventService {
     delete addEventData.sectors;
     delete addEventData.place;
     delete addEventData.ticketPrice;
+    delete addEventData.currentHall;
 
     const token = this.authService.getToken();
 
