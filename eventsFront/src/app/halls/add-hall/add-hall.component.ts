@@ -19,10 +19,9 @@ import { ToastrService } from 'ngx-toastr';
 export class AddHallComponent implements OnInit {
 
   place: Place;
-  sectors = [new Sector(null, '', null, null, null, null)];
   role = '';
-  halls = [new Hall(null, '', this.place, this.sectors)];
-  h = new Hall(null, '', this.place,this.sectors);
+  halls = [new Hall(null, '', this.place, [new Sector(null, '', null, null, null, null)])];
+  h = new Hall(null, '', this.place, [new Sector(null, '', null, null, null, null)]);
   disableSelect = new FormControl(false);
   addHall: FormGroup;
 
@@ -45,11 +44,6 @@ export class AddHallComponent implements OnInit {
 
   }
 
-  addOneMoreSector(inx: number) {
-    this.halls[inx].sectors.push(new Sector(null, '', null, null, null, null));
-  }
-
-
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -63,8 +57,12 @@ export class AddHallComponent implements OnInit {
     }
   }
 
+  addOneMoreSector(inx: number) {
+    this.halls[inx].sectors.push(new Sector(null, '', null, null, null, null));
+  }
+
   addOneMoreHall() {
-    this.halls.push(new Hall(null, '', this.place, this.sectors));
+    this.halls.push(new Hall(null, '', this.place, [new Sector(null, '', null, null, null, null)]));
   }
 
   cancel() {

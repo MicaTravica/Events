@@ -102,12 +102,7 @@ public class PlaceServiceImpl implements PlaceService{
         return placeToUpdate;
     }
 
-	@Override
-	public Page<Place> searchPlaces(int numOfPage, int sizeOfPage, String name) {
-		Pageable pageable = PageRequest.of(numOfPage, sizeOfPage,
-				Sort.by("name").ascending());
-		return placeRepository.searchPlaces(name, pageable);
-	}
+	
 	
 	@Override
 	public Page<Place> search(SearchParamsPlace params) {

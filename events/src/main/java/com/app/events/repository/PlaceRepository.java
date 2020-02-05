@@ -13,10 +13,6 @@ public interface PlaceRepository extends JpaRepository<Place, Long> {
 
     @Query("SELECT place from Place place WHERE place.longitude = ?1 AND place.latitude = ?2")
 	Optional<Place> findByCoordinates(double longitude, double latitude);
-
-    @Query("SELECT p from Place p WHERE p.name like concat('%',?1,'%')")
-	Page<Place> searchPlaces(String name, Pageable pageable);
-
     
     @Query("SELECT p from Place p WHERE p.name like concat('%',?1,'%') AND p.address like concat('%',?2,'%')")
     Page<Place> search(String name, String address, Pageable pageable);

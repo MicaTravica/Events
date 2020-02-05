@@ -26,14 +26,15 @@ public class PlaceMapper {
             );    
     }
 
-	public static PlaceDTO toDTO(Place place, Set<Hall> halls) {
+    public static PlaceDTO toDTOWithHalls(Place place) {
 		  return new PlaceDTO(place.getId(),
 	        		place.getName(),
 	        		place.getAddress(),
 	        		place.getLatitude(),
 	        		place.getLongitude(),
-	        		halls.stream().map(HallMapper::toDTO).collect(Collectors.toSet())
+	        		place.getHalls().stream().map(HallMapper::toDTO).collect(Collectors.toSet())
 	        		);
 	}
+
 
 }

@@ -26,8 +26,6 @@ public interface PlaceService {
 
 	public Place setPlaceFields(Place placeToUpdate, Place place);
 
-	public Page<Place> searchPlaces(int numOfPage, int sizeOfPage, String name);
-
 	public Page<Place> search(SearchParamsPlace params);
 
 	Place findOneAndLoadHalls(Long id) throws ResourceNotFoundException;

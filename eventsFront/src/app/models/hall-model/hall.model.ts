@@ -13,13 +13,6 @@ export class Hall {
         this.place = place;
         this.sectors = sectors;
     }
-/*
-    constructor(id: number, name: string, place: Place, sectors: any[], events:[]){
-        this.id = id;
-        this.name = name;
-        this.place = place;
-        this.sectors = sectors;
-        this.events = events;
-    }*/
+
 
 }

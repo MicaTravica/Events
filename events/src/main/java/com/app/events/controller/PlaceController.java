@@ -47,7 +47,7 @@ public class PlaceController extends BaseController {
 	@GetMapping(value = "/api/place/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlaceDTO> getPlace(@PathVariable("id") Long id) throws ResourceNotFoundException {
 		Place place = placeService.findOneAndLoadHalls(id);
-		return new ResponseEntity<>(PlaceMapper.toDTO(place, place.getHalls()), HttpStatus.OK);
+		return new ResponseEntity<>(PlaceMapper.toDTOWithHalls(place), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,14 +80,5 @@ public class PlaceController extends BaseController {
 		return new ResponseEntity<>(resultDTO, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/api/places/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<PlaceDTO>> searchPlaces(@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "num", required = true) int numOfPage,
-			@RequestParam(value = "size", required = true) int sizeOfPage) {
-		Page<Place> result = placeService.searchPlaces(numOfPage, sizeOfPage, name);
-		Page<PlaceDTO> placesDTO = new PageImpl<PlaceDTO>(
-				result.get().map(PlaceMapper::toDTO).collect(Collectors.toList()), result.getPageable(),
-				result.getTotalElements());
-		return new ResponseEntity<>(placesDTO, HttpStatus.OK);
-	}
+
 }

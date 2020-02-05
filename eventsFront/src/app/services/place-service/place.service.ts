@@ -43,16 +43,5 @@ export class PlaceService {
     return this.http.put(this.url, place, {headers: authHttpOptions(token)});
   }
 
-  public searchPlaces(name: string, numOfPage: number, sizeOfPage: number) {
-    const param = new HttpParams()
-      .append('name', name)
-      .append('num', numOfPage.toString())
-      .append('size', sizeOfPage.toString());
-    return this.http.get(this.url + 's/search',
-      {
-        headers: httpOptions(),
-        params: param
-      }
-    );
-  }
+
 }
