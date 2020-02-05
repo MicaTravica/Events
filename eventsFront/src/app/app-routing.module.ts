@@ -27,11 +27,17 @@ import { UpdateSectorComponent } from './sectors/update-sector/update-sector.com
 import { UpdateHallComponent} from './halls/update-hall/update-hall.component';
 import { HallDetailsComponent } from './halls/hall-details/hall-details.component';
 import { SectorDetailsComponent} from './sectors/sector-details/sector-details.component';
+import { ChangePasswordComponent } from './core/profile/change-password/change-password.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
+  { path: 'profile', component: ProfileComponent,
+  //  canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}
+  },
+  { path: 'changePassword', component: ChangePasswordComponent,
+    //  canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}
+  },
   { path: 'events', component: EventsListComponent },
   { path: 'places', component: PlacesListComponent },
   { path: 'add-place', component: AddPlaceComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
