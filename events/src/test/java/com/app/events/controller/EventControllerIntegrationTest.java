@@ -52,7 +52,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:application-test.properties")
+@TestPropertySource("classpath:application-.properties")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EventControllerIntegrationTest {
 
@@ -95,6 +95,7 @@ public class EventControllerIntegrationTest {
 		assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 	}
 
+	
 	@Test
 	@Transactional
 	@Rollback(true)

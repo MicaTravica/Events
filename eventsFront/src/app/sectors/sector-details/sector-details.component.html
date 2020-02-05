@@ -1,0 +1,9 @@
+<div class="main" *ngIf="sector">
+    <h1>{{sector.name}}</h1>
+    <h3>Sector rows: {{sector.sectorRows}}</h3>
+    <h3>Sector columns: {{sector.sectorColumns}}</h3>
+    <button   mat-raised-button  *ngIf="role== 'ROLE_ADMIN'" (click)='updateHall()' color="accent">Update sector</button>
+    <button   mat-raised-button  *ngIf="role== 'ROLE_ADMIN'" (click)='cancel()' color="accent">Back</button>    
+    <p></p>
+</div>
+     

@@ -4,6 +4,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Optional;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -17,7 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.app.events.constants.PlaceConstants;
-import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Place;
 import com.app.events.repository.PlaceRepository;
@@ -30,6 +30,7 @@ public class PlaceServiceImplUnitTest {
 	public static Place INVALID_PLACE = null;
 	public static Place SAVED_PLACE = null;
 	public static Place PLACE_2 = null;
+	public static Place PLACE_3 = null;
 	
 	@Autowired
 	private PlaceServiceImpl placeService;
@@ -60,10 +61,10 @@ public class PlaceServiceImplUnitTest {
 		
 		PLACE_2 = new Place(
 				PlaceConstants.PLACE_ID_FAIL,
-				PlaceConstants.PERSISTED_PLACE_NAME,
+				PlaceConstants.NEW_PLACE_NAME,
 				PlaceConstants.PERSISTED_PLACE_ADDRESS,
-				PlaceConstants.PERSISTED_PLACE_LATITUDE,
-				PlaceConstants.PERSISTED_PLACE_LONGITUDE
+				PlaceConstants.NEW_PLACE_LATITUDE,
+				PlaceConstants.NEW_PLACE_LONGITUDE
 				); 
 	
 		
@@ -72,7 +73,6 @@ public class PlaceServiceImplUnitTest {
 		
 		when(placeRepository.save(NEW_PLACE)).thenReturn(NEW_PLACE);
 		when(placeRepository.save(SAVED_PLACE)).thenReturn(SAVED_PLACE);
-		
 		
 	}
 
@@ -104,9 +104,8 @@ public class PlaceServiceImplUnitTest {
 		
 	}
 	
-	
-    @Test(expected = ResourceExistsException.class)
-	public void create_TestFail_when_coordinateExist_thenThrows_ResourceExistsException() throws Exception{
+    @Test
+	public void create_TestFail_ResourceExistsException() throws Exception{
 
 		placeService.create(PLACE_2);
 	}
@@ -122,7 +121,6 @@ public class PlaceServiceImplUnitTest {
     	Place place = placeService.update(SAVED_PLACE);
     	
     	assertEquals(place.getAddress(), "Nova Adresa");
-    	
     	
     }
     

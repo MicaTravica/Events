@@ -1,0 +1,32 @@
+<form  [formGroup]="addSector" (ngSubmit)="add()">
+<h1>Add sector:</h1>
+  <div *ngFor="let s of sectors">
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="s.name" name="nameH" placeholder="Sector name" formControlName="name">
+    </mat-form-field>
+    <P></P>
+    <p>
+      <mat-checkbox [formControl]="disableSelect">Parter</mat-checkbox>
+    </p>
+    <P></P>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="s.sectorRows" [disabled]="disableSelect.value"  placeholder="Sector rows" formControlName="sectorRows">
+    </mat-form-field>
+    <P></P>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="s.sectorColumns" [disabled]="disableSelect.value"  placeholder="Sector columns" formControlName="sectorColumns">
+    </mat-form-field>
+    <p></p>
+    <div *ngIf="(addSector.controls.name.touched && addSector.controls.name.errors?.required) ||
+      (addSector.controls.sectorRows.errors?.requrired) ||
+      (addSector.controls.sectorColumns.errors?.requrired)
+    ">
+      Please enter your data!
+    </div>
+  </div>
+  <button mat-raised-button color="accent" (click)="addOneMoreSector()">Add new sector</button>
+  <button mat-raised-button color="accent" type="submit" [disabled]="addSector.invalid">Save sector</button>
+  <p></p>
+  <button mat-raised-button color="accent" (click)="cancel()">Back</button>
+</form>
+ 

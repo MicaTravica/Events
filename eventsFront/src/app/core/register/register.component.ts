@@ -11,11 +11,11 @@ import { UserService } from '../../services/user-service/user.service'
 export class RegisterComponent implements OnInit {
   registerForm;
   submitted;
-  
+
   constructor(
     private userService: UserService,
     private formBuilder: FormBuilder
-  ) { 
+  ) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -29,8 +29,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  get form() { 
-    return this.registerForm.controls; 
+  get form() {
+    return this.registerForm.controls;
   }
 
   onSubmit(registerData) {
@@ -41,7 +41,4 @@ export class RegisterComponent implements OnInit {
 
     this.userService.save(registerData);
   }
-
-  
-
 }

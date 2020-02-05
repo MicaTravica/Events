@@ -9,15 +9,15 @@ import com.app.events.model.SectorCapacity;
 import com.app.events.model.Ticket;
 
 public class SectorMapper {
-
+	
 	public static SectorDTO toDTO(Sector sector) {
-		return new SectorDTO(sector.getId(), sector.getName(), sector.getSectorRows(), sector.getSectorRows(), 0,
+		return new SectorDTO(sector.getId(), sector.getName(), sector.getSectorRows(), sector.getSectorColumns(), 0,
 				sector.getHall().getId());
 	}
 
 	public static Sector toSector(SectorDTO sectorDTO) {
 		Sector sector = new Sector(sectorDTO.getId(), sectorDTO.getName(), sectorDTO.getSectorRows(),
-				sectorDTO.getSectorColumns(), new Hall(sectorDTO.getHallId()), new HashSet<>(), null, new HashSet<>());
+				sectorDTO.getSectorColumns(), new Hall(sectorDTO.getHallID()), new HashSet<>(), null, new HashSet<>());
 
 		HashSet<SectorCapacity> sc = new HashSet<>();
 		sc.add(new SectorCapacity(null, new HashSet<Ticket>(), sector, sectorDTO.getSectorCapacity(),
@@ -25,5 +25,9 @@ public class SectorMapper {
 		sector.setSectorCapacities(sc);
 		return sector;
 	}
-
+	
+   
+		
+		
+	
 }
