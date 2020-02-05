@@ -22,5 +22,6 @@ public class SectorConstants {
     public static final String VALID_SECTOR_NAME_FOR_PERSISTANCE = "Sector10";
 
     public static final Long INVALID_SECTOR_ID = -1l;
+    public static final Long INVALID_SECTOR_HALL_ID = -1l;
 	public static final String URI_PREFIX = "/api/sector/";
 }

@@ -14,10 +14,15 @@ public interface SectorService {
 	public Sector update(Sector sector) throws Exception;
 
 	public void delete(Long id);
+	
+	public void saveSeat(Sector sector) throws Exception;
 
 	public Sector prepareSectorFields(Sector toUpdate, Sector newSector);
 
 	public Collection<Sector> getSectorsByHallId(Long id);
 	Collection<Sector> findAllByHallAndEvent(Long hallId, Long eventId);
+
+
+	public Collection<Sector> getSectorsByHallId(Long id);
 
 }

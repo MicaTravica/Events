@@ -44,6 +44,20 @@ import { ErrorDialogService } from './services/error-dialog-service/error-dialog
 import { Router } from '@angular/router';
 import { AngularFireModule } from 'angularfire2'
 import { AngularFireStorageModule } from 'angularfire2/storage'
+import { PlaceListItemComponent} from './places/place-list-item/place-list-item.component';
+import { PlaceDetailsComponent} from './places/place-details/place-details.component';
+import { PlaceSearchComponent} from './places/place-search/place-search.component';
+import { AddPlaceComponent } from './places/add-place/add-place.component';
+import { AddHallComponent} from './halls/add-hall/add-hall.component';
+import { UpdatePlaceComponent} from './places/update-place/update-place.component';
+import { UpdateHallComponent} from './halls/update-hall/update-hall.component';
+import { AddSectorComponent } from './sectors/add-sector/add-sector.component';
+import { UpdateSectorComponent} from './sectors/update-sector/update-sector.component';
+import { HallDetailsComponent} from './halls/hall-details/hall-details.component';
+import { HallListItemComponent} from './halls/hall-list-item/hall-list-item.component';
+import { SectorListItemComponent} from './sectors/sector-list-item/sector-list-item.component';
+import { SectorDetailsComponent} from './sectors/sector-details/sector-details.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,7 +80,20 @@ import { AngularFireStorageModule } from 'angularfire2/storage'
     ReservationListComponent,
     TicketListComponent,
     PlacesListComponent,
-    ReportsComponent
+    ReportsComponent,
+    PlaceDetailsComponent,
+    PlaceListItemComponent,
+    PlaceSearchComponent,
+    AddPlaceComponent,
+    AddHallComponent,
+    UpdatePlaceComponent,
+    UpdateHallComponent,
+    AddSectorComponent,
+    UpdateSectorComponent,
+    HallDetailsComponent,
+    HallListItemComponent,
+    SectorListItemComponent,
+    SectorDetailsComponent
   ],
   imports: [
     BrowserModule,

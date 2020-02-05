@@ -1,39 +1,46 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { map } from 'rxjs/operators';
-
-const authHttpOptions = (token) => {
-  return {
-    headers: new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Authorization': 'Bearer ' + token
-   })
-  }
-}
+import { HttpClient } from '@angular/common/http';
+import { httpOptions, authHttpOptions } from 'src/app/util/http-util';
+import { environment } from 'src/environments/environment';
+import { Sector } from 'src/app/models/sector-model/sector.model';
+import { AuthService } from '../auth-service/auth.service';
 
 @Injectable({
-  providedIn: 'root'
-})
-export class SectorService {
+    providedIn: 'root'
+  })
+  export class SectorService {
 
-  private url: string;
-  private places;
+    private url: string;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) { 
-    this.url = 'http://localhost:8080/api';
+    constructor(
+      private http: HttpClient,
+      private authService: AuthService
+    ) {
+      this.url = environment.restPath + '/sector';
+    }
+
+    public add(sector: Sector) {
+      const token = this.authService.getToken();
+      return this.http.post(this.url, sector, {headers: authHttpOptions(token)});
+    }
+
+    public update(sector: Sector) {
+      const token = this.authService.getToken();
+      return this.http.put(this.url, sector, {headers: authHttpOptions(token)});
+    }
+
+   public getSector(id: string) {
+    return this.http.get(this.url + '/' + id, {headers: httpOptions()});
   }
 
   public getSectors(hallID) {
-    return this.http.get(this.url + "/hallSectors/" + hallID, authHttpOptions(localStorage.getItem("token")))
+    const token = this.authService.getToken();
+    return this.http.get('http://localhost:8080/api/hallSectors/' + hallID, {headers: authHttpOptions(token)})
     .pipe(map(
       res => {
         return res;
       }
-    ))
+    ));
   }
 }

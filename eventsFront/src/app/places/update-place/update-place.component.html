@@ -1,0 +1,24 @@
+<div class="main" *ngIf="place">
+  <form [formGroup]="updatePlace" (ngSubmit)="update()"  class="addPlace-form">
+    <h1>Update place:</h1>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput name="name" [(ngModel)]="place.name" placeholder="Place name" formControlName="name">
+    </mat-form-field>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput  [(ngModel)]="place.address" name="address" placeholder="Place address" formControlName="address">
+    </mat-form-field>
+    <div *ngIf="(updatePlace.controls.name.touched && updatePlace.controls.name.errors?.required) ||
+    (updatePlace.controls.address.touched && updatePlace.controls.address.errors?.requrired)">
+       Please enter your data!
+    </div>
+  <button mat-raised-button color="accent" type="submit" [disabled]="updatePlace.invalid">Update place</button>
+</form>
+</div>
+
+   
+  
+ 
+
+  
+
+

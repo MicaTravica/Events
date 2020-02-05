@@ -3,6 +3,7 @@ package com.app.events.serviceimpl.hall;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 import com.app.events.constants.HallConstants;
@@ -121,5 +122,25 @@ public class HallServiceImplIntegrationTest {
         hallRepository.save(updatedHall);
     }
 
+
+
+
+    @Test
+    public void getHallsByPlaceId_Test_Success() {
+    	Collection<Hall> results = hallRepository.findAllByPlaceId(HallConstants.PERSISTED_HALL_PLACE_ID);
+    	Hall hall = results.iterator().next();
+		
+		assertEquals(results.size(),2);
+		assertEquals(hall.getId(), HallConstants.PERSISTED_HALL_ID);
+    }
+    
+    @Test
+    public void getHallsByPlaceId_Test_Fail() {
+    	Collection<Hall> results = hallRepository.findAllByPlaceId(HallConstants.INVALID_PLACE_ID);
+		
+		assertEquals(results.size(),0);
+    }
+    
+    
 
 }

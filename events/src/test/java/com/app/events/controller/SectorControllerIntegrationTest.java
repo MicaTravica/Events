@@ -127,7 +127,7 @@ public class SectorControllerIntegrationTest {
         
         assertEquals(sector.getSectorColumns(), sectorDto.getSectorColumns());
         assertEquals(sector.getSectorRows(), sectorDto.getSectorRows());
-        assertEquals(sector.getHall().getId(), sectorDto.getHallId());
+        assertEquals(sector.getHall().getId(), sectorDto.getHallID());
     }
 
 

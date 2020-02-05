@@ -43,4 +43,6 @@ public class SectorCapacity {
 
 	@PositiveOrZero(message ="free must be positive number or zero")
 	private int free;
+	
+	
 }

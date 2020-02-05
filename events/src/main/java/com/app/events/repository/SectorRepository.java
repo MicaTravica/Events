@@ -17,5 +17,8 @@ public interface SectorRepository extends JpaRepository<Sector, Long> {
 
 	@Query("SELECT s FROM Sector s LEFT JOIN PriceList pl ON pl.sector.id = s.id WHERE s.hall.id = ?1 AND pl.event.id = ?2")
 	public Collection<Sector> findAllByHallIdAndEventId(Long hallId, Long eventId);
+
+	@Query("SELECT sector from Sector sector WHERE sector.hall.id = ?1")
+	public Collection<Sector> findAllByHallId(Long id);
 	
 }

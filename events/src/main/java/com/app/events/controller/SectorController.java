@@ -40,8 +40,8 @@ public class SectorController extends BaseController{
 	@PostMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<SectorDTO> createSector(@RequestBody SectorDTO sectorDTO) throws Exception {
-			Sector savedSector = sectorService.create(SectorMapper.toSector(sectorDTO));
-			return new ResponseEntity<>(SectorMapper.toDTO(savedSector), HttpStatus.CREATED);
+		Sector savedSector = sectorService.create(SectorMapper.toSector(sectorDTO));
+		return new ResponseEntity<>(SectorMapper.toDTO(savedSector), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/sector", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
