@@ -22,7 +22,4 @@ public interface SectorService {
 	public Collection<Sector> getSectorsByHallId(Long id);
 	Collection<Sector> findAllByHallAndEvent(Long hallId, Long eventId);
 
-
-	public Collection<Sector> getSectorsByHallId(Long id);
-
 }

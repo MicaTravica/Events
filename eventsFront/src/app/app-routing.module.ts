@@ -27,6 +27,8 @@ import { UpdateSectorComponent } from './sectors/update-sector/update-sector.com
 import { UpdateHallComponent} from './halls/update-hall/update-hall.component';
 import { HallDetailsComponent } from './halls/hall-details/hall-details.component';
 import { SectorDetailsComponent} from './sectors/sector-details/sector-details.component';
+import { EditEventComponent } from './core/edit-event/edit-event.component';
+import { EditSingleEventComponent } from './core/edit-single-event/edit-single-event.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
@@ -40,6 +42,8 @@ const routes: Routes = [
   { path: 'event/:id', component: EventDetailsComponent },
   { path: 'reports', component: ReportsComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
   { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'edit-event', component: EditEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'edit-event/:id', component: EditSingleEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
   { path: 'reservation/:id' , component: ReservationComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'reservations' , component: ReservationListComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'tickets' , component: TicketListComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},

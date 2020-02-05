@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class EventListItemComponent implements OnInit {
 
   @Input() event: EventEntity;
+  @Input() type: string;
 
   constructor(
     private router: Router
@@ -24,5 +25,17 @@ export class EventListItemComponent implements OnInit {
 
   buyReserve() {
     this.router.navigate(['/reservation/' + this.event.id]);
+  }
+
+  isMainType() {
+    return this.type === 'mainList';
+  }
+
+  isEditType() {
+    return this.type === 'editList';
+  }
+
+  showEditPage(event) {
+    this.router.navigate(['/edit-event/' + event.id]);
   }
 }

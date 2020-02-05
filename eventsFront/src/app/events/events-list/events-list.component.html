@@ -2,7 +2,7 @@
   <app-event-search (searchParams)='doSearch($event)'></app-event-search>
   <mat-grid-list *ngIf="totalElements > 0" cols="4" rowHeight="450px">
     <mat-grid-tile *ngFor="let e of events" >
-      <app-event-list-item class="card" [event]='e'></app-event-list-item>
+      <app-event-list-item class="card" [event]='e' [type]='"mainList"'></app-event-list-item>
     </mat-grid-tile>
   </mat-grid-list>
   <app-pagination *ngIf="totalElements > 0" [totalItems]='totalElements' [pageSize]='size' (pageSelected)='pageChanged($event)'></app-pagination>

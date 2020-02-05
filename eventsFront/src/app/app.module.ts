@@ -57,6 +57,8 @@ import { HallDetailsComponent} from './halls/hall-details/hall-details.component
 import { HallListItemComponent} from './halls/hall-list-item/hall-list-item.component';
 import { SectorListItemComponent} from './sectors/sector-list-item/sector-list-item.component';
 import { SectorDetailsComponent} from './sectors/sector-details/sector-details.component';
+import { EditEventComponent } from './core/edit-event/edit-event.component';
+import { EditSingleEventComponent } from './core/edit-single-event/edit-single-event.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +95,9 @@ import { SectorDetailsComponent} from './sectors/sector-details/sector-details.c
     HallDetailsComponent,
     HallListItemComponent,
     SectorListItemComponent,
-    SectorDetailsComponent
+    SectorDetailsComponent,
+    EditEventComponent,
+    EditSingleEventComponent
   ],
   imports: [
     BrowserModule,

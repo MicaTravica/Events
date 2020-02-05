@@ -90,14 +90,10 @@ public class SectorServiceImpl implements SectorService {
     @Override
 	public Collection<Sector> getSectorsByHallId(Long id) {
 		return sectorRepository.findAllByHallId(id);
-	}
+    }
+    
     public Collection<Sector> findAllByHallAndEvent(Long hallId, Long eventId) {
         return this.sectorRepository.findAllByHallIdAndEventId(hallId, eventId);
     }
-
-	@Override
-	public Collection<Sector> getSectorsByHallId(Long id) {
-		return sectorRepository.findAllByHallId(id);
-	}
 
 }

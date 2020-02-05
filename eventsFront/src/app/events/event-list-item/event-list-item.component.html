@@ -12,7 +12,13 @@
     </p>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button (click)="showDetails()" color="accent">Details</button>
-    <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)="buyReserve()" color="accent">Buy\Reserve</button>
+    <div *ngIf="isMainType(type)">
+      <button mat-raised-button (click)="showDetails()" color="accent">Details</button>
+      <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)="buyReserve()" color="accent">Buy\Reserve</button>
+    </div>
+
+    <div *ngIf="isEditType(type)">
+      <button mat-raised-button (click)="showEditPage(event)" color="accent">Edit</button>
+    </div>
   </mat-card-actions>
 </mat-card>
