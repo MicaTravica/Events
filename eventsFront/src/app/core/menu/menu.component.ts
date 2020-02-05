@@ -37,6 +37,10 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['/add-event']);
   }
 
+  showEditEvent() {
+    this.router.navigate(['/edit-event']);
+  }
+
   showAddPlace() {
     this.router.navigate(['/add-place']);
   }

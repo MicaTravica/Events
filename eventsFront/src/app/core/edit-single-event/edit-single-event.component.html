@@ -1,0 +1,108 @@
+<div class="main-container">
+    <form [formGroup]="addEventForm" (ngSubmit)="onSubmit(addEventForm.value)" 
+        enctype="multipart/form-data" 
+        method="POST"
+        class="form-container"
+    >
+
+        <mat-form-field>
+            <input matInput id="name" type="text" formControlName="name" placeholder="Name" [value]="event.name">
+            <mat-error *ngIf="form.name.invalid">Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <textarea matInput id="description" formControlName="description" placeholder="Description" [value]="event.description"></textarea>
+            <mat-error *ngIf="form.description.invalid">Description is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select id="eventType" formControlName="eventType" placeholder="Choose event type..." [(ngModel)]="selectedType">
+            <mat-option value="1">Concert</mat-option>
+            <mat-option value="2">Drama</mat-option>
+            <mat-option value="3">Opera</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.eventType.invalid">Event type is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input 
+                matInput
+                id="fromDate"
+                [(ngModel)]="selectedStartDate"
+                formControlName="fromDate" 
+                placeholder="Choose start date..."
+                [matDatepicker]="fromDatePicker"
+            >
+            <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromDatePicker></mat-datepicker>
+            <mat-error *ngIf="form.fromDate.invalid">Start date is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input 
+                matInput
+                id="toDate"
+                [(ngModel)]="selectedEndDate"
+                formControlName="toDate" 
+                [value]="event.toDate"
+                placeholder="Choose end date..."
+                [matDatepicker]="toDatePicker"
+            >
+            <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #toDatePicker></mat-datepicker>
+            <mat-error *ngIf="form.toDate.invalid">End date is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select id="place" formControlName="place" placeholder="Choose event place..."
+            (selectionChange)="renderHalls($event)">
+                <mat-option value={{place.id}} *ngFor="let place of places">{{place.name}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.eventType.invalid">Event place is required</mat-error>
+        </mat-form-field>
+
+        <span *ngFor="let hall of selectedPlaceHalls">
+            <mat-checkbox name="halls[]" (change)="onHallsCheckboxChange($event, hall)">
+                {{hall.name}}
+            </mat-checkbox>
+        </span>
+
+        <div class="hall-chooser">
+            <mat-select id="hall" placeholder="Select hall..." (selectionChange)="renderSectors($event)" *ngIf="selectedHalls.length > 0">
+                <mat-option value={{hall.id}} *ngFor="let hall of selectedHalls">{{hall.name}}</mat-option>
+            </mat-select>
+        </div>
+
+        <div *ngIf="selectedHallSectors.length > 0" class="sectors-chooser">
+            <span>Sectors</span>
+            <div *ngFor="let sector of selectedHallSectors" class="sector-selection">
+                <mat-checkbox 
+                    type="checkbox" 
+                    value={{sector.id}} 
+                    name="sectors[]" 
+                    (change)="onSectorCheckboxChange($event, sector)"
+                    [checked]="isSectorSelected(sector.id)"
+                >
+                    Sector {{sector.id}}
+                </mat-checkbox>
+            </div>
+        </div>
+       
+
+        <div class="input-field">
+            <div *ngIf="selectedFiles.length > 0">
+                {{selectedFiles.length}} files uploaded
+            </div>
+            <input type="file" id="file" (change)="selectFile($event)">
+        </div>
+
+        <!-- <mat-form-field>
+            <input matInput id="ticketPrice" type="text" formControlName="ticketPrice" placeholder="Ticket price" [value]="event.ticket_price">
+            <mat-error *ngIf="form.ticketPrice.invalid">Ticket price is required</mat-error>
+        </mat-form-field> -->
+
+        <br/>
+        <button mat-button class="button" type="submit" color="accent">EDIT EVENT</button>
+    </form>
+
+</div>

@@ -29,9 +29,8 @@ export class AddEventComponent implements OnInit {
     private eventService: EventService,
     private placeService: PlaceService,
     private hallService: HallService,
-    private formBuilder: FormBuilder,
-    private sanitizer: DomSanitizer
-  ) { 
+    private formBuilder: FormBuilder
+  ) {
     this.addEventForm = this.formBuilder.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
