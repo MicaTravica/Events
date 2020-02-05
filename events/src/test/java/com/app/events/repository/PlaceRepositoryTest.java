@@ -50,6 +50,15 @@ public class PlaceRepositoryTest {
 	
 	}
 	
+	@Test
+	public void findByAddress_Test_Fail() {
+		String address = "Vuka Mandusica";
+		
+		Optional<Place> result = placeRepository.findByAddress(address);
+		assertSame(Optional.empty(), result);
+
+	}
+
 	
 
 }

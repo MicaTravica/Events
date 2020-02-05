@@ -10,9 +10,10 @@ import com.app.events.model.Place;
 public class HallMapper {
 
     public static HallDTO toDTO(Hall hall) {    
-        return new HallDTO(hall.getId(), hall.getName(),
-            PlaceMapper.toDTO(hall.getPlace()),
-            hall.getSectors().stream()
+        return new HallDTO(hall.getId(),
+        		hall.getName(),
+        		PlaceMapper.toDTO(hall.getPlace()),
+        		hall.getSectors().stream()
                 .map(sector-> SectorMapper.toDTO(sector))
                 .collect(Collectors.toSet())
         );

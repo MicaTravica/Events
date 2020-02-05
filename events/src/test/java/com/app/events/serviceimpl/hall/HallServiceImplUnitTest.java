@@ -119,5 +119,7 @@ public class HallServiceImplUnitTest {
         HALL_UPDATE.setId(HallConstants.INVALID_HALL_ID);
         hallService.update(HALL_UPDATE);
     }
+    
+  
 
 }

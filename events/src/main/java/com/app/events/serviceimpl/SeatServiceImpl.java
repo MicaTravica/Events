@@ -9,10 +9,8 @@ import org.springframework.stereotype.Service;
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Seat;
-import com.app.events.model.Sector;
 import com.app.events.repository.SeatRepository;
 import com.app.events.service.SeatService;
-import com.app.events.service.SectorService;
 
 @Service
 public class SeatServiceImpl implements SeatService {
@@ -20,8 +18,6 @@ public class SeatServiceImpl implements SeatService {
 	@Autowired
 	private SeatRepository seatRepository;
 
-	@Autowired
-	private SectorService sectorService;
 
 	@Override
 	public Seat findOne(Long id) throws ResourceNotFoundException{
@@ -35,14 +31,14 @@ public class SeatServiceImpl implements SeatService {
 	public Collection<Seat> findSeatFromSector(Long id){
 		return seatRepository.findSeatBySectorId(id);
 	}
+	
 	@Override
 	public Seat create(Seat seat) throws Exception{
 		if(seat.getId() != null)
 		{
 			throw new ResourceExistsException("Seat");
 		}
-		Sector sector = sectorService.findOne(seat.getSector().getId());
-		seat.setSector(sector);
+		
 		return seatRepository.save(seat);
 	}
 

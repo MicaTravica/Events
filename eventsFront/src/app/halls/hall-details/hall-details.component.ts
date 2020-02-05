@@ -1,0 +1,56 @@
+import { Component, OnInit } from '@angular/core';
+import { Hall } from 'src/app/models/hall-model/hall.model';
+import { Sector } from 'src/app/models/sector-model/sector.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HallService } from 'src/app/services/hall-service/hall.service';
+import { AuthService } from 'src/app/services/auth-service/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Place } from 'src/app/models/place-model/place.model';
+
+@Component({
+  selector: 'app-hall-details',
+  templateUrl: './hall-details.component.html',
+  styleUrls: ['./hall-details.component.scss']
+})
+export class HallDetailsComponent implements OnInit {
+
+  place: Place;
+  hall: Hall;
+  sectors: Sector[];
+  sector: Sector;
+  role = '';
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private hallService: HallService,
+    private authService: AuthService
+  ) { }
+
+  updateHall() {
+    this.router.navigate(['/updateHall/' + this.hall.id]);
+  }
+
+  addSector() {
+    this.router.navigate(['/addSector/' + this.hall.id]);
+  }
+
+  cancel() {
+    this.router.navigate(['/place/' + this.place.id]);
+  }
+
+  ngOnInit() {
+    this.role = this.authService.getUserRole();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.hallService.getHall(id).subscribe(
+      (data: Hall) => {
+        this.hall = data;
+        this.sectors = data.sectors;
+        this.place = data.place;
+      }
+      , (error: HttpErrorResponse) => {
+      },
+      );
+    }
+  }
+  }

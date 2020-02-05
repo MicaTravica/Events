@@ -20,6 +20,8 @@ public class HallConstants {
 
     public static final Long VALID_HALL_ID = 1l;
     public static final Long INVALID_HALL_ID = -1l;
+    public static final Long INVALID_PLACE_ID = -1l;
+
 
 	public static final String URI_PREFIX = "/api/hall/";
 

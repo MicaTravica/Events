@@ -19,4 +19,6 @@ public interface HallService {
 
 	public Collection<Hall> getHallsByPlaceId(Long id);
 
+	Hall findOneAndLoadSectors(Long id) throws ResourceNotFoundException;
+
 }

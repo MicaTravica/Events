@@ -44,6 +44,7 @@ public class PlaceServiceImplIntegrationTest {
 		placeService.findOne(PlaceConstants.INVALID_PLACE_ID);
 	}
 	
+	
 	@Test
 	@Rollback
 	@Transactional
@@ -65,6 +66,8 @@ public class PlaceServiceImplIntegrationTest {
 		assertEquals(PlaceConstants.NEW_PLACE_NAME, savedPlace.getName());
 		assertEquals(PlaceConstants.NEW_PLACE_ADDRESS, savedPlace.getAddress());
 		
+		placeRepository.delete(savedPlace);
+		
 		
 	}
 
@@ -72,7 +75,6 @@ public class PlaceServiceImplIntegrationTest {
 	@Rollback
 	@Transactional
 	public void createPlace_TestFail_CoordinateExist() throws Exception {
-		
 		
 		Place place = new Place(
 				null,
@@ -86,12 +88,38 @@ public class PlaceServiceImplIntegrationTest {
 		
 	}
 	
+	@Test(expected = ResourceExistsException.class)
+	@Rollback
+	@Transactional
+	public void createPlace_TestFail_AddressExist() throws Exception {
+		
+		Place place = new Place(
+				null,
+				PlaceConstants.NEW_PLACE_ADDRESS,
+				PlaceConstants.PERSISTED_PLACE_ADDRESS,
+				PlaceConstants.PERSISTED_PLACE_LATITUDE, 
+				PlaceConstants.PERSISTED_PLACE_LONGITUDE
+				);
+		
+		placeService.create(place);
+		
+	}
+	
 	
 	@Test(expected = ResourceExistsException.class)
 	@Rollback
 	@Transactional
 	public void createPlace_TestFail() throws Exception {
-		placeService.create(new Place(PlaceConstants.INVALID_PLACE_ID));
+
+		Place place = new Place(
+				PlaceConstants.PERSISTED_PLACE_ID,
+				PlaceConstants.NEW_PLACE_NAME,
+				PlaceConstants.NEW_PLACE_ADDRESS,
+				PlaceConstants.PERSISTED_PLACE_LATITUDE, 
+				PlaceConstants.PERSISTED_PLACE_LONGITUDE
+				);
+		
+		placeService.create(place);
 	}
 	
 	
@@ -116,7 +144,7 @@ public class PlaceServiceImplIntegrationTest {
 		assertEquals(numberOfPlaces, placeRepository.findAll().size());
 		assertEquals(savedPlace.getAddress(), PlaceConstants.PERSISTED_PLACE_ADDRESS);
 		assertEquals(savedPlace.getName(), PlaceConstants.PERSISTED_PLACE_NAME);
-		 
+		
 
 	}
 	
@@ -127,13 +155,8 @@ public class PlaceServiceImplIntegrationTest {
 	{
 
 		Place place = new Place(PlaceConstants.INVALID_PLACE_ID);
-		
 		placeService.update(place);
-		 
-		 
-		 
 
 	}
-	
-	
+
 }

@@ -12,13 +12,13 @@ import { ToastrService } from 'ngx-toastr';
 export class RegisterComponent implements OnInit {
   registerForm;
   submitted;
-  
+
   constructor(
     private userService: UserService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toastr: ToastrService
-  ) { 
+  ) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -32,8 +32,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  get form() { 
-    return this.registerForm.controls; 
+  get form() {
+    return this.registerForm.controls;
   }
 
   onSubmit(registerData) {
@@ -48,7 +48,4 @@ export class RegisterComponent implements OnInit {
         this.router.navigate(['/login']);
     });
   }
-
-  
-
 }

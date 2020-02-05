@@ -72,4 +72,13 @@ public class Sector {
 	public Sector(Long sectorId) {
 		this.id = sectorId;
 	}
+
+	public Sector(Long id, String name, int sectorRows, int sectorColumns, Hall hall, int priceList) {
+		this.id = id;
+		this.name = name;
+		this.sectorRows = sectorRows;
+		this.sectorColumns = sectorColumns;
+		this.hall = hall;
+		this.priceLists = new HashSet<PriceList>();
+	}
 }

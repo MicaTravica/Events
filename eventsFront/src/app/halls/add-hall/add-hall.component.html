@@ -1,0 +1,41 @@
+<form [formGroup]="addHall" (ngSubmit)="add()" >
+<h1>Add hall:</h1>
+  <div *ngFor="let h of halls; let i = index" [attr.data-index]="i">
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="h.name" name="nameH" placeholder="Hall name" formControlName="name">
+    </mat-form-field>
+<h1>Add sector:</h1>
+  <div *ngFor="let s of h.sectors">
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="s.name" name="nameH" placeholder="Sector name" formControlName="nameSector"><br>
+    </mat-form-field>
+    <p></p>
+    <p>
+      <mat-checkbox [formControl]="disableSelect">Parter</mat-checkbox>
+    </p> 
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="s.sectorRows" [disabled]="disableSelect.value" placeholder="Sector rows" formControlName="sectorRows"><br>
+    </mat-form-field>  
+    <p></p>
+    <mat-form-field class="addPlace-full-width">
+      <input matInput [(ngModel)]="s.sectorColumns" [disabled]="disableSelect.value" placeholder="Sector columns" formControlName="sectorColumns"><br>
+    </mat-form-field>
+    <p></p>
+  <div *ngIf="(addHall.controls.name.touched && addHall.controls.name.errors?.required) ||
+    (addHall.controls.nameSector.touched && addHall.controls.nameSector.errors?.requrired) ||
+    (addHall.controls.sectorRows.errors?.requrired) ||
+    (addHall.controls.sectorColumns.errors?.requrired)
+  ">
+     Please enter your data!
+  </div>
+
+  <button mat-raised-button color="accent" (click)="addOneMoreSector(i)">Add new sector</button>
+  </div>
+  <p></p>
+  <button mat-raised-button color="accent" (click)="addOneMoreHall()">Add new hall</button>
+  <button mat-raised-button color="accent"  type="submit" [disabled]="addHall.invalid">Save</button>
+  <button mat-raised-button color="accent" (click)="cancel()">Back</button>
+  </div>
+</form>
+
+  
