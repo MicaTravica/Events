@@ -35,9 +35,6 @@ public class SectorServiceImpl implements SectorService {
 
     @Override
     public Sector create(Sector sector) throws Exception {
-    	Seat seat = new Seat();
-		seat.setSector(sector);
-
         if (sector.getId() != null) {
             throw new ResourceExistsException("Sector");
         }

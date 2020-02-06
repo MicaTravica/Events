@@ -18,12 +18,10 @@ import {
   MatSelectModule,
   MatListModule,
   MatCheckboxModule,
-  MatCheckbox,
   MatTabsModule,
   MatDialogModule,
   MatRadioModule,
-  MatRippleModule,
-  MatRadioGroup
+  MatRippleModule
 
 } from '@angular/material';
 

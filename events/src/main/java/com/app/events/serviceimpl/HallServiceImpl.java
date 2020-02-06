@@ -60,7 +60,7 @@ public class HallServiceImpl implements HallService {
         	s.setHall(sh);
         	sectorService.create(s);
         }
-        return sh;
+        return findOneAndLoadSectors(sh.getId());
     }
 
     @Override

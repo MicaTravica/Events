@@ -1,21 +1,25 @@
-<div class="main" *ngIf="place">
-  <form [formGroup]="updatePlace" (ngSubmit)="update()"  class="addPlace-form">
+<div  *ngIf="place">
+  <form #updatePlace="ngForm" (ngSubmit)="update()" novalidate>
     <h1>Update place:</h1>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput name="name" [(ngModel)]="place.name" placeholder="Place name" formControlName="name">
-    </mat-form-field>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput  [(ngModel)]="place.address" name="address" placeholder="Place address" formControlName="address">
-    </mat-form-field>
-    <div *ngIf="(updatePlace.controls.name.touched && updatePlace.controls.name.errors?.required) ||
-    (updatePlace.controls.address.touched && updatePlace.controls.address.errors?.requrired)">
-       Please enter your data!
+    <div>
+      <mat-form-field>
+        <input matInput type="text" required #name='ngModel'
+        [(ngModel)]="place.name" name="name" placeholder="Place name" class="form-control">
+      </mat-form-field>
+      <small *ngIf="name.invalid && (name.dirty || name.touched)">Please enter place name</small>
     </div>
-  <button mat-raised-button color="accent" type="submit" [disabled]="updatePlace.invalid">Update place</button>
-</form>
+    <div>
+      <mat-form-field>
+        <input matInput type="text" required #address='ngModel'
+        [(ngModel)]="place.address" name="address" placeholder="Place address" class="form-control">
+      </mat-form-field>
+      <small *ngIf="address.invalid && (address.dirty || address.touched)">Please enter place address</small>
+    </div>
+    <button mat-raised-button color="accent" type="submit" [disabled]="updatePlace.form.invalid">Update place</button>
+  </form>
 </div>
 
-   
+  
   
  
 

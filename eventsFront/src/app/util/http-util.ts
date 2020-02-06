@@ -9,7 +9,7 @@ export const httpOptions = (): HttpHeaders => {
 export const httpOptionsText = (): HttpHeaders => {
     return new HttpHeaders()
         .append('Content-Type', 'application/json')
-        .append('Accept', 'text/html')
+        .append('Accept', 'text/html');
 };
 
 export const authHttpOptions = (token: string): HttpHeaders => {

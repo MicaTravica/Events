@@ -4,7 +4,7 @@
             <mat-form-field>
                 <input matInput placeholder="Name" type="text" formControlName="name">
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.name.errors">
+            <div class="error" *ngIf="form.name.touched && form.name.errors">
                 <div *ngIf="form.name.errors.required">Name is required</div>
             </div>
         </div>
@@ -12,7 +12,7 @@
             <mat-form-field>
                 <input matInput placeholder="Surname" type="text" formControlName="surname">
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.surname.errors">
+            <div class="error" *ngIf="form.surname.touched && form.surname.errors">
                 <div *ngIf="form.surname.errors.required">Surname is required</div>
             </div>
         </div>
@@ -20,7 +20,7 @@
             <mat-form-field>
                 <input matInput type="email" placeholder="Email" formControlName="email">
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.email.errors">
+            <div class="error" *ngIf="form.email.touched && form.email.errors">
                 <div *ngIf="form.email.errors.required">Email is required</div>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <mat-form-field>
                 <input matInput placeholder="Phone" type="text" formControlName="phone">
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.phone.errors">
+            <div class="error" *ngIf="form.phone.touched && form.phone.errors">
                 <div *ngIf="form.phone.errors.required">Phone is required</div>
             </div>
         </div>
@@ -36,7 +36,7 @@
             <mat-form-field>
                 <input matInput placeholder="Username" type="text" formControlName="username">
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.username.errors">
+            <div class="error" *ngIf="form.username.touched && form.username.errors">
                 <div *ngIf="form.username.errors.required">Username is required</div>
             </div>
         </div>
@@ -44,7 +44,7 @@
             <mat-form-field>
                 <input matInput placeholder="Password" type="password" formControlName="password">
             </mat-form-field>
-            <div class="error" *ngIf="submitted && form.password.errors">
+            <div class="error" *ngIf="form.password.touched && form.password.errors">
                 <div *ngIf="form.password.errors.required">Password is required</div>
                 <div *ngIf="form.password.errors.minlength">Password must be at least 8 characters long</div>
             </div>

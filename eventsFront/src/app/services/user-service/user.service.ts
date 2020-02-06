@@ -24,10 +24,9 @@ export class UserService {
   }
 
   public save(user: User) {
-    return this.http.post<User>(this.usersUrl + '/registration', user, 
+    return this.http.post<string>(this.usersUrl + '/registration', user,
     {
-      headers: httpOptionsText(),
-      responseType: 'text'
+      headers: httpOptionsText()
     });
   }
 

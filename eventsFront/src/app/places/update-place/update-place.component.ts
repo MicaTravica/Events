@@ -16,16 +16,12 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 export class UpdatePlaceComponent implements OnInit {
 
   place: Place;
-  role = '';
-  updatePlace: FormGroup;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private placeService: PlaceService,
-    private authService: AuthService,
-    private toastr: ToastrService,
-    private formBuilder: FormBuilder
+    private toastr: ToastrService
   ) {
   }
 
@@ -34,22 +30,16 @@ export class UpdatePlaceComponent implements OnInit {
     if (id) {
       this.placeService.getPlace(id).subscribe(
         (data: Place) => {
-          this.updatePlace = this.formBuilder.group({
-            name: [data.name, Validators.required],
-            address: [data.address, Validators.required]
-          });
           this.place = data;
         }
-        , (error: HttpErrorResponse) => {
-        },
       );
     }
   }
 
   cancel() {
     this.router.navigate(['/place/' + this.place.id]);
-
   }
+
   update() {
     this.placeService.update(this.place).subscribe(
       (data: any) => {
