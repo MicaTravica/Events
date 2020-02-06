@@ -1,13 +1,27 @@
-.addPlace-form {
-  min-width: 150px;
-  max-width: 500px;
-  width: 35%;
+.right{
+  float: right;
+  width: 50%;
 }
-  
-.addPlace-full-width {
-  width: 35%;
+
+.left {
+  float: left;
+  width: 50%;
+}
+
+.wrapper {
+  overflow:auto; 
+}
+
+mat-form-field, mat-checkbox, mat-error, button, h1, h2 {
+  width: 95%;
+  margin-left: 1%;
 }
 
 button {
-  margin-left: 2px;;
+  margin-bottom: 5px;
+}
+
+.down {
+  width: 31%;
+  margin: 1%;
 }

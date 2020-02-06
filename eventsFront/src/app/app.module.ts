@@ -56,7 +56,6 @@ import { UpdateSectorComponent} from './sectors/update-sector/update-sector.comp
 import { HallDetailsComponent} from './halls/hall-details/hall-details.component';
 import { HallListItemComponent} from './halls/hall-list-item/hall-list-item.component';
 import { SectorListItemComponent} from './sectors/sector-list-item/sector-list-item.component';
-import { SectorDetailsComponent} from './sectors/sector-details/sector-details.component';
 
 @NgModule({
   declarations: [
@@ -92,8 +91,7 @@ import { SectorDetailsComponent} from './sectors/sector-details/sector-details.c
     UpdateSectorComponent,
     HallDetailsComponent,
     HallListItemComponent,
-    SectorListItemComponent,
-    SectorDetailsComponent
+    SectorListItemComponent
   ],
   imports: [
     BrowserModule,

@@ -47,6 +47,7 @@ public class HallServiceImpl implements HallService {
       
     @Override
     public Hall create(Hall hall) throws Exception{
+    	//uraditi proveru da li je uopste poslata lista sa sektorima ili prazna
         if(hall.getId() != null){ 
             throw new ResourceExistsException("Hall");
         }
@@ -60,7 +61,7 @@ public class HallServiceImpl implements HallService {
         	s.setHall(sh);
         	sectorService.create(s);
         }
-        return sh;
+        return findOneAndLoadSectors(sh.getId());
     }
 
     @Override

@@ -39,9 +39,6 @@ export class LoginComponent implements OnInit {
           localStorage.setItem('user', JSON.stringify(user));
           this.router.navigate(['/events']);
         });
-      },
-      error => {
-        // this.toastr.error(error.error);
       }
     );
   }

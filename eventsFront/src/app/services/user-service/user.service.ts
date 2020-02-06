@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user-model/user.model';
-import { Router } from '@angular/router';
-import {httpOptions, authHttpOptions} from '../../util/http-util';
+import { httpOptionsText, authHttpOptions } from '../../util/http-util';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-service/auth.service';
 
@@ -15,7 +14,6 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
     private authService: AuthService
   ) {
     this.usersUrl = environment.restPath;
@@ -26,12 +24,9 @@ export class UserService {
   }
 
   public save(user: User) {
-    // izmeni ovo djoleeeeeeeeeeeee
-    // subscribe se ne radi ovde!
-    console.log(user);
-    return this.http.post<User>(this.usersUrl + '/registration', user, {headers: httpOptions()})
-    .subscribe(() => {
-      this.router.navigate(['/login']);
+    return this.http.post<string>(this.usersUrl + '/registration', user,
+    {
+      headers: httpOptionsText()
     });
   }
 

@@ -1,23 +1,29 @@
-<div class="main" *ngIf="sector">
-  <form class="addPlace-form" [formGroup]="updateSector" (ngSubmit)="update()" >
+<form  #updateSector="ngForm" (ngSubmit)="update()" *ngIf="sector">
     <h1>Update sector:</h1>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput [(ngModel)]="sector.name" name="name" placeholder="Place name" formControlName="name">
-    </mat-form-field>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput [(ngModel)]="sector.sectorRows" name="sectorRows" placeholder="Sector rows" formControlName="sectorRows">
-    </mat-form-field>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput [(ngModel)]="sector.sectorColumns" name="sectorColumns" placeholder="Sector columns" formControlName="sectorColumns">
-    </mat-form-field>
-    <div *ngIf="(updateSector.controls.name.touched && updateSector.controls.name.errors?.required) ||
-      (updateSector.controls.sectorRows.errors?.requrired) ||
-      (updateSector.controls.sectorColumns.errors?.requrired)
-      ">
-       Please enter your data!
+    <div>
+      <mat-form-field>
+        <input matInput type="text" required #sname='ngModel'
+        [(ngModel)]="sector.name" name="sname" placeholder="Sector name">
+      </mat-form-field>
+      <mat-error *ngIf="sname.invalid && (sname.dirty || sname.touched)">Please enter sector name</mat-error>
     </div>
-    <button mat-raised-button color="accent" type="submit" [disabled]="updateSector.invalid">Update sector</button>
-    <button mat-raised-button color="accent" (click)="cancel()">Back</button>
-  </form>
-</div>
-   
+    <div>
+      <mat-checkbox name="parter"[(ngModel)]="checked" (click)="parterre()">Parterre</mat-checkbox>
+    </div>
+    <div *ngIf="!checked">
+      <mat-form-field>
+        <input matInput type="number" required #srows='ngModel'
+        [(ngModel)]="sector.sectorRows" name="srows" placeholder="Sector rows">
+      </mat-form-field>
+      <mat-error *ngIf="srows.invalid && (srows.dirty || srows.touched)">Please enter number of sector rows</mat-error>
+    </div>
+    <div *ngIf="!checked">
+      <mat-form-field>
+        <input matInput type="number" required #scol='ngModel'
+        [(ngModel)]="sector.sectorColumns" name="scol" placeholder="Sector columns">
+      </mat-form-field>
+      <mat-error *ngIf="scol.invalid && (scol.dirty || scol.touched)">Please enter number of sector columns</mat-error>
+    </div>
+  <button mat-raised-button color="accent" type="submit" [disabled]="updateSector.invalid">Save sector</button>
+  <button mat-raised-button color="accent" type="button" (click)="cancel()">Back</button>
+</form>

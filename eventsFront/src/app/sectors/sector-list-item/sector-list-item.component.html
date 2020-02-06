@@ -2,7 +2,13 @@
   <mat-card-header>
     <mat-card-title>{{sector.name}}</mat-card-title>
   </mat-card-header>
+  <mat-card-content *ngIf="sector.sectorColumns > 0">
+    <p>
+      Sector rows: {{sector.sectorRows}}<br>
+      Sector columns: {{sector.sectorColumns}}<br>
+    </p>
+  </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button (click)="showDetails()" color="accent">Details</button>
+    <button mat-raised-button *ngIf="role=='ROLE_ADMIN'" (click)='updateHall()' color="accent">Update sector</button>
   </mat-card-actions>
 </mat-card>
