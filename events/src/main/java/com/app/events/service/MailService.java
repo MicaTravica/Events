@@ -12,9 +12,9 @@ public interface MailService {
 
 	void changeEmail(String email) throws MessagingException;
 
-	void ticketsReserved(ArrayList<Ticket> tickets) throws MessagingException;
+	void ticketsReserved(ArrayList<Ticket> tickets) throws Exception;
 
-	void ticketsBought(ArrayList<Ticket> tickets) throws MessagingException;
+	void ticketsBought(ArrayList<Ticket> tickets) throws Exception;
 
 	void buyReservedTickets(String email, ArrayList<Ticket> tickets) throws MessagingException;
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import com.app.events.service.QRCodeService;
+import com.app.events.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -19,6 +21,12 @@ public class MailServiceImpl implements MailService {
 
 	@Autowired
 	private JavaMailSender mailSender;
+
+	@Autowired
+	private TicketService ticketService;
+
+	@Autowired
+	private QRCodeService qrCodeService;
 
 	@Async
 	@Override
@@ -52,7 +60,7 @@ public class MailServiceImpl implements MailService {
 
 	@Async
 	@Override
-	public void ticketsReserved(ArrayList<Ticket> tickets) throws MessagingException {
+	public void ticketsReserved(ArrayList<Ticket> tickets) throws Exception {
 		String email = tickets.get(0).getUser().getEmail();
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 		MimeMessageHelper mmHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
@@ -61,6 +69,11 @@ public class MailServiceImpl implements MailService {
 				+ " tickets. If you want to buy them, you must do so no "
 				+ "later than 3 days days before the event starts.<br>";
 		for (Ticket ticket : tickets) {
+			String ticketQRStr = this.ticketService.generateStringForQRCodeImage(ticket);
+			this.qrCodeService.generateQRCodeImage(ticketQRStr);
+			String url = this.cloudinaryService.uploadImage("src/main/resources/QRCode.png");
+			System.out.println(url);
+
 			String ticketst = "<hr>Event name: " + ticket.getEvent().getName() + "<br>";
 			if (ticket.getSeat() != null) {
 				ticketst += "Place: " + ticket.getSeat().getSector().getHall().getPlace().getName() + ", "
@@ -85,13 +98,17 @@ public class MailServiceImpl implements MailService {
 
 	@Async
 	@Override
-	public void ticketsBought(ArrayList<Ticket> tickets) throws MessagingException {
+	public void ticketsBought(ArrayList<Ticket> tickets) throws Exception {
 		String email = tickets.get(0).getUser().getEmail();
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 		MimeMessageHelper mmHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
 		String message = "<html><head><meta charset=\"UTF-8\"></head>" + "<body><h3>Events app - your tickets!</h3><br>"
 				+ "<div><p>You bought " + tickets.size() + " tickets.<br>";
 		for (Ticket ticket : tickets) {
+			String ticketQRStr = this.ticketService.generateStringForQRCodeImage(ticket);
+			this.qrCodeService.generateQRCodeImage(ticketQRStr);
+
+
 			String ticketst = "<hr>Event name: " + ticket.getEvent().getName() + "<br>";
 			if (ticket.getSeat() != null) {
 				ticketst += "Place: " + ticket.getSeat().getSector().getHall().getPlace().getName() + ", "

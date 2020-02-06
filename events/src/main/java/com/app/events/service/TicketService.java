@@ -63,4 +63,6 @@ public interface TicketService {
 
 	void cancelReservationsCron(Collection<Ticket> tickets) throws Exception;
 
+	String generateStringForQRCodeImage(Ticket t);
+
 }

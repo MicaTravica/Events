@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.app.events.service.*;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +36,6 @@ import com.app.events.model.Ticket;
 import com.app.events.model.TicketState;
 import com.app.events.model.User;
 import com.app.events.repository.TicketRepository;
-import com.app.events.service.EventService;
-import com.app.events.service.PayPalService;
-import com.app.events.service.PriceListService;
-import com.app.events.service.SeatService;
-import com.app.events.service.SectorCapacityService;
-import com.app.events.service.SectorService;
-import com.app.events.service.TicketService;
-import com.app.events.service.UserService;
 
 @Service
 public class TicketServiceImpl implements TicketService {
@@ -70,6 +63,9 @@ public class TicketServiceImpl implements TicketService {
 
 	@Autowired
 	private PriceListService priceListService;
+
+	@Autowired
+	private MailService mailService;
 
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
@@ -172,6 +168,18 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
+	public String generateStringForQRCodeImage(Ticket t) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("fromtDate: ");
+		sb.append(t.getFromDate().toString());
+		sb.append(" toDate: ");
+		sb.append(t.getToDate());
+		sb.append(" price: ");
+		sb.append(t.getPrice());
+		return sb.toString();
+	}
+
+	@Override
 	public Map<String,Object> ticketPaymentCreation(Collection<Long> ticketIDs, Long userId) throws Exception{
 		
 		Double amout = 0.0;
@@ -246,6 +254,7 @@ public class TicketServiceImpl implements TicketService {
 				eventService.updateEventState(eventService.findOne(eId), EventState.SOLD_OUT);
 			}
 		}
+		this.mailService.ticketsBought((ArrayList<Ticket>) retVal);
 		return retVal;
 	}
 
