@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import com.app.events.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -110,8 +113,17 @@ public class UserController extends BaseController {
 				consumes = MediaType.APPLICATION_JSON_VALUE, 
 				produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
-	public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) throws Exception {
-		return new ResponseEntity<>(UserMapper.toDTO(userService.update(UserMapper.toUser(userDto))), HttpStatus.OK);
+	public ResponseEntity<String> updateUser(@RequestBody UserDTO userDto) throws Exception {
+		User changedUser = userService.update(UserMapper.toUser(userDto));
+		Collection<SimpleGrantedAuthority> nowAuthorities =
+				(Collection<SimpleGrantedAuthority>)SecurityContextHolder
+							.getContext().getAuthentication().getAuthorities();
+		UsernamePasswordAuthenticationToken authentication =
+				new UsernamePasswordAuthenticationToken(changedUser.getUsername(), changedUser.getPassword(), nowAuthorities);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		UserDetails userDetails = userDetailsService.loadUserByUsername(changedUser.getUsername());
+		return new ResponseEntity<>(tokenUtils.generateToken(userDetails), HttpStatus.OK);
 	}
 	
 	@PutMapping(value= "/user/password", 
@@ -120,8 +132,10 @@ public class UserController extends BaseController {
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_REGULAR')")
 	public ResponseEntity<String> changePassword(@RequestBody PasswordChangeDTO pcDto) throws Exception
 	{
-		userService.changeUserPassword(pcDto, SecurityContextHolder.getContext().getAuthentication().getName());
-	    return new ResponseEntity<>("Password changed", HttpStatus.OK);
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		userService.changeUserPassword(pcDto, username);
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		return new ResponseEntity<>(tokenUtils.generateToken(userDetails), HttpStatus.OK);
 	}
 	
 	@GetMapping(value= "/user/verify/{token}",  
