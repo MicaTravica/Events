@@ -1,19 +1,13 @@
-.addPlace-form {
-  min-width: 150px;
-  max-width: 500px;
-  width: 100%;
+mat-form-field, mat-checkbox, button, h1, h2, small {
+  width: 33%;
+  margin-left: 33%;
 }
-.addPlace-full-width {
-  width: 40%;
-}
+
 button {
-  margin-left: 2px;;
+  margin-bottom: 5px;
 }
-.example-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin: 15px 0;
-}
-.example-radio-button {
-  margin: 5px;
+
+.down {
+  width: 31%;
+  margin: 1%;
 }

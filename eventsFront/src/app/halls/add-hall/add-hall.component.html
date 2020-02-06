@@ -20,18 +20,18 @@
         <small *ngIf="sname.invalid && (sname.dirty || sname.touched)">Please enter sector name</small>
       </div>
       <div>
-        <mat-checkbox name="parter"[(ngModel)]="checked[i][j]">Parter</mat-checkbox>
+        <mat-checkbox name="parter"[(ngModel)]="checked[i][j]" (click)="parterre(i, j)">Parter</mat-checkbox>
       </div>
       <div *ngIf="!checked[i][j]">
         <mat-form-field>
-          <input matInput type="number" required #srows='ngModel'
+          <input matInput type="number" required min="1" #srows='ngModel'
           [(ngModel)]="s.sectorRows" name="srows{{i}}{{j}}" placeholder="Sector rows" class="form-control">
         </mat-form-field>
         <small *ngIf="srows.invalid && (srows.dirty || srows.touched)">Please enter number of sector rows</small>
       </div>
       <div *ngIf="!checked[i][j]">
         <mat-form-field>
-          <input matInput type="number" required #scol='ngModel'
+          <input matInput type="number" required min="1" #scol='ngModel'
           [(ngModel)]="s.sectorColumns" name="scol{{i}}{{j}}" placeholder="Sector columns" class="form-control">
         </mat-form-field>
         <small *ngIf="scol.invalid && (scol.dirty || scol.touched)">Please enter number of sector columns</small>

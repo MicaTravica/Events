@@ -30,7 +30,7 @@ export class AddHallComponent implements OnInit {
   ngOnInit() {
     if (this.newPlace) {
       this.place = this.newPlace;
-      this.halls = [new Hall(null, '', this.place, [new Sector(null, '', null, null, null, null)])];
+      this.halls = [new Hall(null, '', this.place, [new Sector(null, '', 0, 0, null, null)])];
     } else {
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {
@@ -56,6 +56,13 @@ export class AddHallComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/place/' + this.place.id]);
+  }
+
+  parterre(idxHall: number, idxSector: number) {
+    if (!this.checked[idxHall][idxSector]) {
+      this.halls[idxHall].sectors[idxSector].sectorRows = null;
+      this.halls[idxHall].sectors[idxSector].sectorColumns = null;
+    }
   }
 
   add() {

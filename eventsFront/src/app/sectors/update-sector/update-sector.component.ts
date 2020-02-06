@@ -1,10 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Hall } from 'src/app/models/hall-model/hall.model';
 import { Sector } from 'src/app/models/sector-model/sector.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SectorService } from 'src/app/services/sector-service/sector.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -13,16 +10,15 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./update-sector.component.scss']
 })
 export class UpdateSectorComponent implements OnInit {
+
   sector: Sector;
-  role = '';
-  updateSector: FormGroup;
+  checked: boolean;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private sectorService: SectorService,
-    private toastr: ToastrService,
-    private formBuilder: FormBuilder
+    private toastr: ToastrService
   ) { }
 
   ngOnInit() {
@@ -30,30 +26,37 @@ export class UpdateSectorComponent implements OnInit {
     if (id) {
       this.sectorService.getSector(id).subscribe(
         (data: Sector) => {
-          this.sector = data;
-          this.updateSector = this.formBuilder.group({
-            name: [data.name, Validators.required],
-            sectorRows: [Validators.required,  Validators.min(1)],
-            sectorColumns: [Validators.required,  Validators.min(1)]});
+          if (data.sectorColumns > 0) {
+            this.checked = false;
+            this.sector = data;
+          } else {
+            this.checked = true;
+            this.sector = data;
+            this.sector.sectorColumns = null;
+            this.sector.sectorRows = null;
+          }
         }
-        , (error: HttpErrorResponse) => {
-        },
       );
     }
   }
 
   update() {
     this.sectorService.update(this.sector).subscribe(
-    (data: any) => {
-      this.sector = data;
-      this.toastr.success('Successful update!');
-      this.router.navigate(['/sector/' + this.sector.id]);
+      (data: Sector) => {
+        this.toastr.success('Successful update!');
+        this.router.navigate(['/hall/' + data.hallID]);
+      });
+  }
+
+  parterre() {
+    if (!this.checked) {
+      this.sector.sectorRows = null;
+      this.sector.sectorColumns = null;
     }
-    );
   }
 
   cancel() {
-    this.router.navigate(['/sector/' + this.sector.id]);
+    this.router.navigate(['/hall/' + this.sector.hallID]);
   }
 
 }
