@@ -4,7 +4,6 @@ import { Sector } from 'src/app/models/sector-model/sector.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HallService } from 'src/app/services/hall-service/hall.service';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Place } from 'src/app/models/place-model/place.model';
 
 @Component({
@@ -16,15 +15,27 @@ export class HallDetailsComponent implements OnInit {
 
   place: Place;
   hall: Hall;
-  sectors: Sector[];
-  sector: Sector;
   role = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private hallService: HallService,
     private authService: AuthService
   ) { }
+
+  ngOnInit() {
+    this.role = this.authService.getUserRole();
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.hallService.getHall(id).subscribe(
+        (data: Hall) => {
+          this.hall = data;
+          this.place = data.place;
+        }
+      );
+    }
+  }
 
   updateHall() {
     this.router.navigate(['/updateHall/' + this.hall.id]);
@@ -37,20 +48,4 @@ export class HallDetailsComponent implements OnInit {
   cancel() {
     this.router.navigate(['/place/' + this.place.id]);
   }
-
-  ngOnInit() {
-    this.role = this.authService.getUserRole();
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.hallService.getHall(id).subscribe(
-      (data: Hall) => {
-        this.hall = data;
-        this.sectors = data.sectors;
-        this.place = data.place;
-      }
-      , (error: HttpErrorResponse) => {
-      },
-      );
-    }
-  }
-  }
+}

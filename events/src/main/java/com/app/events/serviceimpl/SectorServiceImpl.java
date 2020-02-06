@@ -35,9 +35,6 @@ public class SectorServiceImpl implements SectorService {
 
     @Override
     public Sector create(Sector sector) throws Exception {
-    	Seat seat = new Seat();
-		seat.setSector(sector);
-
         if (sector.getId() != null) {
             throw new ResourceExistsException("Sector");
         }
@@ -69,6 +66,8 @@ public class SectorServiceImpl implements SectorService {
     public Sector update(Sector sector) throws Exception {
         Sector sectorToUpdate = this.findOne(sector.getId());
         sectorToUpdate = this.prepareSectorFields(sectorToUpdate, sector);
+        // proveriti da li je prodata neka karta za sektor bilo kad, ako jeste  ne moze da se menja
+        // obrisati sedista stara pa sacuvati nova
         saveSeat(sectorToUpdate);
         return this.sectorRepository.save(sectorToUpdate);
     }

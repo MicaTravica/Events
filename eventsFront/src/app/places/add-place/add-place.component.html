@@ -1,23 +1,26 @@
 <mat-tab-group>
   <mat-tab label="Place">
-  <form class="addPlace-form" [formGroup]="addPlace" (ngSubmit)="add()" >
-  <h1>Add place:</h1>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput [(ngModel)]="place.name" name="name" placeholder="Place name" formControlName="name">
-    </mat-form-field>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput [(ngModel)]="place.address" name="address" placeholder="Place address" formControlName="address">
-    </mat-form-field>
-    <div *ngIf="(addPlace.controls.name.touched && addPlace.controls.name.errors?.required) ||
-      (addPlace.controls.address.touched && addPlace.controls.address.errors?.requrired)">
-      Please enter your data!
+    <form #addPlace="ngForm" (ngSubmit)="add()" novalidate>
+    <h1>Add place:</h1>
+    <div>
+      <mat-form-field>
+        <input matInput type="text" required #name='ngModel'
+        [(ngModel)]="place.name" name="name" placeholder="Place name">
+      </mat-form-field>
+      <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Please enter place name</mat-error>
     </div>
-    <button mat-raised-button color="accent" type="submit" [disabled]="addPlace.invalid">Save place</button>
-    <button mat-raised-button color="accent" (click)="cancel()">Back</button>
-  </form>
+    <div>
+      <mat-form-field>
+        <input matInput type="text" required #address='ngModel'
+        [(ngModel)]="place.address" name="address" placeholder="Place address">
+      </mat-form-field>
+      <mat-error *ngIf="address.invalid && (address.dirty || address.touched)">Please enter place address</mat-error>
+    </div>
+      <button mat-raised-button color="accent" type="submit" [disabled]="addPlace.form.invalid">Save place</button>
+      <button mat-raised-button color="accent" (click)="cancel()">Back</button>
+    </form>
   </mat-tab>
   <mat-tab *ngIf='place.id' label="Hall">
-    <app-add-hall></app-add-hall> 
+    <app-add-hall [newPlace]='place'></app-add-hall> 
   </mat-tab>
 </mat-tab-group>
-   

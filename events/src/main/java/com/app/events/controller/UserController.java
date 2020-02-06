@@ -69,7 +69,7 @@ public class UserController extends BaseController {
 	
 	@PostMapping(value="/registration", 
 				 consumes = MediaType.APPLICATION_JSON_VALUE,
-				 produces = MediaType.APPLICATION_JSON_VALUE)
+				 produces = MediaType.TEXT_HTML_VALUE)
 	public ResponseEntity<String>registration(@RequestBody UserDTO userDTO) throws Exception {
 		userService.registration(UserMapper.toUser(userDTO));
 		return new ResponseEntity<>("You are registered, now you need to verify your email", HttpStatus.OK);

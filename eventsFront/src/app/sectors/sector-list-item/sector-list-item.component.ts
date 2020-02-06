@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 export class SectorListItemComponent implements OnInit {
 
   @Input() sector: Sector;
+  @Input() role: string;
 
   constructor(
     private router: Router
@@ -18,7 +19,7 @@ export class SectorListItemComponent implements OnInit {
   ngOnInit() {
   }
 
-  showDetails() {
-    this.router.navigate(['/sector/' + this.sector.id]);
+  updateHall() {
+    this.router.navigate(['/updateSector/' + this.sector.id]);
   }
 }

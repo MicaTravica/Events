@@ -1,12 +1,13 @@
 <div class="main" *ngIf="hall">
   <h1>{{hall.name}}</h1>
-  <button   mat-raised-button  *ngIf="role== 'ROLE_ADMIN'" (click)='updateHall()' color="accent">Update hall</button>
-  <button   mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='addSector()' color="accent">Add Sector</button>
-  <button   mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='cancel()' color="accent">Back</button>
-  <p></p>
-  <mat-grid-list  cols="4" rowHeight="160px">
+  <div>
+    <button mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='updateHall()' color="accent">Update hall</button>
+    <button mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='addSector()' color="accent">Add Sector</button>
+    <button mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='cancel()' color="accent">Back</button>
+  </div>
+  <mat-grid-list  cols="4" rowHeight="260px">
     <mat-grid-tile *ngFor="let e of hall.sectors" >
-      <app-sector-list-item class="card" [sector]='e'></app-sector-list-item>
+      <app-sector-list-item class="card" [sector]='e' [role]='role'></app-sector-list-item>
     </mat-grid-tile>
   </mat-grid-list>
 </div>

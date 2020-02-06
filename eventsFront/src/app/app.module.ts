@@ -54,7 +54,6 @@ import { UpdateSectorComponent} from './sectors/update-sector/update-sector.comp
 import { HallDetailsComponent} from './halls/hall-details/hall-details.component';
 import { HallListItemComponent} from './halls/hall-list-item/hall-list-item.component';
 import { SectorListItemComponent} from './sectors/sector-list-item/sector-list-item.component';
-import { SectorDetailsComponent} from './sectors/sector-details/sector-details.component';
 import { ChangePasswordComponent } from './core/profile/change-password/change-password.component';
 
 @NgModule({
@@ -92,7 +91,6 @@ import { ChangePasswordComponent } from './core/profile/change-password/change-p
     HallDetailsComponent,
     HallListItemComponent,
     SectorListItemComponent,
-    SectorDetailsComponent,
     ChangePasswordComponent
   ],
   imports: [

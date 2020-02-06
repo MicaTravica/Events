@@ -1,12 +1,13 @@
 <div class="main" *ngIf="place">
   <h1>{{place.name}}</h1>
   <h3>Address: {{place.address}}</h3>
-  <button   mat-raised-button  *ngIf="role== 'ROLE_ADMIN'" (click)='updatePlace()' color="accent">Update place</button>
-  <button   mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='addHall()' color="accent">Add Hall</button>
-  <button   mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='cancel()' color="accent">Back</button>
-  <p></p>
+  <div>
+    <button   mat-raised-button  *ngIf="role== 'ROLE_ADMIN'" (click)='updatePlace()' color="accent">Update place</button>
+    <button   mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='addHall()' color="accent">Add Hall</button>
+    <button   mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='cancel()' color="accent">Back</button>
+  </div>
   <mat-grid-list  cols="4" rowHeight="160px">
-    <mat-grid-tile *ngFor="let e of halls" >
+    <mat-grid-tile *ngFor="let e of place.halls" >
       <app-hall-list-item class="card" [hall]='e'></app-hall-list-item>
     </mat-grid-tile>
   </mat-grid-list>

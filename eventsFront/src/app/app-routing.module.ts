@@ -26,7 +26,6 @@ import { AddSectorComponent } from './sectors/add-sector/add-sector.component';
 import { UpdateSectorComponent } from './sectors/update-sector/update-sector.component';
 import { UpdateHallComponent} from './halls/update-hall/update-hall.component';
 import { HallDetailsComponent } from './halls/hall-details/hall-details.component';
-import { SectorDetailsComponent} from './sectors/sector-details/sector-details.component';
 import { ChangePasswordComponent } from './core/profile/change-password/change-password.component';
 
 const routes: Routes = [
@@ -53,7 +52,6 @@ const routes: Routes = [
   { path: 'failPayPal', component: PaypalComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'reservation/:id' , component: ReservationComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'place/:id' , component: PlaceDetailsComponent},
-  { path: 'sector/:id', component: SectorDetailsComponent},
   { path: 'updatePlace/:id', component: UpdatePlaceComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
   { path: 'updateHall/:id', component: UpdateHallComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
   { path: 'addSector/:id', component: AddSectorComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
