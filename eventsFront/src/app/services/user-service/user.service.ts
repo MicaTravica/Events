@@ -49,12 +49,12 @@ export class UserService {
 
 
   public changePassword(changePassword: ChangePassword ) {
-    return this.http.put(this.usersUrl + '/password', changePassword,
+    return this.http.put(this.usersUrl + '/user/password', changePassword,
       {headers: authHttpOptions(this.authService.getToken())});
   }
 
   public updateMyData(user: User) {
-    return this.http.put(this.usersUrl, user,
+    return this.http.put(this.usersUrl + '/user', user,
       {headers: authHttpOptions(this.authService.getToken())});
   }
 }

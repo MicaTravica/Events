@@ -21,6 +21,8 @@ export class ProfileComponent implements OnInit {
   phone: FormControl = new FormControl('', [Validators.required]);
   profileForm: FormGroup;
 
+  userID: number;
+
   constructor(
         private formBuilder: FormBuilder,
         private router: Router,
@@ -44,6 +46,7 @@ export class ProfileComponent implements OnInit {
       this.phone.setValue(userData.phone);
       this.email.setValue(userData.email);
       this.username.setValue(userData.username);
+      this.userID = userData.id;
     },
     (err: HttpErrorResponse) => {
       this.toastr.error(err.message);
@@ -52,6 +55,7 @@ export class ProfileComponent implements OnInit {
 
   onSubmit() {
     const payLoad = new User(
+      this.userID,
       this.name.value,
       this.surname.value,
       this.email.value,
