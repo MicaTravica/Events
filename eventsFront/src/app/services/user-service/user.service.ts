@@ -24,7 +24,6 @@ export class UserService {
   }
 
   public me(token: string) {
-    // return of(new User('Dusan', 'Bucan', 'dusanbzr@gmail.com', '21-234', 'DusanB'));
     return this.http.get(this.usersUrl + '/userme', { headers: authHttpOptions(token)});
   }
 
@@ -50,11 +49,11 @@ export class UserService {
 
   public changePassword(changePassword: ChangePassword ) {
     return this.http.put(this.usersUrl + '/user/password', changePassword,
-      {headers: authHttpOptions(this.authService.getToken())});
+      {headers: authHttpOptions(this.authService.getToken()), responseType: 'text'});
   }
 
   public updateMyData(user: User) {
     return this.http.put(this.usersUrl + '/user', user,
-      {headers: authHttpOptions(this.authService.getToken())});
+      {headers: authHttpOptions(this.authService.getToken()), responseType: 'text'});
   }
 }

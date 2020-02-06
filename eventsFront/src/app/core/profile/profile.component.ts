@@ -62,8 +62,12 @@ export class ProfileComponent implements OnInit {
       this.phone.value,
       this.username.value
     );
-    this.userService.updateMyData(payLoad).subscribe( () => {
-      this.toastr.success('successfully changed profile data');
+    this.userService.updateMyData(payLoad).subscribe( (token: string) => {
+        localStorage.setItem('token', token);
+        this.userService.me(token).subscribe(user => {
+          localStorage.setItem('user', JSON.stringify(user));
+          this.toastr.success('successfully changed profile data');
+        });
       },
       (err: HttpErrorResponse) => {
       this.toastr.error(err.message);

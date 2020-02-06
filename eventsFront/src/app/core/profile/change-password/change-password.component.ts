@@ -16,7 +16,7 @@ import { AuthService } from 'src/app/services/auth-service/auth.service';
 export class ChangePasswordComponent implements OnInit {
 
   passwordForm: FormGroup;
-  oldPassword = new FormControl('', [Validators.required]);
+  oldPassword = new FormControl('', [Validators.required, Validators.minLength(8)]);
   password1 = new FormControl('', [Validators.required, Validators.minLength(8)]);
   password2 = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
@@ -44,8 +44,9 @@ export class ChangePasswordComponent implements OnInit {
   onSubmit() {
     const payLoad = new ChangePassword(this.oldPassword.value, this.password1.value);
     this.userService.changePassword(payLoad)
-      .subscribe( (res: string) => {
-          this.toastr.success( res );
+      .subscribe( (token: string) => {
+          localStorage.setItem('token', token);
+          this.toastr.success( 'Successfully changed password' );
       },
       (err: HttpErrorResponse) => {
         this.toastr.error(err.message);
