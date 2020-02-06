@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
-import { UserService } from 'src/app/services/user-service/user.service';
 import { EventService } from '../../services/event-service/event.service';
 import { PlaceService } from 'src/app/services/place-service/place.service';
 import { HallService } from 'src/app/services/hall-service/hall.service';
-import { SectorService } from 'src/app/services/sector-service/sector.service';
-import { DomSanitizer } from '@angular/platform-browser'
+
 @Component({
   selector: 'app-add-event',
   templateUrl: './add-event.component.html',
@@ -29,8 +27,7 @@ export class AddEventComponent implements OnInit {
     private eventService: EventService,
     private placeService: PlaceService,
     private hallService: HallService,
-    private formBuilder: FormBuilder,
-    private sanitizer: DomSanitizer
+    private formBuilder: FormBuilder
   ) { 
     this.addEventForm = this.formBuilder.group({
       name: ['', Validators.required],

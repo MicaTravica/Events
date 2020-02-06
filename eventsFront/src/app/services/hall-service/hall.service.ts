@@ -37,7 +37,7 @@ export class HallService {
     const token = this.authService.getToken();
     return this.http.get(this.url + '/placeHalls/' + placeID,
       {
-        headers: new HttpHeaders().set('Authorization',  `Bearer ${token}`)
+        headers: authHttpOptions(token)
       }
     );
   }
