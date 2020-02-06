@@ -7,7 +7,7 @@
     <button   mat-raised-button *ngIf="role== 'ROLE_ADMIN'" (click)='cancel()' color="accent">Back</button>
   </div>
   <mat-grid-list  cols="4" rowHeight="160px">
-    <mat-grid-tile *ngFor="let e of halls" >
+    <mat-grid-tile *ngFor="let e of place.halls" >
       <app-hall-list-item class="card" [hall]='e'></app-hall-list-item>
     </mat-grid-tile>
   </mat-grid-list>

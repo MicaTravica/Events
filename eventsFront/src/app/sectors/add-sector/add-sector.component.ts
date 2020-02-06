@@ -2,11 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Hall } from 'src/app/models/hall-model/hall.model';
 import { Sector } from 'src/app/models/sector-model/sector.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { HallService } from 'src/app/services/hall-service/hall.service';
 import { SectorService } from 'src/app/services/sector-service/sector.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import {FormControl, Validators, FormGroup, FormBuilder} from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
 

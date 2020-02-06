@@ -30,7 +30,7 @@ export class AddHallComponent implements OnInit {
   ngOnInit() {
     if (this.newPlace) {
       this.place = this.newPlace;
-      this.halls = [new Hall(null, '', this.place, [new Sector(null, '', 0, 0, null, null)])];
+      this.halls = [new Hall(null, '', this.place, [new Sector(null, '', null, null, null, null)])];
     } else {
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {

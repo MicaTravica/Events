@@ -4,7 +4,6 @@ import { Sector } from 'src/app/models/sector-model/sector.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HallService } from 'src/app/services/hall-service/hall.service';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Place } from 'src/app/models/place-model/place.model';
 
 @Component({
@@ -16,7 +15,6 @@ export class HallDetailsComponent implements OnInit {
 
   place: Place;
   hall: Hall;
-  sectors: Sector[];
   role = '';
 
   constructor(
@@ -33,7 +31,6 @@ export class HallDetailsComponent implements OnInit {
       this.hallService.getHall(id).subscribe(
         (data: Hall) => {
           this.hall = data;
-          this.sectors = data.sectors;
           this.place = data.place;
         }
       );

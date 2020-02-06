@@ -2,10 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Place } from 'src/app/models/place-model/place.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlaceService } from 'src/app/services/place-service/place.service';
-import { AuthService } from 'src/app/services/auth-service/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 @Component({
     // tslint:disable-next-line: component-selector
