@@ -1,13 +1,13 @@
-<div class="main" *ngIf="hall">
-  <form class="addPlace-form" [formGroup]="updateHall" (ngSubmit)="update()">
+<div *ngIf="hall">
+  <form #updateHall="ngForm" (ngSubmit)="update()" novalidate>
   <h1>Update hall:</h1>
-    <mat-form-field class="addPlace-full-width">
-      <input matInput [(ngModel)]="hall.name" name="name" placeholder="Hall name" formControlName="name">
-    </mat-form-field>
-    <div *ngIf="(updateHall.controls.name.touched && updateHall.controls.name.errors?.required)">
-      Please enter your data!
+    <div>
+      <mat-form-field>
+        <input matInput required #name='ngModel' type="text" [(ngModel)]="hall.name" name="name" placeholder="Hall name">
+      </mat-form-field>
+      <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Please enter hall name</mat-error>
     </div>
     <button mat-raised-button color="accent" type="submit" [disabled]="updateHall.invalid">Update hall</button>
-    <button mat-raised-button color="accent" (click)="cancel()">Back</button>
+    <button mat-raised-button color="accent" type="button" (click)="cancel()">Back</button>
   </form>
 </div>

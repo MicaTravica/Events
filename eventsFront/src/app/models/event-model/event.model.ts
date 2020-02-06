@@ -1,5 +1,6 @@
 import { EventState } from './event-state.enum';
 import { EventType } from './event-type.enum';
+import { Hall } from '../hall-model/hall.model';
 
 export class EventEntity {
     public id: number;
@@ -9,12 +10,12 @@ export class EventEntity {
     public toDate: Date;
     public eventState: EventState;
     public eventType: EventType;
-    public halls: any[]; // hall model
+    public halls: Hall[];
     public priceList: any[]; // price list
     public mediaList: any[]; // media list
 
     constructor(id?: number, name?: string, description?: string, fromDate?: Date, toDate?: Date, eventState?: EventState,
-                eventType?: EventType, halls?: any[], priceList?: any[], mediaList?: any[]) {
+                eventType?: EventType, halls?: Hall[], priceList?: any[], mediaList?: any[]) {
         this.id = id;
         this.name = name;
         this.description = description;
