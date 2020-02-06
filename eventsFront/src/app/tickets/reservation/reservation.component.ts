@@ -36,8 +36,11 @@ export class ReservationComponent implements OnInit {
   parterForms: { [key: string]: FormGroup} = {};
   desiredNumbers: { [key: string]: FormControl} = {};
   availableNumbers: { [key: string]: FormControl} = {};
+  parterTickets: number[];
 
   dataReady = false;
+  showSelectParterSeats = false;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -49,6 +52,7 @@ export class ReservationComponent implements OnInit {
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.parterTickets = [];
       this.eventService.getEvent(id).subscribe(
         (data: EventEntity) => {
           this.event = data;
@@ -89,37 +93,61 @@ export class ReservationComponent implements OnInit {
 
   // ticket vec postoji da li postoji nacin da ih dobavim
   reserveTickets() {
+    const retVal: number[] = [];
     if (this.tickets.length >= 1) {
-      this.ticketService.makeReservation(this.tickets).subscribe(
+      this.tickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (this.parterTickets.length >= 1) {
+      this.parterTickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (retVal.length >= 1) {
+      this.ticketService.makeReservation(retVal).subscribe(
         (res: any) => {
+          this.parterTickets = [];
           this.tickets = [];
           this.ticketMap = {};
           this.dates = [];
           this.toastr.success('reservation successfully made');
         },
         (err: HttpErrorResponse)  => {
-          console.log(err.message);
+          this.toastr.error(err.message);
         }
       );
-    } else {
-      console.log('Choose at least one ticket');
+    } else if (this.parterTickets.length >= 1) {
+      this.toastr.warning('Choose at least one ticket');
     }
   }
 
   buyTickets() {
+    const retVal: number[] = [];
     if (this.tickets.length >= 1) {
-      this.ticketService.startBuyingProcess(this.tickets).subscribe(
+      this.tickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (this.parterTickets.length >= 1) {
+      this.parterTickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (retVal.length >= 1) {
+      this.ticketService.startBuyingProcess(retVal).subscribe(
         (res: {status: string, redirect_url: string }) => {
           if (res.status === 'success') {
-            this.ticketService.setTicketIdsToLocalStorage(this.tickets);
+            this.ticketService.setTicketIdsToLocalStorage(retVal);
             this.ticketService.redirectPayPal(res.redirect_url);
             this.tickets = [];
             this.ticketMap = {};
+            this.parterTickets = [];
             this.dates = [];
           }
         },
         (err: HttpErrorResponse)  => {
-          console.log(err.message);
+          this.toastr.warning(err.message);
         },
       );
     }
@@ -175,7 +203,6 @@ export class ReservationComponent implements OnInit {
               {validators: [ticketNumberValidator]
             });
           });
-            console.log(this.parterForms);
           }
           this.dataReady = true;
         });
@@ -200,6 +227,11 @@ export class ReservationComponent implements OnInit {
 
   canceled() {
     this.tickets = [];
+    this.parterTickets = [];
+    this.dates.forEach(date => {
+      this.desiredNumbers[date].setValue(0);
+    });
+    this.showSelectParterSeats = false;
   }
 
   setClass(ticket: Ticket): string {
@@ -218,6 +250,36 @@ export class ReservationComponent implements OnInit {
   }
   findAvailableNumbers(d: string): FormControl {
     return this.availableNumbers[d] as FormControl;
+  }
+
+  setParterFlags() {
+    let val = 0;
+    this.dates.forEach(date => {
+      if (this.parterForms[date].valid) {
+        val += this.desiredNumbers[date].value as number;
+      }
+    });
+    if (val > 0 ) {
+      this.showSelectParterSeats = true;
+    } else {
+      this.showSelectParterSeats = false;
+    }
+  }
+
+  selectParterSeats() {
+    this.parterTickets = [];
+    this.dates.forEach(date => {
+      if (this.parterForms[date].valid) {
+        let i = 0;
+        const n  = this.desiredNumbers[date].value as number;
+        while (i < n) {
+          this.parterTickets.push(this.ticketMap[date][i].id);
+          i++;
+        }
+      } else {
+        this.toastr.warning('For date:' + date + 'invalid input');
+      }
+    });
   }
 
 

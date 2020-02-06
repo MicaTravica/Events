@@ -53,10 +53,13 @@
     </div>
     <div *ngIf="dates.length > 0" class="card-header">
         <h1>Selected tickets</h1>
-        <p *ngIf="tickets.length > 0">
+        <p *ngIf="tickets.length > 0 || parterTickets.length > 0">
             <button mat-raised-button (click)="canceled()" color="accent" style="margin-right: 5px;">Cancel selected</button>
             <button mat-raised-button (click)="reserveTickets()" color="accent" style="margin-right: 5px;">Reserve selected</button>
             <button mat-raised-button (click)="buyTickets()" color="accent">Buy selected</button>
+        </p>
+        <p *ngIf="showSelectParterSeats">
+            <button mat-raised-button (click)="selectParterSeats()" color="accent" style="margin-right: 5px;">Select parter</button>
         </p>
     </div>
     <mat-divider></mat-divider>
@@ -76,9 +79,10 @@
                 <form *ngIf="parterForms[d]" [formGroup]="parterForms[d]" (ngSubmit)="onParterSubmit(d)">
                     <div>
                         <mat-form-field *ngIf="findDesiredNumbers(d)">
-                            <input matInput placeholder="Number of cards" type="text" [formControl] = "findDesiredNumbers(d)">
+                            <input matInput placeholder="Number of cards" (change)="setParterFlags()"
+                                type="text" [formControl] = "findDesiredNumbers(d)">
                             <mat-error *ngIf="findDesiredNumbers(d).errors?.required">Number is required</mat-error>
-                            <mat-error *ngIf="findDesiredNumbers(d).errors?.MinValue">Number must be >= 1</mat-error>
+                            <mat-error *ngIf="findDesiredNumbers(d).errors?.MinValue">Number must be >= 0</mat-error>
                             <mat-error *ngIf="findDesiredNumbers(d).errors?.ticketNumberValidatorError">aaa</mat-error>
                         </mat-form-field>
                         <mat-form-field *ngIf="findAvailableNumbers(d)">
