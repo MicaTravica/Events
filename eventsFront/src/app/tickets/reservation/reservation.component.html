@@ -61,15 +61,33 @@
     </div>
     <mat-divider></mat-divider>
 
-    <mat-tab-group dynamicHeight>
+    <mat-tab-group dynamicHeight *ngIf="dataReady">
         <mat-tab *ngFor="let d of dates" [label]="d | dateFormat">
-            <mat-grid-list [cols]="sector.sectorColumns"  rowHeight="50">
-                <mat-grid-tile *ngFor="let t of ticketMap[d]" 
-                    (click)="selectedTicket(t)"
-                    [ngClass]="setClass(t)"> 
-                    {{t.seatRow}} | {{t.seatColumn}}
-                </mat-grid-tile>
-            </mat-grid-list>
+            <div *ngIf="!selectedParter">
+                <mat-grid-list  [cols]="sector.sectorColumns"  rowHeight="50">
+                    <mat-grid-tile *ngFor="let t of ticketMap[d]" 
+                        (click)="selectedTicket(t)"
+                        [ngClass]="setClass(t)"> 
+                        {{t.seatRow}} | {{t.seatColumn}}
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </div>
+            <div *ngIf="selectedParter">
+                <form *ngIf="parterForms[d]" [formGroup]="parterForms[d]" (ngSubmit)="onParterSubmit(d)">
+                    <div>
+                        <mat-form-field *ngIf="findDesiredNumbers(d)">
+                            <input matInput placeholder="Number of cards" type="text" [formControl] = "findDesiredNumbers(d)">
+                            <mat-error *ngIf="findDesiredNumbers(d).errors?.required">Number is required</mat-error>
+                            <mat-error *ngIf="findDesiredNumbers(d).errors?.MinValue">Number must be >= 1</mat-error>
+                            <mat-error *ngIf="findDesiredNumbers(d).errors?.ticketNumberValidatorError">aaa</mat-error>
+                        </mat-form-field>
+                        <mat-form-field *ngIf="findAvailableNumbers(d)">
+                            <input matInput placeholder="Available"
+                                 type="text" [formControl]="findAvailableNumbers(d)">
+                        </mat-form-field>
+                    </div>
+                </form>
+            </div>
         </mat-tab>
     </mat-tab-group>
 </div>

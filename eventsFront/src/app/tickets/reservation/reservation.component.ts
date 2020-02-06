@@ -6,6 +6,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TicketService } from 'src/app/services/ticket-service/ticket.service';
 import { Ticket } from 'src/app/models/ticket-model/ticket.model';
 import { ToastrService } from 'ngx-toastr';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { ticketNumberValidator} from 'src/app/util/form-validators';
+import { MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-reservation',
@@ -21,16 +24,27 @@ export class ReservationComponent implements OnInit {
   sector: any = {};
   tickets: number[] = [];
 
+  selectedParter = false;
+
   ticketMap: { [key: string]: Ticket[] } = {};   // map key=date, value list of tickets
   dates = [];
   fromDate: Date = new Date(2000, 0, 1);
   toDate: Date = new Date(2000, 0, 1);
 
+  parterMap: { [key: string]: number} = {};
+
+  parterForms: { [key: string]: FormGroup} = {};
+  desiredNumbers: { [key: string]: FormControl} = {};
+  availableNumbers: { [key: string]: FormControl} = {};
+
+  dataReady = false;
+
   constructor(
     private route: ActivatedRoute,
     private eventService: EventService,
     private ticketService: TicketService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -112,7 +126,6 @@ export class ReservationComponent implements OnInit {
   }
 
   search() {
-    console.log(this.sector);
     this.ticketMap = {};
     this.dates = [];
     this.adjustFromAndToDatesForDataPickers();
@@ -125,6 +138,7 @@ export class ReservationComponent implements OnInit {
                 this.ticketMap[t.fromDate] = [];
                 this.dates.push(t.fromDate);
               }
+              this.selectedParter =  t.seatRow === -1 ? true : false;
               this.ticketMap[t.fromDate].push(t);
               this.ticketMap[t.fromDate].sort(
                 (ticket1, ticket2) => {
@@ -140,7 +154,30 @@ export class ReservationComponent implements OnInit {
           console.log(err.message);
         },
         () => {
-          console.log(this.ticketMap);
+          if (this.selectedParter) {
+            this.parterForms = {};
+            this.availableNumbers = {};
+            this.desiredNumbers = {};
+            this.dates.forEach(d => {
+              // za svaki datum da znas koliko ima ukupno
+              // koliko ima slobodno
+              const availableTickets = this.ticketMap[d].filter(t => t.ticketState === 'AVAILABLE').length;
+              this.parterMap[d] = availableTickets;
+
+              // napravi forme za svaki date i podesi koliko moze da rezervise..
+              this.availableNumbers[d] =
+                 new FormControl({value: this.parterMap[d], disabled : true}, []);
+              this.desiredNumbers[d] = new FormControl(0, [Validators.required, Validators.min(0)]);
+              this.parterForms[d] = this.fb.group({
+                desiredNumber: this.desiredNumbers[d],
+                availableNumber: this.availableNumbers[d]
+            },
+              {validators: [ticketNumberValidator]
+            });
+          });
+            console.log(this.parterForms);
+          }
+          this.dataReady = true;
         });
   }
 
@@ -174,5 +211,14 @@ export class ReservationComponent implements OnInit {
     }
     return retVal;
   }
+
+
+  findDesiredNumbers(d: string): FormControl {
+    return this.desiredNumbers[d] as FormControl;
+  }
+  findAvailableNumbers(d: string): FormControl {
+    return this.availableNumbers[d] as FormControl;
+  }
+
 
 }
