@@ -39,7 +39,6 @@ export class RegisterComponent implements OnInit {
     this.userService.save(registerData).subscribe(
       (data: string) => {
         this.toastr.success(data);
-        console.log(this.toastr)
         this.router.navigate(['/login']);
     });
   }

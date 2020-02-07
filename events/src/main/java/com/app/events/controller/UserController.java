@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import com.app.events.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -13,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +24,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.app.events.dto.LoginDTO;
 import com.app.events.dto.PasswordChangeDTO;
@@ -33,6 +31,7 @@ import com.app.events.dto.UserDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.exception.UserNotFoundByUsernameException;
 import com.app.events.mapper.UserMapper;
+import com.app.events.model.User;
 import com.app.events.security.TokenUtils;
 import com.app.events.service.UserService;
 

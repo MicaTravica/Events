@@ -3,11 +3,10 @@ package com.events.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import com.events.pages.LoginPage;
-import org.junit.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.jupiter.api.Order;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.WebDriver;
@@ -15,9 +14,7 @@ import org.openqa.selenium.support.PageFactory;
 
 import com.events.config.BrowserFactory;
 import com.events.pages.HomePage;
-import com.events.pages.SingInPage;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.events.pages.LoginPage;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LoginTest {

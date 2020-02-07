@@ -37,6 +37,11 @@ public class LoginPage {
         (new WebDriverWait(driver, 10))
                 .until(ExpectedConditions.numberOfElementsToBeLessThan(By.id("password"), 1));
     }
+    
+    public void ensureLoginButtonNotDisplayed() {
+        (new WebDriverWait(driver, 10))
+                .until(ExpectedConditions.numberOfElementsToBeLessThan(By.id("loginBtn"), 1));
+    }
 
     public void setUsernameField(String value) {
         WebElement el = getUsernameField();

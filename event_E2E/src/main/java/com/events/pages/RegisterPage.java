@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class RegisterPage {
 
+	public static String FRONT_URL = "http://localhost:4200/register";
+
 	private WebDriver driver;
 
 	@FindBy(id = "name")
@@ -25,7 +27,7 @@ public class RegisterPage {
 	@FindBy(id = "username")
 	private WebElement usernameInput;
 
-	@FindBy(id = "password")
+	@FindBy(id = "passwordr")
 	private WebElement passwordInput;
 
 	@FindBy(id = "register")
