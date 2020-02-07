@@ -11,7 +11,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
 import { AddressFormatPipe } from 'src/app/pipes/address-format.pipe';
 import { DateFormatPipe } from 'src/app/pipes/date-format.pipe';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
+import { Hall } from 'src/app/models/hall-model/hall.model';
+import { Place } from 'src/app/models/place-model/place.model';
+import { AuthService } from 'src/app/services/auth-service/auth.service';
+import { AngularFireStorage } from 'angularfire2/storage';
 
 describe('EventDetailsComponent', () => {
   let component: EventDetailsComponent;
@@ -20,25 +24,33 @@ describe('EventDetailsComponent', () => {
   let mediaService: any;
   let activatedRoute: any;
   let router: any;
+  let authService: any;
+  let afStorage: any;
 
   beforeEach(() => {
     const eventServiceMock = {
       getEvent: jasmine.createSpy('getEvent')
         .and.returnValue(of(new EventEntity(1, 'Event', 'Some description', new Date(2021, 0O5, 0O5, 20, 0),
-          new Date(2021, 0O5, 0O7, 23, 30), EventState.AVAILABLE, EventType.SPORT, [{
-            id: 1, name: 'Hala',
-            place: { id: 1, name: 'Arena', address: 'Nikole Tesle 10, Novi Sad' }
-          }], [], [])))
+          new Date(2021, 0O5, 0O7, 23, 30), EventState.AVAILABLE, EventType.SPORT,
+          [ new Hall(1, 'Hala', new Place(1, 'Arena', 'Nikole Tesle 10, Novi Sad', 10, 10), [])], [], [])))
     };
 
     const mediaServiceMock = {
       getMediaForEvent: jasmine.createSpy('getMediaForEvent')
         .and.returnValue(of(
           [
-            { id: 1, path: 'https://opusteno.rs/slike/2013/10/kurs-crtanja-20063/kako-nacrtati-srce-4.jpg' },
-            { id: 2, path: 'https://opusteno.rs/slike/2013/08/kako-nacrtati-pile-crtanje-19625/kako-nacrtati-pile-42.jpg' }
+            { id: 1, path: 'https://opusteno.rs/slike/2013/10/kurs-crtanja-20063/kako-nacrtati-srce-4.jpg', eventId: 1 },
+            { id: 2, path: 'https://opusteno.rs/slike/2013/08/kako-nacrtati-pile-crtanje-19625/kako-nacrtati-pile-42.jpg', eventId: 1 }
           ]
         ))
+    };
+
+    const authServiceMock = {
+      getUserRole: jasmine.createSpy('getUserRole')
+        .and.returnValue(of('ROLE_ADMIN'))
+    };
+
+    const afStorageMock = {
     };
 
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
@@ -62,6 +74,8 @@ describe('EventDetailsComponent', () => {
         { provide: MediaService, useValue: mediaServiceMock },
         { provide: ActivatedRoute, useValue: activatedRouteStub },
         { provide: Router, useValue: routerMock },
+        { provide: AuthService, useValue: authServiceMock },
+        { provide: AngularFireStorage, useValue: afStorageMock }
       ]
     });
     fixture = TestBed.createComponent(EventDetailsComponent);
@@ -69,11 +83,14 @@ describe('EventDetailsComponent', () => {
     eventService = TestBed.get(EventService);
     mediaService = TestBed.get(MediaService);
     activatedRoute = TestBed.get(ActivatedRoute);
+    authService = TestBed.get(AuthService);
+    afStorage = TestBed.get(AngularFireStorage);
     router = TestBed.get(Router);
   });
 
   it('should fetch event and his media list', fakeAsync(() => {
     component.ngOnInit();
+    expect(authService.getUserRole).toHaveBeenCalled();
     expect(eventService.getEvent).toHaveBeenCalledWith(1);
     tick();
 
@@ -109,4 +126,5 @@ describe('EventDetailsComponent', () => {
     component.previous();
     expect(component.activeImg).toBe(t - 1);
   });
+
 });
