@@ -4,6 +4,8 @@ import { User } from '../../models/user-model/user.model';
 import { httpOptionsText, authHttpOptions } from '../../util/http-util';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-service/auth.service';
+import { ChangePassword } from 'src/app/models/change-password-model/change.password.model';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,5 +39,16 @@ export class UserService {
       user = JSON.parse(localStorage.getItem('user'));
     }
     return user;
+  }
+
+
+  public changePassword(changePassword: ChangePassword ) {
+    return this.http.put(this.usersUrl + '/user/password', changePassword,
+      {headers: authHttpOptions(this.authService.getToken()), responseType: 'text'});
+  }
+
+  public updateMyData(user: User) {
+    return this.http.put(this.usersUrl + '/user', user,
+      {headers: authHttpOptions(this.authService.getToken()), responseType: 'text'});
   }
 }
