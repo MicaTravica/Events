@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Event;
 import com.app.events.model.Media;
-import com.app.events.repository.EventRepository;
 import com.app.events.repository.MediaRepository;
+import com.app.events.service.EventService;
 import com.app.events.service.MediaService;
 
 @Service
@@ -20,7 +20,7 @@ public class MediaServiceImpl implements MediaService {
 	MediaRepository mediaRepository;
 	
 	@Autowired
-	EventRepository eventRepository;
+	EventService eventService;
 
 	@Override
 	public Media findOne(Long id) throws ResourceNotFoundException {
@@ -34,7 +34,9 @@ public class MediaServiceImpl implements MediaService {
 
 	@Override
 	public Media create(Media media, Long eventId) throws Exception {
-		media.setEvent(eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event")));
+		Event event = eventService.findOne(eventId);
+		System.out.println(event.getId());
+		media.setEvent(event);
 		media.setId(null);
 		return mediaRepository.save(media);
 	}	
@@ -42,7 +44,7 @@ public class MediaServiceImpl implements MediaService {
 	@Override
 	public Collection<Media> createMedias(Collection<Media> mediaList, Long eventId) throws ResourceNotFoundException{
 		Collection<Media> createdMediaList = new HashSet<>();
-		Event event = eventRepository.findById(eventId).orElseThrow(() -> new ResourceNotFoundException("Event"));
+		Event event = eventService.findOne(eventId);
 		for(Media m : mediaList) {
 			m.setEvent(event);
 			m.setId(null);

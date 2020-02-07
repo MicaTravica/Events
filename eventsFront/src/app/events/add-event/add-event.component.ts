@@ -13,6 +13,7 @@ import { PriceList } from 'src/app/models/price-list-model/price-list.model';
 import { ToastrService } from 'ngx-toastr';
 import { AngularFireStorage } from 'angularfire2/storage';
 import { finalize } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-event',
@@ -45,6 +46,7 @@ export class AddEventComponent implements OnInit {
     private placeService: PlaceService,
     private hallService: HallService,
     private toastr: ToastrService,
+    private router: Router,
     private afStorage: AngularFireStorage
   ) { }
 
@@ -64,9 +66,10 @@ export class AddEventComponent implements OnInit {
     this.event.toDate.setHours(this.time[2]);
     this.event.toDate.setMinutes(this.time[3]);
     this.eventService.save(this.event).subscribe(
-      response => {
+      (data: EventEntity) => {
         this.toastr.success('You add event!');
         this.wait = false;
+        this.router.navigate(['/event/' + data.id]);
       }, () => {
         this.wait = false;
     });
@@ -90,10 +93,6 @@ export class AddEventComponent implements OnInit {
         })
       ).subscribe();
     }
-  }
-
-  getLastFile() {
-    return this.selectedFiles[this.selectedFiles.length - 1];
   }
 
   renderHalls(event: MatSelectChange) {
