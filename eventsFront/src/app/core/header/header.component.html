@@ -2,7 +2,7 @@
     <div class="name">Events</div>
     <div>
         <a *ngIf="!user" routerLink="/login" routerLinkActive="active" mat-button color="accent">Sign in</a>
-        <a *ngIf="!user" routerLink="/register" routerLinkActive="active" mat-button color="accent">Register</a>
+        <a *ngIf="!user" routerLink="/register" routerLinkActive="active" mat-button color="accent" id="registerlink">Register</a>
         <a *ngIf="user" routerLink="/profile" routerLinkActive="active" mat-button color="accent">My profile</a>
     
         <a *ngIf="user" (click)="logout()" mat-button color="accent">Sign out</a>

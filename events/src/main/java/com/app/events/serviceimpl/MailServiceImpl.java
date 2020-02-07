@@ -71,8 +71,8 @@ public class MailServiceImpl implements MailService {
 		for (Ticket ticket : tickets) {
 			String ticketQRStr = this.ticketService.generateStringForQRCodeImage(ticket);
 			this.qrCodeService.generateQRCodeImage(ticketQRStr);
-			String url = this.cloudinaryService.uploadImage("src/main/resources/QRCode.png");
-			System.out.println(url);
+//			String url = this.cloudinaryService.uploadImage("src/main/resources/QRCode.png");
+//			System.out.println(url);
 
 			String ticketst = "<hr>Event name: " + ticket.getEvent().getName() + "<br>";
 			if (ticket.getSeat() != null) {
