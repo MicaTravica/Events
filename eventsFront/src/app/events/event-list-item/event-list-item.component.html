@@ -13,6 +13,6 @@
   </mat-card-content>
   <mat-card-actions>
     <button mat-raised-button (click)="showDetails()" color="accent">Details</button>
-    <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)="buyReserve()" color="accent">Buy\Reserve</button>
+    <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE' && role=='ROLE_REGULAR'" (click)="buyReserve()" color="accent">Buy\Reserve</button>
   </mat-card-actions>
 </mat-card>

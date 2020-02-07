@@ -9,7 +9,7 @@ export class Hall {
     public sectors: Sector[];
     public events: EventEntity[];
 
-    constructor(id: number, name: string, place: Place, sectors: Sector[]) {
+    constructor(id?: number, name?: string, place?: Place, sectors?: Sector[]) {
         this.id = id;
         this.name = name;
         this.place = place;
