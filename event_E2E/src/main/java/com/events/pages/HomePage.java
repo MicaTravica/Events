@@ -13,6 +13,8 @@ public class HomePage {
 	@FindBy(id = "registerlink")
 	private WebElement registerLink;
 
+	public static String FRONT_URL = "http://localhost:4200/events";
+
 	public HomePage(WebDriver driver) {
 		this.driver = driver;
 	}
