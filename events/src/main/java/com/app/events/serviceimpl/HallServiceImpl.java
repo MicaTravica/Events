@@ -84,9 +84,14 @@ public class HallServiceImpl implements HallService {
 		return hallRepository.findAllByEventsId(id);
 	}
 
-    @Override
+	@Override
 	public Collection<Hall> getHallsByPlaceId(Long id) {
-		return hallRepository.findAllByPlaceId(id);
+		Collection<Hall> halls = hallRepository.findAllByPlaceId(id);
+		for (Hall hall : halls) {
+			Set<Sector> sectors = this.sectorService.getSectorsByHallId(hall.getId()).stream().collect(Collectors.toSet());
+			hall.setSectors(sectors);
+		}
+		return halls;
 	}
 }
 

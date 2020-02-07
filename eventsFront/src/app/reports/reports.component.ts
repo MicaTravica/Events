@@ -4,6 +4,7 @@ import { ChartDataSets, ChartType } from 'chart.js';
 import { Label } from 'ng2-charts';
 import { ReportService } from '../services/report-service/report.service';
 import { stringify } from 'querystring';
+import { Place } from '../models/place-model/place.model';
 
 @Component({
   selector: 'app-reports',
@@ -31,7 +32,7 @@ export class ReportsComponent implements OnInit {
 
   ngOnInit() {
     this.placeService.getPlaces().subscribe(
-      (data: any[]) => { // zameni sa place
+      (data: Place[]) => {
         this.places = data;
       }
     );

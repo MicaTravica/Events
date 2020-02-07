@@ -12,7 +12,9 @@
             </button>
         </mat-grid-tile>
         <mat-grid-tile colspan='10' style="background-color: black;">
-            <img mat-card-image src="{{event.mediaList[activeImg].path}}" alt="Photo is not found">
+            <div>
+                <img mat-card-image src="{{event.mediaList[activeImg].path}}" alt="Photo is not found">
+            </div>
         </mat-grid-tile> 
         <mat-grid-tile>
             <button mat-button *ngIf="activeImg != event.mediaList.length - 1" (click)='next()' color="accent"  class="arrow">
@@ -23,5 +25,16 @@
     <p>
         {{event.description}}
     </p>
-    <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE'" (click)='buyReserve()' color="accent">Buy\Reserve</button>
+    <button mat-raised-button *ngIf="event.eventState == 'AVAILABLE' && role=='ROLE_REGULAR'" (click)='buyReserve()' color="accent">Buy\Reserve</button>
+    <div class="input-field" *ngIf="role=='ROLE_ADMIN'">
+        <input type="file" id="file" (change)="upload($event)">
+    </div>
+</div>
+<div class="overlay" *ngIf="wait">
+    <div class="center">
+        <mat-progress-spinner diameter=50 
+                            mode="indeterminate" 
+                            color="accent">
+        </mat-progress-spinner> 
+    </div>
 </div>
