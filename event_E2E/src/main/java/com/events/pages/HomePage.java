@@ -10,6 +10,8 @@ public class HomePage {
 
 	private WebDriver driver;
 
+	public static String FRONT_URL = "http://localhost:4200/events";
+
 	@FindBy(css = "a[title=\"Contact Us\"]")
 	private WebElement contactUsLink;
 
