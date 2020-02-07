@@ -75,7 +75,11 @@ export class ProfileComponent implements OnInit {
   }
 
   changePassword() {
-    this.router.navigate(['changePassword']);
+    this.router.navigateByUrl('changePassword');
+  }
+
+  getUserId() {
+    return this.userID;
   }
 
 }
