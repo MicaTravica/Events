@@ -6,6 +6,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TicketService } from 'src/app/services/ticket-service/ticket.service';
 import { Ticket } from 'src/app/models/ticket-model/ticket.model';
 import { ToastrService } from 'ngx-toastr';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { ticketNumberValidator} from 'src/app/util/form-validators';
+import { MatTabChangeEvent } from '@angular/material';
 
 @Component({
   selector: 'app-reservation',
@@ -21,20 +24,35 @@ export class ReservationComponent implements OnInit {
   sector: any = {};
   tickets: number[] = [];
 
+  selectedParter = false;
+
   ticketMap: { [key: string]: Ticket[] } = {};   // map key=date, value list of tickets
   dates = [];
   fromDate: Date = new Date(2000, 0, 1);
   toDate: Date = new Date(2000, 0, 1);
 
+  parterMap: { [key: string]: number} = {};
+
+  parterForms: { [key: string]: FormGroup} = {};
+  desiredNumbers: { [key: string]: FormControl} = {};
+  availableNumbers: { [key: string]: FormControl} = {};
+  parterTickets: number[];
+
+  dataReady = false;
+  showSelectParterSeats = false;
+
+
   constructor(
     private route: ActivatedRoute,
     private eventService: EventService,
     private ticketService: TicketService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService,
+    private fb: FormBuilder) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
+      this.parterTickets = [];
       this.eventService.getEvent(id).subscribe(
         (data: EventEntity) => {
           this.event = data;
@@ -75,44 +93,67 @@ export class ReservationComponent implements OnInit {
 
   // ticket vec postoji da li postoji nacin da ih dobavim
   reserveTickets() {
+    const retVal: number[] = [];
     if (this.tickets.length >= 1) {
-      this.ticketService.makeReservation(this.tickets).subscribe(
+      this.tickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (this.parterTickets.length >= 1) {
+      this.parterTickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (retVal.length >= 1) {
+      this.ticketService.makeReservation(retVal).subscribe(
         (res: any) => {
+          this.parterTickets = [];
           this.tickets = [];
           this.ticketMap = {};
           this.dates = [];
           this.toastr.success('reservation successfully made');
         },
         (err: HttpErrorResponse)  => {
-          console.log(err.message);
+          this.toastr.error(err.message);
         }
       );
-    } else {
-      console.log('Choose at least one ticket');
+    } else if (this.parterTickets.length >= 1) {
+      this.toastr.warning('Choose at least one ticket');
     }
   }
 
   buyTickets() {
+    const retVal: number[] = [];
     if (this.tickets.length >= 1) {
-      this.ticketService.startBuyingProcess(this.tickets).subscribe(
+      this.tickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (this.parterTickets.length >= 1) {
+      this.parterTickets.forEach(t => {
+        retVal.push(t);
+      });
+    }
+    if (retVal.length >= 1) {
+      this.ticketService.startBuyingProcess(retVal).subscribe(
         (res: {status: string, redirect_url: string }) => {
           if (res.status === 'success') {
-            this.ticketService.setTicketIdsToLocalStorage(this.tickets);
+            this.ticketService.setTicketIdsToLocalStorage(retVal);
             this.ticketService.redirectPayPal(res.redirect_url);
             this.tickets = [];
             this.ticketMap = {};
+            this.parterTickets = [];
             this.dates = [];
           }
         },
         (err: HttpErrorResponse)  => {
-          console.log(err.message);
+          this.toastr.warning(err.message);
         },
       );
     }
   }
 
   search() {
-    console.log(this.sector);
     this.ticketMap = {};
     this.dates = [];
     this.adjustFromAndToDatesForDataPickers();
@@ -125,6 +166,7 @@ export class ReservationComponent implements OnInit {
                 this.ticketMap[t.fromDate] = [];
                 this.dates.push(t.fromDate);
               }
+              this.selectedParter =  t.seatRow === -1 ? true : false;
               this.ticketMap[t.fromDate].push(t);
               this.ticketMap[t.fromDate].sort(
                 (ticket1, ticket2) => {
@@ -140,7 +182,29 @@ export class ReservationComponent implements OnInit {
           console.log(err.message);
         },
         () => {
-          console.log(this.ticketMap);
+          if (this.selectedParter) {
+            this.parterForms = {};
+            this.availableNumbers = {};
+            this.desiredNumbers = {};
+            this.dates.forEach(d => {
+              // za svaki datum da znas koliko ima ukupno
+              // koliko ima slobodno
+              const availableTickets = this.ticketMap[d].filter(t => t.ticketState === 'AVAILABLE').length;
+              this.parterMap[d] = availableTickets;
+
+              // napravi forme za svaki date i podesi koliko moze da rezervise..
+              this.availableNumbers[d] =
+                 new FormControl({value: this.parterMap[d], disabled : true}, []);
+              this.desiredNumbers[d] = new FormControl(0, [Validators.required, Validators.min(0)]);
+              this.parterForms[d] = this.fb.group({
+                desiredNumber: this.desiredNumbers[d],
+                availableNumber: this.availableNumbers[d]
+            },
+              {validators: [ticketNumberValidator]
+            });
+          });
+          }
+          this.dataReady = true;
         });
   }
 
@@ -163,6 +227,11 @@ export class ReservationComponent implements OnInit {
 
   canceled() {
     this.tickets = [];
+    this.parterTickets = [];
+    this.dates.forEach(date => {
+      this.desiredNumbers[date].setValue(0);
+    });
+    this.showSelectParterSeats = false;
   }
 
   setClass(ticket: Ticket): string {
@@ -174,5 +243,44 @@ export class ReservationComponent implements OnInit {
     }
     return retVal;
   }
+
+
+  findDesiredNumbers(d: string): FormControl {
+    return this.desiredNumbers[d] as FormControl;
+  }
+  findAvailableNumbers(d: string): FormControl {
+    return this.availableNumbers[d] as FormControl;
+  }
+
+  setParterFlags() {
+    let val = 0;
+    this.dates.forEach(date => {
+      if (this.parterForms[date].valid) {
+        val += this.desiredNumbers[date].value as number;
+      }
+    });
+    if (val > 0 ) {
+      this.showSelectParterSeats = true;
+    } else {
+      this.showSelectParterSeats = false;
+    }
+  }
+
+  selectParterSeats() {
+    this.parterTickets = [];
+    this.dates.forEach(date => {
+      if (this.parterForms[date].valid) {
+        let i = 0;
+        const n  = this.desiredNumbers[date].value as number;
+        while (i < n) {
+          this.parterTickets.push(this.ticketMap[date][i].id);
+          i++;
+        }
+      } else {
+        this.toastr.warning('For date:' + date + 'invalid input');
+      }
+    });
+  }
+
 
 }
