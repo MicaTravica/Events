@@ -8,7 +8,7 @@ import { ProfileComponent } from './core/profile/profile.component';
 import { LoginGuard } from './guards/login.service';
 import { RoleGuard } from './guards/role.service';
 import { EventsListComponent } from './events/events-list/events-list.component';
-import { AddEventComponent } from './core/add-event/add-event.component';
+import { AddEventComponent } from './events/add-event/add-event.component';
 import { EventDetailsComponent } from './events/event-details/event-details.component';
 import { ReservationComponent } from './tickets/reservation/reservation.component';
 import { PaypalComponent } from './tickets/paypal/paypal.component';
