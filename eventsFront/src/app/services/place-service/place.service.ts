@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { PlaceSearch } from 'src/app/models/place-search-model/place-search.model';
 import { Place } from 'src/app/models/place-model/place.model';
 import { AuthService } from '../auth-service/auth.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,15 @@ export class PlaceService {
   }
 
   public getPlaces() {
-    return this.http.get(this.url + 's', {headers: httpOptions()});
-  }
+    return this.http.get(this.url + 's', {
+      headers: authHttpOptions(this.authService.getToken())
+    })
+    .pipe(map(
+      res => {
+        return res;
+      }
+      ));
+    }
 
   public getPlace(id: string) {
     return this.http.get(this.url + '/' + id, {headers: httpOptions()});

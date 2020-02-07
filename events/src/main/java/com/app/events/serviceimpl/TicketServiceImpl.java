@@ -265,8 +265,14 @@ public class TicketServiceImpl implements TicketService {
 			for (Sector s : h.getSectors()) {
 				Sector sector = sectorService.findOne(s.getId());
 				PriceList priceList = priceListMap.get(sector.getId());
-				PriceList savedPriceList = priceListService
-						.create(new PriceList(null, priceList.getPrice(), savedEvent, sector));
+				PriceList savedPriceList;
+				try {
+					savedPriceList = priceListService
+							.create(new PriceList(null, priceList.getPrice(), savedEvent, sector));
+				} catch (Exception e) {
+					eventService.delete(eventId);
+					throw e;
+				}
 
 				Date toDate = savedEvent.getToDate();
 				Date fromDate = savedEvent.getFromDate();

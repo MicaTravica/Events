@@ -9,7 +9,7 @@ export class User implements Deserializable {
   public username: string;
   public password: string;
 
-  constructor(id: number, name: string, surname: string, email: string, phone: string, username: string) {
+  constructor(id?: number, name?: string, surname?: string, email?: string, phone?: string, username?: string) {
     this.id = id;
     this.name = name;
     this.surname = surname;

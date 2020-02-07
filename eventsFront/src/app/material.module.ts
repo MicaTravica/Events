@@ -21,7 +21,8 @@ import {
   MatTabsModule,
   MatDialogModule,
   MatRadioModule,
-  MatRippleModule
+  MatRippleModule,
+  MatProgressSpinnerModule
 
 } from '@angular/material';
 
@@ -46,7 +47,8 @@ import {
     MatCheckboxModule,
     MatTabsModule,
     MatDialogModule,
-    MatRippleModule
+    MatRippleModule,
+    MatProgressSpinnerModule
   ],
   exports: [
     MatButtonModule,
@@ -68,7 +70,8 @@ import {
     MatCheckboxModule,
     MatTabsModule,
     MatDialogModule,
-    MatRadioModule
+    MatRadioModule,
+    MatProgressSpinnerModule
   ]
 })
 export class MaterialModule {}

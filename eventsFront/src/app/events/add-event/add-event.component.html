@@ -1,0 +1,131 @@
+<div class="main-container">
+    <form #addEventForm="ngForm" (ngSubmit)="onSubmit()" class="form-container" novalidate>
+        <mat-form-field>
+            <input matInput id="name" type="text" required #name='ngModel' [(ngModel)]="event.name" name="name" placeholder="Name">
+            <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Name is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <textarea matInput id="description" type="text" required #description='ngModel' [(ngModel)]="event.description" name="description" placeholder="Description"></textarea>
+            <mat-error *ngIf="description.invalid && (description.dirty || description.touched)">Description is required</mat-error>
+        </mat-form-field>
+        
+        <mat-form-field>
+            <mat-select id="eventState" #eventState='ngModel' [(ngModel)]="event.eventState" name="eventState" placeholder="Choose event state...">
+                <mat-option *ngFor="let state of eventStates" [value]="state">
+                {{state}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-select id="eventType" #eventType='ngModel' [(ngModel)]="event.eventType" name="eventType" placeholder="Choose event type... ">
+                <mat-option *ngFor="let type of eventTypes" [value]="type">
+                {{type}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <div>
+            <mat-form-field class="datetime">
+                <input matInput id="fromDate" [min]="minDate" [max]="event.toDate" required #fromDate='ngModel' name="fromDate" [(ngModel)]="event.fromDate" placeholder="Choose start date..." [matDatepicker]="fromDatePicker">
+                <mat-datepicker-toggle matSuffix [for]="fromDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #fromDatePicker></mat-datepicker>
+                <mat-error *ngIf="fromDate.invalid && (fromDate.dirty || fromDate.touched)">Start date is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="datetime">
+                <mat-select [(ngModel)]="time[0]" name="fromDateHours" required #fromDateHours='ngModel' placeholder="Choose hours">
+                    <mat-option [value]="i" *ngFor="let i of hours">{{i}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="fromDateHours.invalid && (fromDateHours.dirty || fromDateHours.touched)">Hours is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="datetime">
+                <mat-select [(ngModel)]="time[1]" name="fromDateMinutes" required #fromDateMinutes='ngModel' placeholder="Choose minutes">
+                    <mat-option [value]="i" *ngFor="let i of minutes">{{i}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="fromDateMinutes.invalid && (fromDateMinutes.dirty || fromDateMinutes.touched)">Minutes is required</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field class="datetime">
+                <input matInput id="toDate" [min]="event.fromDate" required #toDate='ngModel' name="toDate" [(ngModel)]="event.toDate" placeholder="Choose end date..." [matDatepicker]="toDatePicker">
+                <mat-datepicker-toggle matSuffix [for]="toDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #toDatePicker></mat-datepicker>
+                <mat-error *ngIf="toDate.invalid && (toDate.dirty || toDate.touched)">End date is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="datetime">
+                <mat-select [(ngModel)]="time[2]" name="toDateHours" required #toDateHours='ngModel' placeholder="Choose hours">
+                    <mat-option [value]="i" *ngFor="let i of hours">{{i}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="toDateHours.invalid && (toDateHours.dirty || toDateHours.touched)">Hours is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="datetime">
+                <mat-select [(ngModel)]="time[3]" name="toDateMinutes" required #toDateMinutes='ngModel' placeholder="Choose minutes">
+                    <mat-option [value]="i" *ngFor="let i of minutes">{{i}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="toDateMinutes.invalid && (toDateMinutes.dirty || toDateMinutes.touched)">Minutes is required</mat-error>
+            </mat-form-field>
+        </div>
+        
+        <mat-form-field>
+            <mat-select id="place"  #place name="place" [(ngModel)]="event.place" #place='ngModel' placeholder="Choose event place..." required (selectionChange)="renderHalls($event)">
+                <mat-option value={{place.id}} *ngFor="let place of places">{{place.name}}, {{place.address}}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="place.invalid && (place.dirty || place.touched)">Event place is required</mat-error>
+        </mat-form-field>
+
+        <span *ngFor="let hall of selectedPlaceHalls">
+            <mat-checkbox name="halls[]" (change)="onHallsCheckboxChange($event, hall)">
+                {{hall.name}}
+            </mat-checkbox>
+        </span>
+
+        <div class="hall-chooser">
+            <mat-select id="hall" placeholder="Select hall..." (selectionChange)="renderSectors($event)" *ngIf="selectedHalls.length > 0">
+                <mat-option value={{hall.id}} *ngFor="let hall of event.halls">{{hall.name}}</mat-option>
+            </mat-select>
+        </div>
+
+        <div *ngIf="selectedHalls.length > 0">
+            <div *ngFor="let hall of selectedHalls; let i = index" [attr.data-index]="i" class="sectors-chooser">
+                <span>Hall {{hall.name}}</span>
+                <div *ngFor="let sector of hall.sectors" class="sector-selection">
+                    <mat-checkbox type="checkbox" value={{sector.id}} name="sectors[]" (change)="onSectorCheckboxChange($event, i, sector)" [checked]="isSectorSelected(sector.id)">
+                        Sector {{sector.name}}
+                    </mat-checkbox>
+                    <mat-form-field *ngIf="isSectorSelected(sector.id)">
+                        <input matInput #ticketPrice='ngModel' min="1" name="ticketPrice{{sector.id}}" [ngModel]="getPriceList(sector.id)" (change)="setPriceList($event, sector.id)" required type="number" placeholder="Ticket price">
+                        <mat-error *ngIf="ticketPrice.invalid && (ticketPrice.dirty || ticketPrice.touched)">Ticket price is required</mat-error>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="isSectorSelected(sector.id) && sector.sectorRows < 1 && sector.sectorColumns < 1">
+                        <input matInput #sectorCapacity="ngModel" min="1" [(ngModel)]="sector.sectorCapacity" name="sectorCapacity{{sector.id}}" required type="number" placeholder="Number of tickets">
+                        <mat-error *ngIf="sectorCapacity.invalid && (sectorCapacity.dirty || sectorCapacity.touched)">Ticket price is required</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-field">
+            <div *ngIf="selectedFiles.length > 0">
+                {{selectedFiles.length}} files for upload
+                <div *ngFor="let f of selectedFiles; let i = index" [attr.data-index]="i">
+                    {{f.name}}
+                    <button  mat-raised-button type="button" (click)="remove(i)" color="accent" >Remove</button>
+                </div>
+            </div>
+            <input type="file" id="file" (change)="upload($event)">
+        </div>
+        <br/>
+        <button mat-raised-button type="submit" color="accent" [disabled]="addEventForm.invalid || (this.event.halls.length < 1) || sectorsChoosen() || submitted">Save</button> 
+    </form>
+
+</div>
+
+<div class="overlay" *ngIf="wait">
+<div class="center">
+    <mat-progress-spinner diameter=50 
+	                      mode="indeterminate" 
+						  color="accent">
+	</mat-progress-spinner> 
+</div>
+</div>

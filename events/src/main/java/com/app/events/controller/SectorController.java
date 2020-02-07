@@ -1,5 +1,16 @@
 package com.app.events.controller;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.app.events.dto.SectorDTO;
+import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.mapper.HallMapper;
+import com.app.events.mapper.SectorMapper;
+import com.app.events.model.Hall;
+import com.app.events.model.Sector;
+import com.app.events.service.SectorService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,12 +23,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.app.events.dto.SectorDTO;
-import com.app.events.exception.ResourceNotFoundException;
-import com.app.events.mapper.SectorMapper;
-import com.app.events.model.Sector;
-import com.app.events.service.SectorService;
 
 @RestController
 public class SectorController extends BaseController{
@@ -51,6 +56,16 @@ public class SectorController extends BaseController{
 	public ResponseEntity<Sector> deleteSector(@PathVariable("id") Long id) {
 		sectorService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping(value = "/api/hallSectors/{id}")
+	public ResponseEntity<Collection<SectorDTO>> getSectorsByHallId(@PathVariable("id") Long id) {
+		Collection<Sector> sectors = sectorService.getSectorsByHallId(id);
+		Collection<SectorDTO> sectorsDTO = new ArrayList<SectorDTO>();
+		for (Sector sector: sectors) {
+			sectorsDTO.add(SectorMapper.toDTO(sector));
+		}
+		return new ResponseEntity<>(sectorsDTO, HttpStatus.OK);
 	}
 
 }

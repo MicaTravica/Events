@@ -9,7 +9,7 @@ export class Sector {
     public hallID: number;
 
 
-    constructor(id: number, name: string, sectorRows: number, sectorColumns: number, sectorCapacity: number,  hallID: number) {
+    constructor(id?: number, name?: string, sectorRows?: number, sectorColumns?: number, sectorCapacity?: number,  hallID?: number) {
         this.id = id;
         this.name = name;
         this.sectorRows = sectorRows;

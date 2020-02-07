@@ -1,9 +1,9 @@
 package com.app.events.serviceimpl;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
 
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
@@ -85,13 +85,11 @@ public class SectorServiceImpl implements SectorService {
     }
 
     @Override
-    public Collection<Sector> findAllByHallAndEvent(Long hallId, Long eventId) {
-        return this.sectorRepository.findAllByHallIdAndEventId(hallId, eventId);
-    }
-
-	@Override
 	public Collection<Sector> getSectorsByHallId(Long id) {
 		return sectorRepository.findAllByHallId(id);
 	}
+    public Collection<Sector> findAllByHallAndEvent(Long hallId, Long eventId) {
+        return this.sectorRepository.findAllByHallIdAndEventId(hallId, eventId);
+    }
 
 }

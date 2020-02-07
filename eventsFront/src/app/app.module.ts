@@ -12,7 +12,7 @@ import { MenuComponent } from './core/menu/menu.component';
 import { LoginComponent } from './core/login/login.component';
 import { RegisterComponent } from './core/register/register.component';
 import { ProfileComponent } from './core/profile/profile.component';
-import { AddEventComponent } from './core/add-event/add-event.component';
+import { AddEventComponent } from './events/add-event/add-event.component';
 
 import { UserService } from './services/user-service/user.service';
 import { LoginGuard } from './guards/login.service';
@@ -39,9 +39,12 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ReportsComponent } from './reports/reports.component';
 import { ChartsModule } from 'ng2-charts';
 import { ReportService } from './services/report-service/report.service';
+import { FormsModule } from '@angular/forms';
 import { ErrorHandlingInterceptor } from './interceptors/error.handling.intercepotr';
 import { ErrorDialogService } from './services/error-dialog-service/error-dialog.service';
 import { Router } from '@angular/router';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireStorageModule } from 'angularfire2/storage';
 import { PlaceListItemComponent} from './places/place-list-item/place-list-item.component';
 import { PlaceDetailsComponent} from './places/place-details/place-details.component';
 import { PlaceSearchComponent} from './places/place-search/place-search.component';
@@ -100,7 +103,15 @@ import { ChangePasswordComponent } from './core/profile/change-password/change-p
     MaterialModule,
     HttpClientModule,
     ToastrModule.forRoot(),
-    ChartsModule
+    ChartsModule,
+    FormsModule,
+    AngularFireModule.initializeApp({
+      apiKey: 'AIzaSyB_W90XMlHfNwQQ9KRMhco0qsMPzTc42lA',
+      authDomain: 'events-1ce6f.firebaseapp.com',
+      projectId: 'events-1ce6f',
+      storageBucket: 'events-1ce6f.appspot.com',
+    }),
+    AngularFireStorageModule
   ],
   providers: [
     ToastrService,

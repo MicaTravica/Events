@@ -55,7 +55,7 @@ public class HallController extends BaseController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/api/placeHalls/{id}")
+	@GetMapping(value = "/api/hall/placeHalls/{id}")
 	public ResponseEntity<Collection<HallDTO>> getHallsByPlaceId(@PathVariable("id") Long id) {
 		Collection<Hall> halls = hallService.getHallsByPlaceId(id);
 		Collection<HallDTO> hallsDTO = new ArrayList<HallDTO>();
