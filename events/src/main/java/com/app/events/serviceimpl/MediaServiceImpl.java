@@ -35,7 +35,6 @@ public class MediaServiceImpl implements MediaService {
 	@Override
 	public Media create(Media media, Long eventId) throws Exception {
 		Event event = eventService.findOne(eventId);
-		System.out.println(event.getId());
 		media.setEvent(event);
 		media.setId(null);
 		return mediaRepository.save(media);
