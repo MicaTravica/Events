@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-page-not-found',
@@ -9,22 +8,12 @@ import { Location } from '@angular/common';
 })
 export class PageNotFoundComponent implements OnInit {
 
-  url: string;
-
-  constructor(private location: Location,
-              private router: Router) {
-    this.router.events.subscribe((value) => {
-      if (value instanceof NavigationEnd) {
-        this.url = value.url;
-    }
-  });
-  }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
-
   back(): void {
-    this.location.back();
+    this.router.navigate(['events']);
   }
 
 }

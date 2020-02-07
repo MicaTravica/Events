@@ -7,6 +7,8 @@ import com.app.events.serviceimpl.SectorServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Collection;
+
 import com.app.events.constants.*;
 import com.app.events.exception.ResourceNotFoundException;
 
@@ -97,5 +99,16 @@ public class SectorServiceImplIntegrationTest {
         assertEquals(numberOfSectors, sectorRepository.findAll().size());
         assertEquals(SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE, savedSector.getName());
     }
+    
+    @Test
+    public void findAll_Sectors_By_HallID_should_returnSector() throws Exception
+    {
+        Collection<Sector> foundSector = sectorServiceImpl.getSectorsByHallId(SectorConstants.PERSISTED_SECTOR_HALL_ID);
+        Sector sector = foundSector.iterator().next();
+        assertEquals(sector.getHall().getId(), SectorConstants.PERSISTED_SECTOR_HALL_ID);
+        assertEquals(sector.getName(), SectorConstants.PERSISTED_SECTOR_NAME);
+        assertEquals(foundSector.size(), 2);
+    }
+    
 
 }

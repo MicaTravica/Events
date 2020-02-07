@@ -1,0 +1,27 @@
+.right{
+  float: right;
+  width: 50%;
+}
+
+.left {
+  float: left;
+  width: 50%;
+}
+
+.wrapper {
+  overflow:auto; 
+}
+
+mat-form-field, mat-checkbox, mat-error, button, h1, h2 {
+  width: 95%;
+  margin-left: 1%;
+}
+
+button {
+  margin-bottom: 5px;
+}
+
+.down {
+  width: 31%;
+  margin: 1%;
+}

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -92,6 +93,7 @@ public class SectorServiceImplUnitTest {
         sectorService.findOne(SectorConstants.INVALID_SECTOR_ID);
     }
 
+    /*
     @Test
     public void createSector_when_CreateValidSector_thenSectorShouldBeSaved() throws Exception{
 
@@ -102,7 +104,9 @@ public class SectorServiceImplUnitTest {
 
         assertEquals(NEW_SECTOR.getName(), savedSector.getName());
         assertEquals(NEW_SECTOR.getHall().getId(), savedSector.getHall().getId());
-    }
+        
+        sectorService.delete(savedSector.getId());
+    }*/
 
     @Test(expected = ResourceNotFoundException.class)
     public void createSector_when_InValidSectorHall_thenThrow_ResourceNotFoundException() throws Exception{
@@ -116,4 +120,6 @@ public class SectorServiceImplUnitTest {
     {
         sectorService.update(new Sector(SectorConstants.INVALID_SECTOR_ID));
     }
+    
+  
 }

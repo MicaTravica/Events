@@ -1,0 +1,49 @@
+<form #addHall="ngForm" (ngSubmit)="add()" novalidate>
+  <div *ngFor="let h of halls; let i = index" [attr.data-index]="i">
+    <div class="wrapper">
+    <div class="left">
+      <h1>Add hall {{i + 1}}:</h1>
+      <mat-form-field>
+        <input matInput type="text" required #hname='ngModel'
+        [(ngModel)]="h.name" name="hname{{i}}" placeholder="Hall name">
+      </mat-form-field>
+      <mat-error *ngIf="hname.invalid && (hname.dirty || hname.touched)">Please enter hall name</mat-error>
+    </div>
+    <div class="right">
+    <div *ngFor="let s of h.sectors; let j = index" [attr.data-index]="j">
+    <h2>Add sector {{j + 1}} for hall {{i + 1}}:</h2>
+      <div>
+        <mat-form-field>
+          <input matInput type="text" required #sname='ngModel'
+          [(ngModel)]="s.name" name="sname{{i}}{{j}}" placeholder="Sector name">
+        </mat-form-field>
+        <mat-error *ngIf="sname.invalid && (sname.dirty || sname.touched)">Please enter sector name</mat-error>
+      </div>
+      <div>
+        <mat-checkbox name="parter"[(ngModel)]="checked[i][j]" (click)="parterre(i, j)">Parterre</mat-checkbox>
+      </div>
+      <div *ngIf="!checked[i][j]">
+        <mat-form-field>
+          <input matInput type="number" required #srows='ngModel'
+          [(ngModel)]="s.sectorRows" name="srows{{i}}{{j}}" placeholder="Sector rows">
+        </mat-form-field>
+        <mat-error *ngIf="srows.invalid && (srows.dirty || srows.touched)">Please enter number of sector rows</mat-error>
+      </div>
+      <div *ngIf="!checked[i][j]">
+        <mat-form-field>
+          <input matInput type="number" required #scol='ngModel'
+          [(ngModel)]="s.sectorColumns" name="scol{{i}}{{j}}" placeholder="Sector columns">
+        </mat-form-field>
+        <mat-error *ngIf="scol.invalid && (scol.dirty || scol.touched)">Please enter number of sector columns</mat-error>
+      </div>
+      </div>
+    <button mat-raised-button color="accent" type="button" (click)="addOneMoreSector(i)">Add new sector</button>
+    </div>
+  </div>
+  </div>
+  <button mat-raised-button color="accent" type="button" (click)="addOneMoreHall()" class="down">Add new hall</button>
+  <button mat-raised-button color="accent" type="submit" [disabled]="addHall.invalid" class="down">Save</button>
+  <button mat-raised-button color="accent" type="button" (click)="cancel()" class="down">Back</button>
+</form>
+
+  

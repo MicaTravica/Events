@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,11 +35,27 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { ReservationListComponent } from './tickets/reservation-list/reservation-list.component';
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
 import { PlacesListComponent } from './places/places-list/places-list.component';
-import { ToastrModule } from 'ngx-toastr';
+import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { ReportsComponent } from './reports/reports.component';
 import { ChartsModule } from 'ng2-charts';
 import { ReportService } from './services/report-service/report.service';
 import { FormsModule } from '@angular/forms';
+import { ErrorHandlingInterceptor } from './interceptors/error.handling.intercepotr';
+import { ErrorDialogService } from './services/error-dialog-service/error-dialog.service';
+import { Router } from '@angular/router';
+import { PlaceListItemComponent} from './places/place-list-item/place-list-item.component';
+import { PlaceDetailsComponent} from './places/place-details/place-details.component';
+import { PlaceSearchComponent} from './places/place-search/place-search.component';
+import { AddPlaceComponent } from './places/add-place/add-place.component';
+import { AddHallComponent} from './halls/add-hall/add-hall.component';
+import { UpdatePlaceComponent} from './places/update-place/update-place.component';
+import { UpdateHallComponent} from './halls/update-hall/update-hall.component';
+import { AddSectorComponent } from './sectors/add-sector/add-sector.component';
+import { UpdateSectorComponent} from './sectors/update-sector/update-sector.component';
+import { HallDetailsComponent} from './halls/hall-details/hall-details.component';
+import { HallListItemComponent} from './halls/hall-list-item/hall-list-item.component';
+import { SectorListItemComponent} from './sectors/sector-list-item/sector-list-item.component';
+import { ChangePasswordComponent } from './core/profile/change-password/change-password.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +79,20 @@ import { FormsModule } from '@angular/forms';
     ReservationListComponent,
     TicketListComponent,
     PlacesListComponent,
-    ReportsComponent
+    ReportsComponent,
+    PlaceDetailsComponent,
+    PlaceListItemComponent,
+    PlaceSearchComponent,
+    AddPlaceComponent,
+    AddHallComponent,
+    UpdatePlaceComponent,
+    UpdateHallComponent,
+    AddSectorComponent,
+    UpdateSectorComponent,
+    HallDetailsComponent,
+    HallListItemComponent,
+    SectorListItemComponent,
+    ChangePasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -76,6 +105,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule
   ],
   providers: [
+    ToastrService,
     UserService,
     EventService,
     AuthService,
@@ -85,7 +115,14 @@ import { FormsModule } from '@angular/forms';
     PlaceService,
     LoginGuard,
     RoleGuard,
-    ReportService
+    ReportService,
+    ErrorDialogService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorHandlingInterceptor,
+      multi: true,
+      deps: [ErrorDialogService, Router]
+    }
   ],
   bootstrap: [AppComponent]
 })

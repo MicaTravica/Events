@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-
-import { UserService } from '../../services/user-service/user.service'
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user-service/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -9,13 +10,14 @@ import { UserService } from '../../services/user-service/user.service'
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  registerForm;
-  submitted;
-  
+  registerForm: FormGroup;
+
   constructor(
     private userService: UserService,
-    private formBuilder: FormBuilder
-  ) { 
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private toastr: ToastrService
+  ) {
     this.registerForm = this.formBuilder.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -29,19 +31,15 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  get form() { 
-    return this.registerForm.controls; 
+  get form() {
+    return this.registerForm.controls;
   }
 
-  onSubmit(registerData) {
-    this.submitted = true;
-    if (this.registerForm.invalid) {
-      return;
-    }
-
-    this.userService.save(registerData);
+  onSubmit(registerData: any) {
+    this.userService.save(registerData).subscribe(
+      (data: string) => {
+        this.toastr.success(data);
+        this.router.navigate(['/login']);
+    });
   }
-
-  
-
 }

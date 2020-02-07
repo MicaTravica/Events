@@ -2,6 +2,8 @@ package com.app.events.serviceimpl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,8 +14,11 @@ import org.springframework.stereotype.Service;
 
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.model.Hall;
 import com.app.events.model.Place;
+import com.app.events.model.SearchParamsPlace;
 import com.app.events.repository.PlaceRepository;
+import com.app.events.service.HallService;
 import com.app.events.service.PlaceService;
 
 @Service
@@ -21,7 +26,10 @@ public class PlaceServiceImpl implements PlaceService{
 
 	@Autowired
     private PlaceRepository placeRepository;
-
+	
+	@Autowired
+	private HallService hallService;
+	
     @Override
     public List<Place> findAll() {
         return this.placeRepository.findAll();
@@ -30,25 +38,45 @@ public class PlaceServiceImpl implements PlaceService{
     @Override
     public Place findOne(Long id) throws ResourceNotFoundException {
         return this.placeRepository.findById(id)
-                    .orElseThrow(
-                        ()-> new ResourceNotFoundException("Place")
-                    );
+        		.orElseThrow(
+                ()-> new ResourceNotFoundException("Place")
+       );
     }
 
     @Override
+	public Place findOneAndLoadHalls(Long id) throws ResourceNotFoundException {
+		Place place = this.placeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Place"));
+		Set<Hall> halls = this.hallService.getHallsByPlaceId(id).stream().collect(Collectors.toSet());
+		place.setHalls(halls);
+		return place;
+	}
+   
+    @Override
     public Place create(Place place) throws Exception{
-        if(place.getId() != null){
-            throw new ResourceExistsException("Place");
-        }
-        this.coordinatesCheckReserved(place);
+        this.checkAddress(place);
         return this.placeRepository.save(place);
     }
 
-    @Override
+  
+    private void checkAddress(Place place) throws ResourceExistsException {
+    	Optional<Place> optPlace = placeRepository.findByAddress(place.getAddress());
+        if(optPlace.isPresent()){
+            throw new ResourceExistsException("Place");
+        }		 
+	}
+    
+    private void checkAddressupdate(Place place) throws ResourceExistsException {
+    	Optional<Place> optPlace = placeRepository.findByAddress(place.getAddress());
+        if(optPlace.isPresent() && optPlace.get().getId() != place.getId()){
+            throw new ResourceExistsException("Place");
+        }		
+	}
+
+	@Override
     public Place update(Place place) throws Exception{
         Place placeToUpdate = this.findOne(place.getId());
         this.setPlaceFields(placeToUpdate, place);
-        this.coordinatesCheckReserved(placeToUpdate);	    
+        this.checkAddressupdate(placeToUpdate);	    
 	    return this.placeRepository.save(placeToUpdate);
     }
 
@@ -74,11 +102,23 @@ public class PlaceServiceImpl implements PlaceService{
         return placeToUpdate;
     }
 
+	
+	
 	@Override
-	public Page<Place> searchPlaces(int numOfPage, int sizeOfPage, String name) {
-		Pageable pageable = PageRequest.of(numOfPage, sizeOfPage,
-				Sort.by("name").ascending());
-		return placeRepository.searchPlaces(name, pageable);
+	public Page<Place> search(SearchParamsPlace params) {
+		if (params.getSortBy().equals("")) {
+			params.setSortBy("name");
+		}
+		Pageable pageable;
+		if(params.isAscending()) {
+			pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(),
+					Sort.by(params.getSortBy()).ascending());
+		} else {
+			pageable = PageRequest.of(params.getNumOfPage(), params.getSizeOfPage(),
+					Sort.by(params.getSortBy()).descending());
+		}
+		Page<Place> found = placeRepository.search(params.getName(),params.getAddress(), pageable);
+		return found;
 	}
 	
 }

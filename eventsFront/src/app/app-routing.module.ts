@@ -17,13 +17,31 @@ import { ReservationListComponent } from './tickets/reservation-list/reservation
 import { TicketListComponent } from './tickets/ticket-list/ticket-list.component';
 import { PlacesListComponent } from './places/places-list/places-list.component';
 import { ReportsComponent } from './reports/reports.component';
+import { PlaceDetailsComponent} from './places/place-details/place-details.component';
+import { PlaceSearchComponent} from './places/place-search/place-search.component';
+import { AddPlaceComponent } from './places/add-place/add-place.component';
+import { AddHallComponent} from './halls/add-hall/add-hall.component';
+import { UpdatePlaceComponent } from './places/update-place/update-place.component';
+import { AddSectorComponent } from './sectors/add-sector/add-sector.component';
+import { UpdateSectorComponent } from './sectors/update-sector/update-sector.component';
+import { UpdateHallComponent} from './halls/update-hall/update-hall.component';
+import { HallDetailsComponent } from './halls/hall-details/hall-details.component';
+import { ChangePasswordComponent } from './core/profile/change-password/change-password.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoginGuard] },
-  { path: 'profile', component: ProfileComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}},
+  { path: 'profile', component: ProfileComponent,
+   canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}
+  },
+  { path: 'changePassword', component: ChangePasswordComponent,
+     canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN|ROLE_REGULAR'}
+  },
   { path: 'events', component: EventsListComponent },
   { path: 'places', component: PlacesListComponent },
+  { path: 'add-place', component: AddPlaceComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'addHall/:id', component: AddHallComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'place', component: PlaceSearchComponent},
   { path: 'event/:id', component: EventDetailsComponent },
   { path: 'reports', component: ReportsComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
   { path: 'add-event', component: AddEventComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
@@ -33,6 +51,12 @@ const routes: Routes = [
   { path: 'successPayPal' , component: PaypalComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'failPayPal', component: PaypalComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
   { path: 'reservation/:id' , component: ReservationComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_REGULAR'}},
+  { path: 'place/:id' , component: PlaceDetailsComponent},
+  { path: 'updatePlace/:id', component: UpdatePlaceComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'updateHall/:id', component: UpdateHallComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'addSector/:id', component: AddSectorComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'updateSector/:id', component: UpdateSectorComponent, canActivate: [RoleGuard], data: {expectedRoles: 'ROLE_ADMIN'}},
+  { path: 'hall/:id', component: HallDetailsComponent},
   { path: '', redirectTo: 'events', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];

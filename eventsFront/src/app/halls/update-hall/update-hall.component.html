@@ -1,0 +1,13 @@
+<div *ngIf="hall">
+  <form #updateHall="ngForm" (ngSubmit)="update()" novalidate>
+  <h1>Update hall:</h1>
+    <div>
+      <mat-form-field>
+        <input matInput required #name='ngModel' type="text" [(ngModel)]="hall.name" name="name" placeholder="Hall name">
+      </mat-form-field>
+      <mat-error *ngIf="name.invalid && (name.dirty || name.touched)">Please enter hall name</mat-error>
+    </div>
+    <button mat-raised-button color="accent" type="submit" [disabled]="updateHall.invalid">Update hall</button>
+    <button mat-raised-button color="accent" type="button" (click)="cancel()">Back</button>
+  </form>
+</div>

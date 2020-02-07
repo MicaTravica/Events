@@ -25,6 +25,7 @@ import com.app.events.dto.PlaceDTO;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.mapper.PlaceMapper;
 import com.app.events.model.Place;
+import com.app.events.model.SearchParamsPlace;
 import com.app.events.service.PlaceService;
 
 @RestController
@@ -45,15 +46,15 @@ public class PlaceController extends BaseController {
 
 	@GetMapping(value = "/api/place/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<PlaceDTO> getPlace(@PathVariable("id") Long id) throws ResourceNotFoundException {
-		Place place = placeService.findOne(id);
-		return new ResponseEntity<>(PlaceMapper.toDTO(place), HttpStatus.OK);
+		Place place = placeService.findOneAndLoadHalls(id);
+		return new ResponseEntity<>(PlaceMapper.toDTOWithHalls(place), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<PlaceDTO> createPlace(@RequestBody PlaceDTO placeDTO) throws Exception {
-			Place savedPlace = placeService.create(PlaceMapper.toPlace(placeDTO));
-			return new ResponseEntity<>(PlaceMapper.toDTO(savedPlace), HttpStatus.CREATED);
+		Place savedPlace = placeService.create(PlaceMapper.toPlace(placeDTO));
+		return new ResponseEntity<>(PlaceMapper.toDTO(savedPlace), HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/api/place", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,15 +70,15 @@ public class PlaceController extends BaseController {
 		placeService.delete(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
-	@GetMapping(value = "/api/places/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Page<PlaceDTO>> searchPlaces(@RequestParam(value = "name", required = true) String name,
-			@RequestParam(value = "num", required = true) int numOfPage,
-			@RequestParam(value = "size", required = true) int sizeOfPage) {
-		Page<Place> result = placeService.searchPlaces(numOfPage, sizeOfPage, name);
-		Page<PlaceDTO> placesDTO = new PageImpl<PlaceDTO>(
+	
+	@PostMapping(value = "/api/place/search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Page<PlaceDTO>> search(@RequestBody SearchParamsPlace params) {
+		Page<Place> result = placeService.search(params);
+		Page<PlaceDTO> resultDTO = new PageImpl<PlaceDTO>(
 				result.get().map(PlaceMapper::toDTO).collect(Collectors.toList()), result.getPageable(),
 				result.getTotalElements());
-		return new ResponseEntity<>(placesDTO, HttpStatus.OK);
+		return new ResponseEntity<>(resultDTO, HttpStatus.OK);
 	}
+
+
 }

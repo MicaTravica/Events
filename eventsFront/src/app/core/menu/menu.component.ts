@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { NavigationEnd, Router, Event} from '@angular/router';
 
@@ -8,6 +8,7 @@ import { NavigationEnd, Router, Event} from '@angular/router';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
+
   role: string;
 
   constructor(
@@ -30,6 +31,10 @@ export class MenuComponent implements OnInit {
 
   showPlaces() {
     this.router.navigate(['/places']);
+  }
+
+  showAddPlace() {
+    this.router.navigate(['/add-place']);
   }
 
   showReports() {

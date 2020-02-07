@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
     private userService: UserService,
     private formBuilder: FormBuilder,
     private router: Router,
-    // private toastr: ToastrService
+    private toastr: ToastrService
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', Validators.required],
@@ -33,15 +33,12 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.authService.login({ username: this.loginForm.value.username, password: this.loginForm.value.password }).subscribe(
       result => {
-        // this.toastr.success('Successful login!');
+        this.toastr.success('Successful login!');
         this.userService.me(result).subscribe(user => {
           localStorage.setItem('token', result);
           localStorage.setItem('user', JSON.stringify(user));
           this.router.navigate(['/events']);
         });
-      },
-      error => {
-        // this.toastr.error(error.error);
       }
     );
   }
