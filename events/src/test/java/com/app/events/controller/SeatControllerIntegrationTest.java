@@ -1,7 +1,7 @@
 package com.app.events.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.URI;
 
@@ -24,6 +24,8 @@ import com.app.events.constants.SeatConstants;
 import com.app.events.constants.UserConstants;
 import com.app.events.dto.LoginDTO;
 import com.app.events.dto.SeatDTO;
+import com.app.events.model.Seat;
+
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
@@ -36,7 +38,7 @@ public class SeatControllerIntegrationTest {
     private TestRestTemplate restTemplate;
 
     private String authTokenAdmin = "";
-
+ 
    
     
     @Before
@@ -62,24 +64,27 @@ public class SeatControllerIntegrationTest {
         assertEquals(SeatConstants.PERSISTED_SEAT_COLUMN, res.getBody().getSeatColumn());
         assertEquals(SeatConstants.PERSISTED_SEAT_ROW, res.getBody().getSeatRow());
     }
+   
     
+  
     @Test
-	 public void findSeat_when_Invalid_ID_then_return_NotFound() throws Exception{
-	        
-		 URI uri = new URI(SeatConstants.URI_PREFIX + SeatConstants.INVALID_SEAT_ID);
-	     HttpHeaders headers = new HttpHeaders();
-	     headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-	     HttpEntity<String> req = new HttpEntity<>(headers);
+    public void delete_Test_Fail() throws Exception
+    {
 
-	     ResponseEntity<String> res = restTemplate.exchange(uri, HttpMethod.GET, req, String.class);
+        Long seat = SeatConstants.PERSISTED_SEAT_ID;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+        HttpEntity<Long> req = new HttpEntity<>(seat, headers);
 
-	     assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
-	 }
+        ResponseEntity<Seat> res = restTemplate.exchange("/api/seats/" + seat , HttpMethod.DELETE, req, Seat.class);
+
+
+        assertEquals(HttpStatus.NO_CONTENT, res.getStatusCode());
+    }
     
-    
- 
-     
-     
+  
+
      
 
 

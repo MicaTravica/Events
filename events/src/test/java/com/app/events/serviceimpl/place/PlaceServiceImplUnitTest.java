@@ -2,10 +2,13 @@ package com.app.events.serviceimpl.place;
 
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Optional;
-
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
@@ -15,11 +18,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.app.events.constants.HallConstants;
 import com.app.events.constants.PlaceConstants;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.model.Event;
+import com.app.events.model.EventState;
+import com.app.events.model.EventType;
+import com.app.events.model.Hall;
 import com.app.events.model.Place;
+import com.app.events.model.SearchParamsEvent;
+import com.app.events.model.SearchParamsPlace;
 import com.app.events.repository.PlaceRepository;
 import com.app.events.serviceimpl.PlaceServiceImpl;
 @RunWith(SpringRunner.class)
@@ -31,7 +46,10 @@ public class PlaceServiceImplUnitTest {
 	public static Place SAVED_PLACE = null;
 	public static Place PLACE_2 = null;
 	public static Place PLACE_3 = null;
-	
+
+
+
+	 
 	@Autowired
 	private PlaceServiceImpl placeService;
 	
@@ -74,16 +92,18 @@ public class PlaceServiceImplUnitTest {
 		when(placeRepository.save(NEW_PLACE)).thenReturn(NEW_PLACE);
 		when(placeRepository.save(SAVED_PLACE)).thenReturn(SAVED_PLACE);
 		
+	
+		
 	}
 
 	
 	@Test
 	public void findOne_TestSuccess() throws Exception {
-		Place place = placeService.findOne(PlaceConstants.PERSISTED_PLACE_ID);
+		Place place = placeService.findOne(SAVED_PLACE.getId());
 		assertNotNull(place);
-		assertEquals(PlaceConstants.PERSISTED_PLACE_ID, place.getId());
-		assertEquals(PlaceConstants.PERSISTED_PLACE_NAME, place.getName());
-		assertEquals(PlaceConstants.PERSISTED_PLACE_ADDRESS, place.getAddress());
+		assertEquals(SAVED_PLACE.getId(), place.getId());
+		assertEquals(SAVED_PLACE.getName(), place.getName());
+		assertEquals(SAVED_PLACE.getAddress(), place.getAddress());
 		
 	}
 	
@@ -92,6 +112,11 @@ public class PlaceServiceImplUnitTest {
 		placeService.findOne(PlaceConstants.INVALID_PLACE_ID);
 	}
 	
+
+	@Test(expected = ResourceNotFoundException.class)
+	public void findOneAndLoadHalls_TestFail() throws ResourceNotFoundException {
+		placeService.findOneAndLoadHalls(PlaceConstants.INVALID_PLACE_ID);
+	}
 	
 	@Test
 	public void create_TestSuccess() throws Exception{
@@ -123,6 +148,9 @@ public class PlaceServiceImplUnitTest {
     	assertEquals(place.getAddress(), "Nova Adresa");
     	
     }
+    
+
+
     
    
 

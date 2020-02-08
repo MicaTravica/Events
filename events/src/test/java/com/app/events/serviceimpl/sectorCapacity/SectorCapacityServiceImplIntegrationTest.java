@@ -2,13 +2,23 @@ package com.app.events.serviceimpl.sectorCapacity;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import com.app.events.constants.HallConstants;
 import com.app.events.constants.SectorCapacityConstants;
+import com.app.events.constants.SectorConstants;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.TicketBoughtOrReservedException;
+import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 import com.app.events.model.SectorCapacity;
 import com.app.events.repository.SectorCapacityRepository;
@@ -97,4 +107,48 @@ public class SectorCapacityServiceImplIntegrationTest {
         int sizeAfterSave = sectorCapacityRepository.findAll().size();
         assertEquals(sizeAfterSave, sizeBeforeSave);
     }
+    
+    @Test
+    public void findBySectorId_Test_Fail()
+    {
+        Collection<SectorCapacity> retVal = sectorCapacityServiceImpl.findSectorCapacityBySectorId(SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_SECTOR_INVALID_ID);
+        assertTrue(retVal.isEmpty());
+    }
+    
+    @Test
+    public void findBySectorId_Test_Success()
+    {
+        Collection<SectorCapacity> retVal = sectorCapacityServiceImpl.findSectorCapacityBySectorId(SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_SECTOR_ID);
+        assertFalse(retVal.isEmpty());
+        Iterator<SectorCapacity> itr = retVal.iterator();
+        while(itr.hasNext())
+        {
+            Long sectorID = itr.next().getSector().getId();
+            assertEquals(SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_SECTOR_ID, sectorID);
+        }
+    }
+    
+    @Test(expected = ResourceNotFoundException.class)
+    public void updateSectorCapacity_Test_Fail() throws Exception
+    {
+    	sectorCapacityServiceImpl.update(new SectorCapacity(SectorCapacityConstants.INVALID_SECTOR_CAPACITY_ID));
+    }
+    
+    @Test
+    @Rollback
+    @Transactional
+    public void updateSector_Test_Success() throws Exception
+    {
+        int numberOfSectors = sectorCapacityRepository.findAll().size();
+
+        SectorCapacity s = new SectorCapacity(SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_ID);
+        SectorCapacity sectorCapacity = sectorCapacityServiceImpl.update(s);
+        
+        assertEquals(numberOfSectors, sectorCapacityRepository.findAll().size());
+
+
+    }
+  
+
+
 }

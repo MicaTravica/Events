@@ -3,8 +3,9 @@ package com.app.events.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+
 import java.net.URI;
-import java.util.List;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
-
 
 import com.app.events.constants.PlaceConstants;
 import com.app.events.constants.SectorConstants;
@@ -88,175 +86,33 @@ public class PlaceControllerIntegrationTest {
         assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
 
     }
-    
+   
+
     @Test
-	 public void addPlace_when_ValidPlace_then_PlaceShouldBeAdded() throws Exception
-	 {
+    public void add_Test_Fail() throws Exception
+    {
     	 int sizeBeforeInsert = placeRepository.findAll().size();
 
-    	 Place place = new Place(
-    			 null,
-    			 PlaceConstants.NEW_PLACE_NAME,
-    			 PlaceConstants.NEW_PLACE_ADDRESS,
-    			 PlaceConstants.NEW_PLACE_LATITUDE,
-    			 PlaceConstants.NEW_PLACE_LONGITUDE
-    			 );
-    	 
-     
-    	 
-    	 PlaceDTO content = PlaceMapper.toDTO(place);
-    	 
-    	 URI uri = new URI(PlaceConstants.URI_PREFIX);
+         Place place = new Place(
+             null,
+             PlaceConstants.PERSISTED_HALL_NAME,
+             null,
+             PlaceConstants.PERSISTED_PLACE_LATITUDE,
+             PlaceConstants.PERSISTED_PLACE_LONGITUDE);
+        
+         PlaceDTO content = PlaceMapper.toDTO(place);
 
-   
+         URI uri = new URI(PlaceConstants.URI_PREFIX);
          HttpHeaders headers = new HttpHeaders();
          headers.add("Authorization", "Bearer " + this.authTokenAdmin);
          HttpEntity<PlaceDTO> req = new HttpEntity<>(content, headers);
 
          ResponseEntity<PlaceDTO> res = restTemplate.exchange(uri, HttpMethod.POST, req, PlaceDTO.class);
 
-         List<Place> afterInsert = placeRepository.findAll();
-         Place addedPlace = afterInsert.get(afterInsert.size()-1);
+        int afterInsertSize = placeRepository.findAll().size();
 
-         assertNotNull(res.getBody());
-         assertEquals(HttpStatus.CREATED, res.getStatusCode());
-
-         assertEquals(SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE, res.getBody().getName());
-         assertEquals(sizeBeforeInsert + 1, afterInsert.size());
-         checkCreatedPlaceDTO(addedPlace, res.getBody());
-
-         placeRepository.delete(addedPlace);
-	    }
-    
-    
-    @Test
- 	public void createPlace_TestFail_CoordinateExist() throws Exception
- 	{
-    	Place place = new Place(
-     		 null,
-   			 PlaceConstants.NEW_PLACE_NAME,
-   			 PlaceConstants.NEW_PLACE_ADDRESS,
-   			 PlaceConstants.PERSISTED_PLACE_LATITUDE,
-   			 PlaceConstants.PERSISTED_PLACE_LONGITUDE
-     	 );
-     	 
-      
-     	 PlaceDTO content = PlaceMapper.toDTO(place);
-     	 
-     	 URI uri = new URI(PlaceConstants.URI_PREFIX);
-
-    
-         HttpHeaders headers = new HttpHeaders();
-         headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-         HttpEntity<PlaceDTO> req = new HttpEntity<>(content, headers);
-
-         ResponseEntity<Object> res = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
-
-
-         String message = (String) res.getBody();
-
-         assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
-         assertEquals("Place already exists", message);
- 	    
- 	}
-    
-    
-    @Test
- 	public void createPlace_TestFail() throws Exception
- 	{
-    	Place place = new Place(
-    		PlaceConstants.INVALID_PLACE_ID
-     	);
-     	 
-      
-     	PlaceDTO content = PlaceMapper.toDTO(place);
-     	 
-     	URI uri = new URI(PlaceConstants.URI_PREFIX);
-
-    
-     	HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-        HttpEntity<PlaceDTO> req = new HttpEntity<>(content, headers);
-
-        ResponseEntity<Object> res = restTemplate.exchange(uri, HttpMethod.POST, req, Object.class);
-
-
-  		String message = (String) res.getBody();
-  		assertEquals(HttpStatus.BAD_REQUEST, res.getStatusCode());
-  		assertEquals("Place already exists", message);
- 	
- 	}
-    
-    
-    private void checkCreatedPlaceDTO(Place place, PlaceDTO placeDto) {
-        assertEquals(place.getId(), placeDto.getId());
-        assertEquals(place.getName(), placeDto.getName());
-        assertEquals(place.getAddress(), placeDto.getAddress());
-        
-    
+        assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+        assertEquals(sizeBeforeInsert, afterInsertSize);
     }
-    
-    
-    @Test
-	@Transactional
-	@Rollback(true)
-	public void update_TestSuccess() throws Exception {
-		URI uri = new URI(PlaceConstants.URI_PREFIX);
-		
-		
-		PlaceDTO place = new PlaceDTO(
-				PlaceConstants.PERSISTED_PLACE_ID,
-				PlaceConstants.NEW_PLACE_NAME,
-				PlaceConstants.PERSISTED_PLACE_ADDRESS,
-				PlaceConstants.PERSISTED_PLACE_LATITUDE, 
-				PlaceConstants.PERSISTED_PLACE_LONGITUDE
-				);
-				
-
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-		HttpEntity<PlaceDTO> req = new HttpEntity<>(place, headers);
-
-		ResponseEntity<PlaceDTO> response = restTemplate.exchange(uri, HttpMethod.PUT, req, PlaceDTO.class);
-		PlaceDTO updated = response.getBody();
-
-		assertEquals(HttpStatus.OK, response.getStatusCode());
-		assertEquals(PlaceConstants.PERSISTED_PLACE_ID, updated.getId());
-		assertEquals(PlaceConstants.NEW_PLACE_NAME, updated.getName());
-		assertEquals(PlaceConstants.PERSISTED_PLACE_ADDRESS, updated.getAddress());
-		
-		
-	}
-    
-    
-    
-    @Test
- 	public void updatePlace_TestFail() throws Exception
- 	{
-    	Place place = new Place(
-     		 PlaceConstants.INVALID_PLACE_ID
-     	 );
-     	 
-      
-     	PlaceDTO content = PlaceMapper.toDTO(place);
-     	 
-     	URI uri = new URI(PlaceConstants.URI_PREFIX);
-
-    
-     	HttpHeaders headers = new HttpHeaders();
-     	headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-     	HttpEntity<PlaceDTO> req = new HttpEntity<>(content, headers);
-
-     	ResponseEntity<Object> res = restTemplate.exchange(uri, HttpMethod.PUT, req, Object.class);
-
-
-     	String message = (String) res.getBody();
-     	assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
-     	assertEquals("Place is not found!", message);
- 	    
- 	}
-
-
 
 }

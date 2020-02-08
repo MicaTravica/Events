@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.app.events.exception.HallMustHaveSector;
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
@@ -47,10 +48,12 @@ public class HallServiceImpl implements HallService {
       
     @Override
     public Hall create(Hall hall) throws Exception{
-    	//uraditi proveru da li je uopste poslata lista sa sektorima ili prazna
         if(hall.getId() != null){ 
             throw new ResourceExistsException("Hall");
         }
+        if(hall.getSectors() == null) {
+    		throw new HallMustHaveSector();
+    	}
         Place place = placeService.findOne(hall.getPlace().getId());
         hall.setPlace(place);
         Hall newHall = new Hall();

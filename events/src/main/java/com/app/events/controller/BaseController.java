@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.app.events.exception.BadEventStateException;
 import com.app.events.exception.CollectionIsEmptyException;
 import com.app.events.exception.DateException;
+import com.app.events.exception.HallMustHaveSector;
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.SectorCapacatyMustBePositiveNumberException;
 import com.app.events.exception.SectorIsNotInThisHallException;
 import com.app.events.exception.SectorPriceListException;
+import com.app.events.exception.TicketBoughtOrReservedException;
 import com.app.events.exception.TicketIsBoughtException;
 
 public abstract class BaseController {
@@ -40,7 +42,7 @@ public abstract class BaseController {
 		 	DateException.class,
 			SectorCapacatyMustBePositiveNumberException.class, TicketIsBoughtException.class,
 			CollectionIsEmptyException.class, BadEventStateException.class, SectorPriceListException.class,
-			SectorIsNotInThisHallException.class })
+			SectorIsNotInThisHallException.class,  HallMustHaveSector.class, TicketBoughtOrReservedException.class })
 	public ResponseEntity<String> badRequest(Exception e) {
 		return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 	}

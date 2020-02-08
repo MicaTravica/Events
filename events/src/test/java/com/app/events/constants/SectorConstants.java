@@ -16,6 +16,13 @@ public class SectorConstants {
 
     public static final Long PERSISTED_SECTOR_ID2 = 2l;
     public static final Long PERSISTED_SECTOR_ID3 = 3l;
+    public static final String PERSISTED_SECTOR_NAME3 = "sektor3";
+    public static final int PERSISTED_SECTOR_COLUMNS3 = 1;
+    public static final int PERSISTED_SECTOR_ROWS3 = 1;
+    public static final Long PERSISTED_SECTOR_HALL_ID3 = 2l;
+    public static final int INVALID_SECTOR_COLUMNS = -2;
+    public static final int INVALID_SECTOR_ROWS = -2;
+
     /*
         constants for pesisting new sector in db
     */

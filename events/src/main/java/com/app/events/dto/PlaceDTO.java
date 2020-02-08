@@ -29,6 +29,11 @@ public class PlaceDTO {
 		this.longitude = longitude;
 	}
 	
+	public PlaceDTO(Long id) {
+		super();
+		this.id = id;
+	}
+	
 	
 	
 }

@@ -37,4 +37,10 @@ public class PriceList {
 	@NotNull(message = "PriceList must be asociated with Sector")
 	private Sector sector;
 	
+	public PriceList(Long id) {
+		super();
+		this.id = id;
+	}
+	
+	
 }

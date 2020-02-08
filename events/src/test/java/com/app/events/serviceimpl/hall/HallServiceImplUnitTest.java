@@ -1,16 +1,23 @@
 package com.app.events.serviceimpl.hall;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import com.app.events.constants.HallConstants;
 import com.app.events.constants.PlaceConstants;
+import com.app.events.constants.SectorConstants;
+import com.app.events.exception.HallMustHaveSector;
 import com.app.events.exception.ResourceNotFoundException;
 import com.app.events.model.Hall;
 import com.app.events.model.Place;
+import com.app.events.model.Sector;
 import com.app.events.repository.HallRepository;
 import com.app.events.service.HallService;
 import com.app.events.service.PlaceService;
@@ -35,6 +42,10 @@ public class HallServiceImplUnitTest {
 
     public static Place PLACE = null;
     public static Place INVALID_PLACE = null;
+    
+    public static Sector SECTOR = null;
+    public static Set<Sector> SECTORS = null;
+    
 
     @Autowired
 	private HallService hallService;
@@ -53,7 +64,9 @@ public class HallServiceImplUnitTest {
 
         PLACE = new Place(PlaceConstants.PLACE_ID);
         INVALID_PLACE = new Place(PlaceConstants.INVALID_PLACE_ID);
-
+       
+        SECTOR = new Sector(SectorConstants.PERSISTED_SECTOR_ID);
+        
         HALL_NEW = new Hall(null, HallConstants.VALID_HALL_NAME_FOR_PERSISTANCE, null, new HashSet<>(), new HashSet<>());
         
         HALL_UPDATE = new Hall(HallConstants.PERSISTED_HALL_ID, HallConstants.PERSISTED_HALL_NAME, PLACE, new HashSet<>(), new HashSet<>());
@@ -84,14 +97,21 @@ public class HallServiceImplUnitTest {
     {
         hallService.findOne(HallConstants.INVALID_HALL_ID);
     }
-
+    
     @Test
-    public void WhenCreateValidHall_thenHallShouldBeSaved() throws Exception{
-        HALL_NEW.setPlace(PLACE);
-        Hall savedHall = hallService.create(HALL_NEW);
-        assertEquals(savedHall.getName(), HALL_NEW.getName());
-        assertEquals(savedHall.getPlace().getId(), HALL_NEW.getPlace().getId());
+    public void findOneAndLoadSectors_Test_Success() throws Exception {
+    	Hall foundHall = hallService.findOneAndLoadSectors(HallConstants.PERSISTED_HALL_ID);
+        assertNotNull(foundHall);
+        assertEquals(HallConstants.PERSISTED_HALL_ID, foundHall.getId());
+        assertEquals(HallConstants.PERSISTED_HALL_NAME, foundHall.getName());
     }
+    
+    @Test(expected = ResourceNotFoundException.class)
+    public void findOneAndLoadSectors_Test_Fail() throws Exception {
+    	hallService.findOneAndLoadSectors(HallConstants.INVALID_HALL_ID);
+
+    }
+
 
     @Test(expected = ResourceNotFoundException.class)
     public void WhenCreateInValidHallPlace_thenThrow_ResourceNotFoundException() throws Exception{
@@ -99,6 +119,14 @@ public class HallServiceImplUnitTest {
         hallService.create(HALL_NEW);
     }
 
+    @Test(expected = HallMustHaveSector.class)
+    public void Create_Test_Fail() throws Exception {
+    	HALL_NEW.setPlace(PLACE);
+    	HALL_NEW.setSectors(SECTORS);
+    	hallService.create(HALL_NEW);
+    	
+    }
+    
 
     @Test
     public void WhenUpdateValidHallPlace_thenHallShouldBeUpdated() throws Exception{
@@ -118,6 +146,34 @@ public class HallServiceImplUnitTest {
     public void WhenUpateNotExsistingHall_thenThrow_ResourceNotFoundException() throws Exception{
         HALL_UPDATE.setId(HallConstants.INVALID_HALL_ID);
         hallService.update(HALL_UPDATE);
+    }
+    
+    @Test
+    public void getHallsByPlaceId_Test_Success() {
+    	Collection<Hall> results = hallRepositoryMocked.findAllByPlaceId(HallConstants.PERSISTED_HALL_PLACE_ID);
+		
+		assertEquals(results.size(),3);
+    }
+    
+    @Test
+    public void getHallsByPlaceId_Test_Fail() {
+    	Collection<Hall> results = hallRepositoryMocked.findAllByPlaceId(HallConstants.INVALID_PLACE_ID);
+		
+		assertEquals(results.size(),0);
+    }
+    
+    @Test
+    public void getHallByEventId_Test_Success() {
+    	Collection<Hall> results = hallRepositoryMocked.findAllByEventsId(HallConstants.PERSISTED_HALL_EVENT_ID);
+    	
+    	assertFalse(results.isEmpty());
+    }
+    
+    @Test
+    public void getHallByEventId_Test_Fail() {
+    	Collection<Hall> results = hallRepositoryMocked.findAllByEventsId(HallConstants.INVALID_EVENT_ID);
+    	
+    	assertTrue(results.isEmpty());
     }
     
   

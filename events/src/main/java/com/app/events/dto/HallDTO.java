@@ -17,6 +17,12 @@ public class HallDTO {
 	private String name;
 	private PlaceDTO place;
 	private Set<SectorDTO> sectors;
+	
+	public HallDTO(Long id) {
+		super();
+		this.id = id;
+	}
+
 
 }
 

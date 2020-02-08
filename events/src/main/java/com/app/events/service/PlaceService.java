@@ -22,8 +22,6 @@ public interface PlaceService {
 
 	public void delete(Long id);
 
-	public void coordinatesCheckReserved(Place place) throws ResourceExistsException;
-
 	public Place setPlaceFields(Place placeToUpdate, Place place);
 
 	public Page<Place> search(SearchParamsPlace params);

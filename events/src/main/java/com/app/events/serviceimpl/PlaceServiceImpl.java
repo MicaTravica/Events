@@ -85,14 +85,6 @@ public class PlaceServiceImpl implements PlaceService{
         this.placeRepository.deleteById(id);
     }
 
-    public void coordinatesCheckReserved(Place place) throws ResourceExistsException
-    {
-        Optional<Place> optPlace = placeRepository.findByCoordinates(place.getLongitude(), place.getLatitude());
-        if(optPlace.isPresent() && optPlace.get().getId() != place.getId()){
-            throw new ResourceExistsException("Place");
-        }
-    }
-
     public Place setPlaceFields(Place placeToUpdate, Place place)
     {
 	    placeToUpdate.setName(place.getName());
