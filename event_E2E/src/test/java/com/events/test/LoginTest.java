@@ -3,10 +3,12 @@ package com.events.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import com.events.constants.UserConstants;
+import com.events.pages.LoginPage;
+import org.junit.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
 import org.junit.runners.MethodSorters;
 import org.openqa.selenium.WebDriver;
@@ -32,12 +34,11 @@ public class LoginTest {
 	}
 
 	@Test
-	@Order(1)
 	public void A_invalidLoginTest() {
 		browser.navigate().to(LoginPage.FRONT_URL);
 		loginPage.ensureLoginDisplayed();
-		loginPage.setUsernameField("dusann");
-		loginPage.setPasswordField("caoo");
+		loginPage.setUsernameField(UserConstants.INVALID_USERNAME);
+		loginPage.setPasswordField(UserConstants.PASSWORD);
 		loginPage.getLogginBtn().click();
 
 		assertNotEquals(HomePage.FRONT_URL,
@@ -45,20 +46,17 @@ public class LoginTest {
 	}
 
 	@Test
-	@Order(2)
 	public void B_validLoginTest() {
 		browser.navigate().to(LoginPage.FRONT_URL);
 		loginPage.ensureLoginDisplayed();
-		loginPage.setUsernameField("dusan");
-		loginPage.setPasswordField("cao");
+		loginPage.setUsernameField(UserConstants.VALID_USERNAME);
+		loginPage.setPasswordField(UserConstants.PASSWORD);
 		loginPage.getLogginBtn().click();
 		loginPage.ensureLoginNotDisplayed();
 
 		assertEquals(HomePage.FRONT_URL,
 				browser.getCurrentUrl());
 	}
-
-
 
 	@AfterClass
 	public static void closeSelenium() {
