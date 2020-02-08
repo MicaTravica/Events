@@ -67,6 +67,12 @@ public class TicketServiceImpl implements TicketService {
 	@Autowired
 	private MailService mailService;
 
+	@Autowired
+	private CloudinaryService cloudinaryService;
+
+	@Autowired
+	private QRCodeService qrCodeService;
+
 	@Override
 	public Ticket findOne(Long id) throws ResourceNotFoundException {
 		return ticketRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ticket"));
@@ -200,7 +206,8 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public Collection<Ticket> buyTickets(Collection<Long> ticketIDs, Long ticketUserID, String payPalPaymentId,String payPalPayerId) throws Exception {
+	public Collection<Ticket> buyTickets(Collection<Long> ticketIDs, Long ticketUserID,
+										 String payPalPaymentId,String payPalPayerId) throws Exception {
 		Collection<Ticket> retVal = new ArrayList<>();
 		Collection<Ticket> boughtTickets = new ArrayList<>();
 		Collection<Long> sc = new ArrayList<>();
@@ -239,11 +246,14 @@ public class TicketServiceImpl implements TicketService {
 		{
 			throw new PayPalException("Not enough money on card for ticket purchuse");
 		}
-		boughtTickets.stream().forEach(
-			ticket-> {
-				Ticket savedTicket = ticketRepository.save(ticket);
-				retVal.add(savedTicket);
-			});
+		for(Ticket ticket: boughtTickets) {
+			String ticketQrCode = generateStringForQRCodeImage(ticket);
+			byte[] image = this.qrCodeService.generateQRCodeImage(ticketQrCode);
+			String url = this.cloudinaryService.uploadImage(image);
+			ticket.setBarCode(url);
+			Ticket savedTicket = ticketRepository.save(ticket);
+			retVal.add(savedTicket);
+		}
 		for (Long scId : sc) {
 			SectorCapacity scu = sectorCapacityService.findOne(scId);
 			scu.setFree(scu.getFree() - 1);

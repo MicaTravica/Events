@@ -40,7 +40,7 @@ export class PaypalComponent implements OnInit {
           console.log(res);
           this.state = 'successfully bought ticket';
           this.ticketService.removeTicketIdsFromLocalStorage();
-          this.router.navigate(['/reservations']);
+          this.router.navigate(['/tickets']);
         },
         err => {
           console.log(err.message);
