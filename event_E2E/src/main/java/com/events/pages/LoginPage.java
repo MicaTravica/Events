@@ -27,7 +27,7 @@ public class LoginPage {
 
     public void ensureLoginDisplayed() {
         //wait for card number input field to be present
-        (new WebDriverWait(driver, 10))
+        (new WebDriverWait(driver, 20))
                 .until(ExpectedConditions.presenceOfElementLocated(
                         By.id("password")));
     }
@@ -36,11 +36,6 @@ public class LoginPage {
         //wait for card number input field to be present
         (new WebDriverWait(driver, 10))
                 .until(ExpectedConditions.numberOfElementsToBeLessThan(By.id("password"), 1));
-    }
-    
-    public void ensureLoginButtonNotDisplayed() {
-        (new WebDriverWait(driver, 10))
-                .until(ExpectedConditions.numberOfElementsToBeLessThan(By.id("loginBtn"), 1));
     }
 
     public void setUsernameField(String value) {

@@ -2,21 +2,18 @@ package com.events.test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.jupiter.api.Order;
-import org.junit.runners.MethodSorters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import com.events.config.BrowserFactory;
+import com.events.constants.UserConstants;
 import com.events.pages.HomePage;
 import com.events.pages.LoginPage;
 import com.events.pages.RegisterPage;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class RegisterTest {
 
 	private WebDriver browser;
@@ -35,44 +32,29 @@ public class RegisterTest {
 	}
 	
 	@Test
-	@Order(1)
-	public void A_registerTestInvalid() {
+	public void registerTest() {
 		browser.navigate().to(HomePage.FRONT_URL);
 		homePage.ensureRegisterIsDisplayed();
 		homePage.getRegisterLink().click();
 
 		assertEquals(RegisterPage.FRONT_URL, browser.getCurrentUrl());
 
-		registerPage.setNameInput("Olga");
-		registerPage.setSurnameInput("Danilovic");
-		registerPage.setEmailInput("email@gmail.com");
-		registerPage.setPhoneInput("123-456789");
-		registerPage.setUsernameInput("milovica");
-		registerPage.setPasswordInput("12345678");
+
+		registerPage.setNameInput(UserConstants.NEW_NAME);
+		registerPage.setSurnameInput(UserConstants.NEW_SURNAME);
+		registerPage.setEmailInput(UserConstants.NEW_EMAIL);
+		registerPage.setPhoneInput(UserConstants.NEW_PHONE);
+		registerPage.setUsernameInput(UserConstants.VALID_USERNAME_ADMIN);
+		registerPage.setPasswordInput(UserConstants.NEW_PASSWORD);
 		
 		registerPage.ensureSubmitButtonIsDisplayed();
 		registerPage.getSubmitButton().click();
 		
-		loginPage.ensureLoginButtonNotDisplayed();
+		homePage.ensureToasterIsDisplayed();
 		
-		assertEquals(RegisterPage.FRONT_URL, browser.getCurrentUrl());
-	}
-
-	@Test
-	@Order(2)
-	public void B_registerTestValid() {
-		browser.navigate().to(HomePage.FRONT_URL);
-		homePage.ensureRegisterIsDisplayed();
-		homePage.getRegisterLink().click();
-
-		assertEquals(RegisterPage.FRONT_URL, browser.getCurrentUrl());
-
-		registerPage.setNameInput("Olga");
-		registerPage.setSurnameInput("Danilovic");
-		registerPage.setEmailInput("email@gmail.com");
-		registerPage.setPhoneInput("123-456789");
-		registerPage.setUsernameInput("olgica");
-		registerPage.setPasswordInput("12345678");
+		assertEquals("\"Username already exists\"", homePage.getToastr().getText());
+		
+		registerPage.setUsernameInput(UserConstants.NEW_USERNAME);
 
 		registerPage.ensureSubmitButtonIsDisplayed();
 		registerPage.getSubmitButton().click();
@@ -82,9 +64,8 @@ public class RegisterTest {
 		assertEquals(LoginPage.FRONT_URL, browser.getCurrentUrl());
 	}
 
-
-	@AfterClass
-	public static void closeSelenium() {
+	@After
+	public void closeSelenium() {
 		BrowserFactory.quitBrowser();
 	}
 }

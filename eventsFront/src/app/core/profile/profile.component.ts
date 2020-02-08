@@ -47,9 +47,6 @@ export class ProfileComponent implements OnInit {
       this.email.setValue(userData.email);
       this.username.setValue(userData.username);
       this.userID = userData.id;
-    },
-    (err: HttpErrorResponse) => {
-      this.toastr.error(err.message);
     });
   }
 
@@ -68,9 +65,6 @@ export class ProfileComponent implements OnInit {
           localStorage.setItem('user', JSON.stringify(user));
           this.toastr.success('successfully changed profile data');
         });
-      },
-      (err: HttpErrorResponse) => {
-      this.toastr.error(err.message);
       });
   }
 
