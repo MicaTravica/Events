@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+import com.app.events.service.CloudinaryService;
 import com.app.events.service.QRCodeService;
 import com.app.events.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,6 @@ public class MailServiceImpl implements MailService {
 
 	@Autowired
 	private JavaMailSender mailSender;
-
-	@Autowired
-	private TicketService ticketService;
-
-	@Autowired
-	private QRCodeService qrCodeService;
 
 	@Async
 	@Override
@@ -69,11 +64,6 @@ public class MailServiceImpl implements MailService {
 				+ " tickets. If you want to buy them, you must do so no "
 				+ "later than 3 days days before the event starts.<br>";
 		for (Ticket ticket : tickets) {
-			String ticketQRStr = this.ticketService.generateStringForQRCodeImage(ticket);
-			this.qrCodeService.generateQRCodeImage(ticketQRStr);
-//			String url = this.cloudinaryService.uploadImage("src/main/resources/QRCode.png");
-//			System.out.println(url);
-
 			String ticketst = "<hr>Event name: " + ticket.getEvent().getName() + "<br>";
 			if (ticket.getSeat() != null) {
 				ticketst += "Place: " + ticket.getSeat().getSector().getHall().getPlace().getName() + ", "
@@ -105,11 +95,8 @@ public class MailServiceImpl implements MailService {
 		String message = "<html><head><meta charset=\"UTF-8\"></head>" + "<body><h3>Events app - your tickets!</h3><br>"
 				+ "<div><p>You bought " + tickets.size() + " tickets.<br>";
 		for (Ticket ticket : tickets) {
-			String ticketQRStr = this.ticketService.generateStringForQRCodeImage(ticket);
-			this.qrCodeService.generateQRCodeImage(ticketQRStr);
-
-
 			String ticketst = "<hr>Event name: " + ticket.getEvent().getName() + "<br>";
+			ticketst += "<img href=\"" + ticket.getBarCode() + "\" height='150' width='150' >";
 			if (ticket.getSeat() != null) {
 				ticketst += "Place: " + ticket.getSeat().getSector().getHall().getPlace().getName() + ", "
 						+ ticket.getSeat().getSector().getHall().getPlace().getAddress() + "<br>";

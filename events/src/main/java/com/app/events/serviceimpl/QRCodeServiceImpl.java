@@ -20,11 +20,11 @@ public class QRCodeServiceImpl implements QRCodeService {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 150, 150);
 
-        Path path = FileSystems.getDefault().getPath("src/main/resources/QRCode.png");
-        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+        Path path = FileSystems.getDefault().getPath("src/main/resources/QRCode.jpg");
+        MatrixToImageWriter.writeToPath(bitMatrix, "JPG", path);
 
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-        MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
+        MatrixToImageWriter.writeToStream(bitMatrix, "JPG", pngOutputStream);
         byte[] pngData = pngOutputStream.toByteArray();
         return pngData;
     }
