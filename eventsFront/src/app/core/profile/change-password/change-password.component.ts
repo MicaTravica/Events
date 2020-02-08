@@ -16,7 +16,7 @@ import { AuthService } from 'src/app/services/auth-service/auth.service';
 export class ChangePasswordComponent implements OnInit {
 
   passwordForm: FormGroup;
-  oldPassword = new FormControl('', [Validators.required, Validators.minLength(8)]);
+  oldPassword = new FormControl('', [Validators.required]);
   password1 = new FormControl('', [Validators.required, Validators.minLength(8)]);
   password2 = new FormControl('', [Validators.required, Validators.minLength(8)]);
 
