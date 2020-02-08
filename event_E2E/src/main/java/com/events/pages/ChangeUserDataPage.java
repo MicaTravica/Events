@@ -1,5 +1,6 @@
 package com.events.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -30,6 +31,9 @@ public class ChangeUserDataPage {
 
 	@FindBy(id = "change")
 	private WebElement submitButton;
+
+	@FindBy(id="changePasswordBtn")
+	private WebElement changePasswordButton;
 	
 	public ChangeUserDataPage(WebDriver driver) {
 		this.driver = driver;
@@ -85,8 +89,17 @@ public class ChangeUserDataPage {
 		el.sendKeys(value);
 	}
 
+	public WebElement getChangePasswordButton() {
+		return changePasswordButton;
+	}
+
 	public WebElement getSubmitButton() {
 		return submitButton;
+	}
+
+	public void ensureProfilePageIsDiplayed() {
+		(new WebDriverWait(driver, 10))
+				.until(ExpectedConditions.presenceOfElementLocated(By.id("changePasswordBtn")));
 	}
 
 	public void ensureSubmitButtonIsDisplayed() {

@@ -1,14 +1,4 @@
 <div class="main">
-    <mat-accordion>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                Search
-                </mat-panel-title>
-                <mat-panel-description>
-                    Input parameras for seat search
-                </mat-panel-description>
-            </mat-expansion-panel-header>
             <mat-form-field>
                 <input matInput 
                     [min] = "event.fromDate" [max] = "event.toDate"
@@ -25,7 +15,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Choose hall</mat-label>
-                <mat-select>
+                <mat-select id="selectHall">
                     <mat-option (click)="chooseHall(-1)">None</mat-option>
                     <mat-option *ngFor="let hall of event.halls" [value]="hall.id" (click)="chooseHall(hall.id)">
                     {{hall.name}}
@@ -34,7 +24,7 @@
             </mat-form-field>
             <mat-form-field>
                 <mat-label>Choose sector</mat-label>
-                <mat-select [disabled]="!hallChoosen">
+                <mat-select id="selectSector" [disabled]="!hallChoosen">
                     <mat-option (click)="chooseSector(-1)">None</mat-option>
                     <mat-option *ngFor="let sector of hall.sectors" [value]="sector.id" (click)="chooseSector(sector.id)">
                         {{sector.name}}
@@ -42,10 +32,8 @@
                 </mat-select>
             </mat-form-field>
             <mat-action-row>
-                <button mat-raised-button [disabled]="!sectorChoosen" color="accent" (click)="search()">Search</button>
+                <button id="searchSectorBtn" mat-raised-button [disabled]="!sectorChoosen" color="accent" (click)="search()">Search</button>
             </mat-action-row>
-        </mat-expansion-panel>
-    </mat-accordion>
 
     <mat-divider></mat-divider>
     <div *ngIf="dates.length == 0" class="card-header">
@@ -55,37 +43,37 @@
         <h1>Selected tickets</h1>
         <p *ngIf="tickets.length > 0 || parterTickets.length > 0">
             <button mat-raised-button (click)="canceled()" color="accent" style="margin-right: 5px;">Cancel selected</button>
-            <button mat-raised-button (click)="reserveTickets()" color="accent" style="margin-right: 5px;">Reserve selected</button>
+            <button id="reserveBtn" mat-raised-button (click)="reserveTickets()" color="accent" style="margin-right: 5px;">Reserve selected</button>
             <button mat-raised-button (click)="buyTickets()" color="accent">Buy selected</button>
         </p>
         <p *ngIf="showSelectParterSeats">
-            <button mat-raised-button (click)="selectParterSeats()" color="accent" style="margin-right: 5px;">Select parter</button>
+            <button id="selectParter" mat-raised-button (click)="selectParterSeats()" color="accent" style="margin-right: 5px;">Select parter</button>
         </p>
     </div>
     <mat-divider></mat-divider>
 
     <mat-tab-group dynamicHeight *ngIf="dataReady">
         <mat-tab *ngFor="let d of dates" [label]="d | dateFormat">
-            <div *ngIf="!selectedParter">
+            <div *ngIf="!selectedParter" id="notParterDiv">
                 <mat-grid-list  [cols]="sector.sectorColumns"  rowHeight="50">
-                    <mat-grid-tile *ngFor="let t of ticketMap[d]" 
+                    <mat-grid-tile *ngFor="let t of ticketMap[d]"
                         (click)="selectedTicket(t)"
                         [ngClass]="setClass(t)"> 
                         {{t.seatRow}} | {{t.seatColumn}}
                     </mat-grid-tile>
                 </mat-grid-list>
             </div>
-            <div *ngIf="selectedParter">
-                <form *ngIf="parterForms[d]" [formGroup]="parterForms[d]" (ngSubmit)="onParterSubmit(d)">
+            <div *ngIf="selectedParter" id="parterDiv">
+                <form [id]="[d]" *ngIf="parterForms[d]" [formGroup]="parterForms[d]" (ngSubmit)="onParterSubmit(d)">
                     <div>
                         <mat-form-field *ngIf="findDesiredNumbers(d)">
-                            <input matInput placeholder="Number of cards" (change)="setParterFlags()"
+                            <input id="desiredCount" matInput placeholder="Number of cards" (change)="setParterFlags()"
                                 type="text" [formControl] = "findDesiredNumbers(d)">
                             <mat-error *ngIf="findDesiredNumbers(d).errors?.required">Number is required</mat-error>
                             <mat-error *ngIf="findDesiredNumbers(d).errors?.MinValue">Number must be >= 0</mat-error>
                             <mat-error *ngIf="findDesiredNumbers(d).errors?.ticketNumberValidatorError">aaa</mat-error>
                         </mat-form-field>
-                        <mat-form-field *ngIf="findAvailableNumbers(d)">
+                        <mat-form-field id="availableCount" *ngIf="findAvailableNumbers(d)">
                             <input matInput placeholder="Available"
                                  type="text" [formControl]="findAvailableNumbers(d)">
                         </mat-form-field>

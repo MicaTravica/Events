@@ -111,7 +111,7 @@ export class ReservationComponent implements OnInit {
           this.tickets = [];
           this.ticketMap = {};
           this.dates = [];
-          this.toastr.success('reservation successfully made');
+          this.toastr.success('Reservation successfully made');
         },
         (err: HttpErrorResponse)  => {
           this.toastr.error(err.message);
@@ -271,10 +271,19 @@ export class ReservationComponent implements OnInit {
     this.dates.forEach(date => {
       if (this.parterForms[date].valid) {
         let i = 0;
-        const n  = this.desiredNumbers[date].value as number;
-        while (i < n) {
-          this.parterTickets.push(this.ticketMap[date][i].id);
+        let added = 0;
+        const n  =  +this.desiredNumbers[date].value ;
+        // da prodje kroz sve karte
+        while (i < this.ticketMap[date].length) {
+          if (this.ticketMap[date][i].ticketState === 'AVAILABLE' && added < n) {
+            this.parterTickets.push(this.ticketMap[date][i].id);
+            added = added + 1;
+          }
           i++;
+        }// ako nisu dodate sve jer su neke mozda rezervisane onda 
+        if (added !== n) {
+          this.parterTickets = [];
+          this.toastr.warning('Some partert tickets were not available');
         }
       } else {
         this.toastr.warning('For date:' + date + 'invalid input');
