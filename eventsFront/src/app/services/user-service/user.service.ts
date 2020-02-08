@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../../models/user-model/user.model';
-import { httpOptionsText, authHttpOptions } from '../../util/http-util';
+import { authHttpOptions, httpOptions } from '../../util/http-util';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../auth-service/auth.service';
 import { ChangePassword } from 'src/app/models/change-password-model/change.password.model';
@@ -26,9 +26,10 @@ export class UserService {
   }
 
   public save(user: User) {
-    return this.http.post<string>(this.usersUrl + '/registration', user,
+    return this.http.post(this.usersUrl + '/registration', user,
     {
-      headers: httpOptionsText()
+      headers: httpOptions(),
+      responseType: 'text'
     });
   }
 

@@ -33,7 +33,7 @@
                 <mat-error *ngIf="fromDate.invalid && (fromDate.dirty || fromDate.touched)">Start date is required</mat-error>
             </mat-form-field>
             <mat-form-field class="datetime">
-                <mat-select [(ngModel)]="time[0]" name="fromDateHours" required #fromDateHours='ngModel' placeholder="Choose hours">
+                <mat-select [(ngModel)]="time[0]" name="fromDateHours" required #fromDateHours='ngModel' placeholder="Choose hours" id="fromhours">
                     <mat-option [value]="i" *ngFor="let i of hours">{{i}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="fromDateHours.invalid && (fromDateHours.dirty || fromDateHours.touched)">Hours is required</mat-error>
@@ -54,7 +54,7 @@
                 <mat-error *ngIf="toDate.invalid && (toDate.dirty || toDate.touched)">End date is required</mat-error>
             </mat-form-field>
             <mat-form-field class="datetime">
-                <mat-select [(ngModel)]="time[2]" name="toDateHours" required #toDateHours='ngModel' placeholder="Choose hours">
+                <mat-select [(ngModel)]="time[2]" name="toDateHours" required #toDateHours='ngModel' placeholder="Choose hours" id="tohours">
                     <mat-option [value]="i" *ngFor="let i of hours">{{i}}</mat-option>
                 </mat-select>
                 <mat-error *ngIf="toDateHours.invalid && (toDateHours.dirty || toDateHours.touched)">Hours is required</mat-error>
@@ -75,31 +75,25 @@
         </mat-form-field>
 
         <span *ngFor="let hall of selectedPlaceHalls">
-            <mat-checkbox name="halls[]" (change)="onHallsCheckboxChange($event, hall)">
+            <mat-checkbox name="halls[]" class="halls" id="hall{{hall.id}}" (change)="onHallsCheckboxChange($event, hall)">
                 {{hall.name}}
             </mat-checkbox>
         </span>
-
-        <div class="hall-chooser">
-            <mat-select id="hall" placeholder="Select hall..." (selectionChange)="renderSectors($event)" *ngIf="selectedHalls.length > 0">
-                <mat-option value={{hall.id}} *ngFor="let hall of event.halls">{{hall.name}}</mat-option>
-            </mat-select>
-        </div>
 
         <div *ngIf="selectedHalls.length > 0">
             <div *ngFor="let hall of selectedHalls; let i = index" [attr.data-index]="i" class="sectors-chooser">
                 <span>Hall {{hall.name}}</span>
                 <div *ngFor="let sector of hall.sectors" class="sector-selection">
-                    <mat-checkbox type="checkbox" value={{sector.id}} name="sectors[]" (change)="onSectorCheckboxChange($event, i, sector)" [checked]="isSectorSelected(sector.id)">
+                    <mat-checkbox type="checkbox" value={{sector.id}} id="sectors{{sector.id}}" name="sectors{{sector.id}}" class="sectorslist" (change)="onSectorCheckboxChange($event, i, sector)" [checked]="isSectorSelected(sector.id)">
                         Sector {{sector.name}}
                     </mat-checkbox>
                     <mat-form-field *ngIf="isSectorSelected(sector.id)">
-                        <input matInput #ticketPrice='ngModel' min="1" name="ticketPrice{{sector.id}}" [ngModel]="getPriceList(sector.id)" (change)="setPriceList($event, sector.id)" required type="number" placeholder="Ticket price">
+                        <input matInput #ticketPrice='ngModel' min="1" name="ticketPrice{{sector.id}}" id="ticketPrice{{sector.id}}" [ngModel]="getPriceList(sector.id)" (change)="setPriceList($event, sector.id)" required type="number" placeholder="Ticket price">
                         <mat-error *ngIf="ticketPrice.invalid && (ticketPrice.dirty || ticketPrice.touched)">Ticket price is required</mat-error>
                     </mat-form-field>
                     <mat-form-field *ngIf="isSectorSelected(sector.id) && sector.sectorRows < 1 && sector.sectorColumns < 1">
                         <input matInput #sectorCapacity="ngModel" min="1" [(ngModel)]="sector.sectorCapacity" name="sectorCapacity{{sector.id}}" required type="number" placeholder="Number of tickets">
-                        <mat-error *ngIf="sectorCapacity.invalid && (sectorCapacity.dirty || sectorCapacity.touched)">Ticket price is required</mat-error>
+                        <mat-error *ngIf="sectorCapacity.invalid && (sectorCapacity.dirty || sectorCapacity.touched)">Sector capacity is required</mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -116,7 +110,7 @@
             <input type="file" id="file" (change)="upload($event)">
         </div>
         <br/>
-        <button mat-raised-button type="submit" color="accent" [disabled]="addEventForm.invalid || (this.event.halls.length < 1) || sectorsChoosen() || submitted">Save</button> 
+        <button mat-raised-button type="submit" color="accent" id="add" [disabled]="addEventForm.invalid || (this.event.halls.length < 1) || sectorsChoosen() || submitted">Save</button> 
     </form>
 
 </div>

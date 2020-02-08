@@ -17,7 +17,7 @@ import { Place } from 'src/app/models/place-model/place.model';
 import { AuthService } from 'src/app/services/auth-service/auth.service';
 import { AngularFireStorage } from 'angularfire2/storage';
 
-describe('EventDetailsComponent', () => {
+fdescribe('EventDetailsComponent', () => {
   let component: EventDetailsComponent;
   let fixture: ComponentFixture<EventDetailsComponent>;
   let eventService: any;

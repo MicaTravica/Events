@@ -26,6 +26,11 @@
                 <p>To: {{ticket.toDate | dateFormat}}</p>
                 <p *ngIf='ticket.seatRow'>Seat: {{ticket.seatRow}} | {{ticket.seatColumn}}</p>
             </mat-card-content>
+            <mat-card-content>
+                <p>
+                    <img [src]="ticket.barCode" height="100" width="100"/>
+                </p>
+            </mat-card-content>
         </mat-card-content>
         <mat-card-actions class="card-actions">
             <button mat-raised-button (click)="showDetails(ticket.event.id)" color="accent">Event details</button>

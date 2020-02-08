@@ -9,15 +9,15 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <mat-form-field>
-      <input matInput [(ngModel)]="eventSearch.name" placeholder="Event name">
+      <input matInput id="searchName" [(ngModel)]="eventSearch.name" placeholder="Event name">
     </mat-form-field>
     <mat-form-field class="example-full-width">
-        <input matInput [max]="eventSearch.toDate" [matDatepicker]="picker1" placeholder="From date" [(ngModel)]="eventSearch.fromDate">
+        <input matInput id="searchFromDate" [max]="eventSearch.toDate" [matDatepicker]="picker1" placeholder="From date" [(ngModel)]="eventSearch.fromDate">
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
     </mat-form-field>
     <mat-form-field class="example-full-width">
-        <input matInput [min]="eventSearch.fromDate" [matDatepicker]="picker2" placeholder="To date" [(ngModel)]="eventSearch.toDate">
+        <input matInput id="searchToDate" [min]="eventSearch.fromDate" [matDatepicker]="picker2" placeholder="To date" [(ngModel)]="eventSearch.toDate">
         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
         <mat-datepicker #picker2></mat-datepicker>
     </mat-form-field>
@@ -46,7 +46,7 @@
       </mat-select>
     </mat-form-field>
     <mat-action-row>
-      <button mat-raised-button color="accent" (click)="search()">Search</button>
+      <button id="searchBtn" mat-raised-button color="accent" (click)="search()">Search</button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>

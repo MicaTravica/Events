@@ -2,40 +2,40 @@
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
         <div>
             <mat-form-field>
-                <input matInput placeholder="Name" type="text" formControlName="name">
+                <input matInput placeholder="Name" type="text" formControlName="name" id="name">
                 <mat-error *ngIf="name.errors?.required">Name is required</mat-error>
             </mat-form-field>
         </div>
         <div>
             <mat-form-field>
-                <input matInput placeholder="Surname" type="text" formControlName="surname">
+                <input matInput placeholder="Surname" type="text" formControlName="surname" id="surname">
                 <mat-error *ngIf="surname.errors?.required">Surname is required</mat-error>
             </mat-form-field>
         </div>
         <div>
             <mat-form-field>
-                <input matInput type="text" placeholder="Username" formControlName="username">
+                <input matInput type="text" placeholder="Username" formControlName="username" id="username">
                 <mat-error *ngIf="username.errors?.required">Username is required</mat-error>
             </mat-form-field>
         </div>
         <div>
             <mat-form-field>
-                <input matInput type="email" placeholder="Email" formControlName="email">
+                <input matInput type="email" placeholder="Email" formControlName="email" id="email">
             </mat-form-field>
         </div>
         <div>
             <mat-form-field>
-                <input matInput placeholder="Phone" type="text" formControlName="phone">
+                <input matInput placeholder="Phone" type="text" formControlName="phone" id="phone">
                 <mat-error *ngIf="phone.errors?.required">Phone is required</mat-error>
             </mat-form-field>
         </div>
         <p>
-            <button mat-raised-button color="accent" type="button" (click)='changePassword()'>
+            <button id="changePasswordBtn" mat-raised-button color="accent" type="button" (click)='changePassword()'>
                 Change password</button>
         </p>
         <p>
             <button mat-raised-button color="accent"
-                type="submit" [disabled]="profileForm.invalid">Save</button>
+                type="submit" [disabled]="profileForm.invalid" id="change">Save</button>
         </p>
     </form>
 </div>
