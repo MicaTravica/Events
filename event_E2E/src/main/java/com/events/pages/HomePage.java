@@ -35,6 +35,10 @@ public class HomePage {
 
 	private static String searchNameFiledId = "searchName";
 
+	private static String searchFromDateFiledId = "searchFromDate";
+
+	private static String searchToDateFiledId = "searchToDate";
+
 	private static String searchResultElement = "mat-grid-tile";
 
 	public static String FRONT_URL = "http://localhost:4200/events";
@@ -62,7 +66,7 @@ public class HomePage {
 	}
 
 	public void ensureSearchBoxIsDisplayed() {
-		(new WebDriverWait(driver, 10))
+		(new WebDriverWait(driver, 20))
 				.until(ExpectedConditions.presenceOfElementLocated(By.tagName(HomePage.searchPanel)));
 	}
 
@@ -96,7 +100,7 @@ public class HomePage {
 	}
 
 	public void ensureSeachResulstPresent() {
-		(new WebDriverWait(driver,10))
+		(new WebDriverWait(driver, 20))
 				.until(ExpectedConditions.presenceOfElementLocated(By.tagName(searchResultElement)));
 	}
 	
@@ -120,5 +124,15 @@ public class HomePage {
 	public void setSearchEventName(String name) {
 		WebElement e = driver.findElement(By.id(HomePage.searchNameFiledId));
 		e.sendKeys(name);
+	}
+	
+	public void setSearchEventFromDate(String value) {
+		WebElement e = driver.findElement(By.id(HomePage.searchFromDateFiledId));
+		e.sendKeys(value);
+	}
+	
+	public void setSearchEventToDate(String value) {
+		WebElement e = driver.findElement(By.id(HomePage.searchToDateFiledId));
+		e.sendKeys(value);
 	}
 }
