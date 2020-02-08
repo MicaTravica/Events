@@ -9,7 +9,7 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <mat-form-field>
-      <input matInput [(ngModel)]="eventSearch.name" placeholder="Event name">
+      <input matInput id="searchName" [(ngModel)]="eventSearch.name" placeholder="Event name">
     </mat-form-field>
     <mat-form-field class="example-full-width">
         <input matInput [max]="eventSearch.toDate" [matDatepicker]="picker1" placeholder="From date" [(ngModel)]="eventSearch.fromDate">
@@ -46,7 +46,7 @@
       </mat-select>
     </mat-form-field>
     <mat-action-row>
-      <button mat-raised-button color="accent" (click)="search()">Search</button>
+      <button id="searchBtn" mat-raised-button color="accent" (click)="search()">Search</button>
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
