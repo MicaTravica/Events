@@ -21,6 +21,9 @@ public class HomePage {
 
 	@FindBy(id = "loginlink")
 	private WebElement loginLink;
+	
+	@FindBy(id = "newevent")
+	private WebElement newEventButton;
 
 	@FindBy(className = "ngx-toastr")
 	private WebElement toastr;
@@ -31,6 +34,10 @@ public class HomePage {
 	private static String searchPanel = "mat-expansion-panel-header";
 
 	private static String searchNameFiledId = "searchName";
+
+	private static String searchFromDateFiledId = "searchFromDate";
+
+	private static String searchToDateFiledId = "searchToDate";
 
 	private static String searchResultElement = "mat-grid-tile";
 
@@ -59,7 +66,7 @@ public class HomePage {
 	}
 
 	public void ensureSearchBoxIsDisplayed() {
-		(new WebDriverWait(driver, 10))
+		(new WebDriverWait(driver, 20))
 				.until(ExpectedConditions.presenceOfElementLocated(By.tagName(HomePage.searchPanel)));
 	}
 
@@ -93,7 +100,7 @@ public class HomePage {
 	}
 
 	public void ensureSeachResulstPresent() {
-		(new WebDriverWait(driver,10))
+		(new WebDriverWait(driver, 20))
 				.until(ExpectedConditions.presenceOfElementLocated(By.tagName(searchResultElement)));
 	}
 	
@@ -104,9 +111,28 @@ public class HomePage {
 	public void ensureToasterIsDisplayed() {
 		(new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("ngx-toastr")));
 	}
+	
+	public WebElement getNewEventButton() {
+		return newEventButton;
+	}
+	
+	public void ensureNewEventIsDisplayed() {
+		(new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(newEventButton));
 
+	}
+	
 	public void setSearchEventName(String name) {
 		WebElement e = driver.findElement(By.id(HomePage.searchNameFiledId));
 		e.sendKeys(name);
+	}
+	
+	public void setSearchEventFromDate(String value) {
+		WebElement e = driver.findElement(By.id(HomePage.searchFromDateFiledId));
+		e.sendKeys(value);
+	}
+	
+	public void setSearchEventToDate(String value) {
+		WebElement e = driver.findElement(By.id(HomePage.searchToDateFiledId));
+		e.sendKeys(value);
 	}
 }

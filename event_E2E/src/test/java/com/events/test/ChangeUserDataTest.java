@@ -48,6 +48,8 @@ public class ChangeUserDataTest {
 		homePage.ensureToasterIsNotDisplayed();
 		homePage.getProfilLink().click();
 		
+		assertEquals(ChangeUserDataPage.FRONT_URL, browser.getCurrentUrl());
+		
 		changeUserDataPage.ensureSubmitButtonIsDisplayed();
 		changeUserDataPage.setNameInput(UserConstants.NEW_NAME);
 		changeUserDataPage.setUsernameInput(UserConstants.VALID_USERNAME);
