@@ -19,6 +19,9 @@ public class HomePage {
 
 	@FindBy(id = "loginlink")
 	private WebElement loginLink;
+	
+	@FindBy(id = "newevent")
+	private WebElement newEventButton;
 
 	@FindBy(className = "ngx-toastr")
 	private WebElement toastr;
@@ -63,5 +66,13 @@ public class HomePage {
 	
 	public void ensureToasterIsDisplayed() {
 		(new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("ngx-toastr")));
+	}
+	
+	public WebElement getNewEventButton() {
+		return newEventButton;
+	}
+	
+	public void ensureNewEventIsDisplayed() {
+		(new WebDriverWait(driver, 10)).until(ExpectedConditions.elementToBeClickable(newEventButton));
 	}
 }
