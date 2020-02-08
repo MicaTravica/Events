@@ -27,7 +27,7 @@ public class LoginPage {
 
     public void ensureLoginDisplayed() {
         //wait for card number input field to be present
-        (new WebDriverWait(driver, 10))
+        (new WebDriverWait(driver, 20))
                 .until(ExpectedConditions.presenceOfElementLocated(
                         By.id("password")));
     }

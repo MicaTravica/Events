@@ -2,7 +2,7 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit(registerForm.value)">
         <div>
             <mat-form-field>
-                <input matInput placeholder="Name" type="text" formControlName="name">
+                <input matInput placeholder="Name" type="text" formControlName="name" id="name">
             </mat-form-field>
             <div class="error" *ngIf="form.name.touched && form.name.errors">
                 <mat-error *ngIf="form.name.errors.required">Name is required</mat-error>
@@ -10,7 +10,7 @@
         </div>
         <div>
             <mat-form-field>
-                <input matInput placeholder="Surname" type="text" formControlName="surname">
+                <input matInput placeholder="Surname" type="text" formControlName="surname" id="surname">
             </mat-form-field>
             <div class="error" *ngIf="form.surname.touched && form.surname.errors">
                 <mat-error *ngIf="form.surname.errors.required">Surname is required</mat-error>
@@ -18,7 +18,7 @@
         </div>
         <div>
             <mat-form-field>
-                <input matInput type="email" placeholder="Email" formControlName="email">
+                <input matInput type="email" placeholder="Email" formControlName="email" id="email">
             </mat-form-field>
             <div class="error" *ngIf="form.email.touched && form.email.errors">
                 <mat-error *ngIf="form.email.errors.required">Email is required</mat-error>
@@ -26,7 +26,7 @@
         </div>
         <div>
             <mat-form-field>
-                <input matInput placeholder="Phone" type="text" formControlName="phone">
+                <input matInput placeholder="Phone" type="text" formControlName="phone" id="phone">
             </mat-form-field>
             <div class="error" *ngIf="form.phone.touched && form.phone.errors">
                 <mat-error *ngIf="form.phone.errors.required">Phone is required</mat-error>
@@ -34,7 +34,7 @@
         </div>
         <div>
             <mat-form-field>
-                <input matInput placeholder="Username" type="text" formControlName="username">
+                <input matInput placeholder="Username" type="text" formControlName="username" id="username">
             </mat-form-field>
             <div class="error" *ngIf="form.username.touched && form.username.errors">
                 <mat-error *ngIf="form.username.errors.required">Username is required</mat-error>
@@ -42,13 +42,13 @@
         </div>
         <div>
             <mat-form-field>
-                <input matInput placeholder="Password" type="password" formControlName="password">
+                <input matInput placeholder="Password" type="password" formControlName="password" id="passwordr">
             </mat-form-field>
             <div class="error" *ngIf="form.password.touched && form.password.errors">
                 <mat-error *ngIf="form.password.errors.required">Password is required</mat-error>
                 <mat-error *ngIf="form.password.errors.minlength">Password must be at least 8 characters long</mat-error>
             </div>
         </div>
-        <button mat-raised-button color="accent" type="submit" [disabled]="registerForm.invalid">Register</button>
+        <button mat-raised-button color="accent" type="submit" [disabled]="registerForm.invalid" id="register">Register</button>
     </form>
 </div>
