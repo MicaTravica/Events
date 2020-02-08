@@ -1,5 +1,6 @@
 package com.app.events.serviceimpl.report;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -36,7 +37,11 @@ public class ReportservicaImplIntegrationTest {
 	public void profitByEvent_Test_Success() {
 		 Map<String, Double> found = reportService.profitByEvent(EventConstants.PERSISTED_EVENT_ID);
 		 assertFalse(found.isEmpty());
+		 for(String s : found.keySet()) {
+			 assertEquals(EventConstants.PERSISTED_EVENT_NAME1,s);
+		 }
 	}
+	
 
 
 	@Test
@@ -49,6 +54,9 @@ public class ReportservicaImplIntegrationTest {
 	public void attendanceByEvent_Test_Success() {
 		 Map<String, Double> found = reportService.attendanceByEvent(EventConstants.PERSISTED_EVENT_ID);
 		 assertFalse(found.isEmpty());
+		 for(String s : found.keySet()) {
+			 assertEquals(EventConstants.PERSISTED_EVENT_NAME1,s);
+		 }
 	}
 	
 }
