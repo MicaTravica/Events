@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import com.app.events.service.CloudinaryService;
-import com.app.events.service.QRCodeService;
-import com.app.events.service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
