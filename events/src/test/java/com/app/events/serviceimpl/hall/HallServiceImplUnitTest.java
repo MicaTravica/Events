@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
@@ -82,7 +83,13 @@ public class HallServiceImplUnitTest {
         Mockito.when(placeSerivce.findOne(PlaceConstants.PLACE_ID)).thenReturn(PLACE);
         Mockito.when(placeSerivce.findOne(PlaceConstants.INVALID_PLACE_ID))
             .thenThrow(new ResourceNotFoundException("place not found"));
-
+        
+        Collection<Hall> halls = new ArrayList<>();
+        halls.add(new Hall());
+        
+        Mockito.when(hallRepositoryMocked.findAllByEventsId(HallConstants.PERSISTED_HALL_EVENT_ID)).thenReturn(halls);
+        Mockito.when(hallRepositoryMocked.findAllByPlaceId(HallConstants.PERSISTED_HALL_PLACE_ID)).thenReturn(halls);
+        
     }    
     @Test
     public void when_ValidID_thenHallShouldBeFound() throws Exception {
@@ -152,7 +159,7 @@ public class HallServiceImplUnitTest {
     public void getHallsByPlaceId_Test_Success() {
     	Collection<Hall> results = hallRepositoryMocked.findAllByPlaceId(HallConstants.PERSISTED_HALL_PLACE_ID);
 		
-		assertEquals(results.size(),3);
+		assertEquals(results.size(), 1);
     }
     
     @Test

@@ -18,8 +18,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.events.constants.PriceListConstants;
 import com.app.events.constants.UserConstants;
@@ -51,8 +53,11 @@ public class PriceListControllerIntegrationTest {
 
     
     @Test
+    @Transactional
+	@Rollback(true)
     public void findOneById_Test_Success() throws Exception
     {
+    	//TODO: osigurati se da u bazi postoji to sto trazi
     	URI uri = new URI(PriceListConstants.URI_PREFIX );
 
 		ResponseEntity<PriceListDTO> response = restTemplate.getForEntity(uri + "/" + PriceListConstants.PERSISTED_PL_ID, PriceListDTO.class);
@@ -64,6 +69,8 @@ public class PriceListControllerIntegrationTest {
     }
 
     @Test
+    @Transactional
+	@Rollback(true)
     public void findOneById_Test_Fail() throws Exception
     {
     	URI uri = new URI(PriceListConstants.URI_PREFIX );
@@ -73,6 +80,8 @@ public class PriceListControllerIntegrationTest {
     }
     
     @Test
+    @Transactional
+	@Rollback(true)
     public void creat_Test_Success() throws Exception
     {
         int sizeBeforeInsert = priceListRepository.findAll().size();
@@ -104,6 +113,8 @@ public class PriceListControllerIntegrationTest {
     }
  
     @Test
+    @Transactional
+	@Rollback(true)
     public void creat_Test_Fail() throws Exception
     {
 
@@ -130,6 +141,8 @@ public class PriceListControllerIntegrationTest {
     
     
     @Test
+    @Transactional
+	@Rollback(true)
     public void update_Test_Success() throws Exception
     {
     	PriceListDTO sc = new PriceListDTO(
@@ -155,6 +168,8 @@ public class PriceListControllerIntegrationTest {
     }
     
     @Test
+    @Transactional
+	@Rollback(true)
     public void update_Test_Fail() throws Exception
     {
     	PriceListDTO sc = new PriceListDTO(
