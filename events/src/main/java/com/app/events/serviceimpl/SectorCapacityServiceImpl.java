@@ -1,5 +1,7 @@
 package com.app.events.serviceimpl;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,4 +50,10 @@ public class SectorCapacityServiceImpl implements SectorCapacityService {
     public void delete(Long id) {
         this.sectorCapacityRepository.deleteById(id);
     }
+    
+    @Override
+	public Collection<SectorCapacity> findSectorCapacityBySectorId(Long id) {
+		return sectorCapacityRepository.findBySectorId(id);
+
+	}
 }

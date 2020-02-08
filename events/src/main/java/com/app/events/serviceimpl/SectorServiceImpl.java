@@ -7,12 +7,18 @@ import org.springframework.stereotype.Service;
 
 import com.app.events.exception.ResourceExistsException;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.ResourceNullNumber;
+import com.app.events.exception.TicketBoughtOrReservedException;
 import com.app.events.model.Hall;
 import com.app.events.model.Seat;
 import com.app.events.model.Sector;
+import com.app.events.model.SectorCapacity;
+import com.app.events.model.Ticket;
 import com.app.events.repository.HallRepository;
 import com.app.events.repository.SectorRepository;
+import com.app.events.repository.TicketRepository;
 import com.app.events.service.SeatService;
+import com.app.events.service.SectorCapacityService;
 import com.app.events.service.SectorService;
 
 @Service
@@ -26,6 +32,15 @@ public class SectorServiceImpl implements SectorService {
     
     @Autowired
     private SeatService seatService;
+   
+
+    @Autowired
+    private TicketRepository ticketRepository;
+   
+    
+    @Autowired
+    private SectorCapacityService sectorCapacityService;
+
 
 
     @Override
@@ -37,6 +52,9 @@ public class SectorServiceImpl implements SectorService {
     public Sector create(Sector sector) throws Exception {
         if (sector.getId() != null) {
             throw new ResourceExistsException("Sector");
+        }
+        if (sector.getSectorColumns()<0 || sector.getSectorRows()<0) {
+            throw new ResourceNullNumber();
         }
         
         Hall hall = hallRepository.findById(sector.getHall().getId())
@@ -66,12 +84,39 @@ public class SectorServiceImpl implements SectorService {
     public Sector update(Sector sector) throws Exception {
         Sector sectorToUpdate = this.findOne(sector.getId());
         sectorToUpdate = this.prepareSectorFields(sectorToUpdate, sector);
-        // proveriti da li je prodata neka karta za sektor bilo kad, ako jeste  ne moze da se menja
-        // obrisati sedista stara pa sacuvati nova
+        checkTicketForSeat(sectorToUpdate);
+        deleteSeatForOldSector(sectorToUpdate);
         saveSeat(sectorToUpdate);
         return this.sectorRepository.save(sectorToUpdate);
     }
 
+	private void deleteSeatForOldSector(Sector sectorToUpdate) {
+   	 if(sectorToUpdate.getSectorColumns()> 0 && sectorToUpdate.getSectorRows()> 0) {
+         	Collection<Seat> seats = seatService.findSeatFromSector(sectorToUpdate.getId());
+         	for(Seat s : seats) {
+         		seatService.delete(s.getId());
+         	}
+    } 
+	}
+	
+	private void checkTicketForSeat(Sector sectorToUpdate) throws ResourceExistsException, TicketBoughtOrReservedException {
+	    Collection<Seat> seats = seatService.findSeatFromSector(sectorToUpdate.getId());
+	   	for(Seat s : seats) {
+	        Collection<Ticket> tickets = ticketRepository.findTicketsBySeatId(s.getId());
+           	if(!tickets.isEmpty()) {
+           		throw new TicketBoughtOrReservedException();
+	         } 
+	     }
+	   	Collection<SectorCapacity> sectorCapacity = sectorCapacityService.findSectorCapacityBySectorId(sectorToUpdate.getId());
+	   	for(SectorCapacity sc: sectorCapacity) {
+    		Collection<Ticket> tickets = ticketRepository.findTicketsBySectorCapacityId(sc.getId());
+    		if(!tickets.isEmpty()) {
+	       		throw new TicketBoughtOrReservedException();
+	           	} 
+	     	}
+			
+		}
+    
     @Override
     public void delete(Long id) {
         this.sectorRepository.deleteById(id);

@@ -11,8 +11,12 @@ public class HallConstants {
     public static final Long PERSISTED_HALL_ID = 1l;
     public static final String PERSISTED_HALL_NAME = "sala1";
     public static final Long PERSISTED_HALL_PLACE_ID  = 1l;
+    public static final Long PERSISTED_HALL_EVENT_ID  = 1l;
 
+    
     public static final Long PERSISTED_HALL_ID2 = 2l;
+    public static final Long PERSISTED_HALL_ID3 = 3l;
+
     /*
         constants for pesisting new hall in db
     */
@@ -21,6 +25,7 @@ public class HallConstants {
     public static final Long VALID_HALL_ID = 1l;
     public static final Long INVALID_HALL_ID = -1l;
     public static final Long INVALID_PLACE_ID = -1l;
+    public static final Long INVALID_EVENT_ID = -1l;
 
 
 	public static final String URI_PREFIX = "/api/hall/";

@@ -16,6 +16,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.app.events.constants.SeatConstants;
+import com.app.events.constants.SectorConstants;
 import com.app.events.model.Seat;
 
 @RunWith(SpringRunner.class)
@@ -29,11 +30,8 @@ public class SeatRepositoryTest {
 
 	@Test
 	public void findSeatByAllParams_TestSuccess() {
-		int column = 1;
-		int row = 1;
-		Long sectorID = 1l;
-		
-		Optional<Seat> results = seatRepository.findSeatByAllParams(column, row, sectorID);
+
+		Optional<Seat> results = seatRepository.findSeatByAllParams(SeatConstants.PERSISTED_SEAT_COLUMN, SeatConstants.PERSISTED_SEAT_ROW, SectorConstants.PERSISTED_SECTOR_ID);
 		
 		Seat seat = results.get();
 		assertEquals(seat.getId(), SeatConstants.PERSISTED_SEAT_ID);
@@ -42,11 +40,8 @@ public class SeatRepositoryTest {
 	
 	@Test
 	public void findSeatByAllParams_TestFail_Column() {
-		int column = 3;
-		int row = 1;
-		Long sectorID = 1l;
 		
-		Optional<Seat> results = seatRepository.findSeatByAllParams(column, row, sectorID);
+		Optional<Seat> results = seatRepository.findSeatByAllParams(SectorConstants.PERSISTED_SECTOR_COLUMNS, SectorConstants.PERSISTED_SECTOR_ROWS3, SectorConstants.INVALID_SECTOR_ID);
 				
 		assertSame(Optional.empty(), results);
 		
@@ -66,10 +61,8 @@ public class SeatRepositoryTest {
 	
 	@Test
 	public void findSeatBySectorId_TestSuccess() {
-		
-		Long sectorID = 1l;
-		
-		Collection<Seat> results = seatRepository.findSeatBySectorId(sectorID);
+				
+		Collection<Seat> results = seatRepository.findSeatBySectorId(SectorConstants.PERSISTED_SECTOR_ID);
 		
 		int numberOfSeat = results.size();
 		
@@ -84,10 +77,8 @@ public class SeatRepositoryTest {
 	
 	@Test
 	public void findSeatBySectorId_TestFail() {
-		
-		Long sectorID = 10l;
-		
-		Collection<Seat> results = seatRepository.findSeatBySectorId(sectorID);
+				
+		Collection<Seat> results = seatRepository.findSeatBySectorId(SectorConstants.INVALID_SECTOR_ID);
 		
 		int numberOfSeat = results.size();
 		

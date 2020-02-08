@@ -46,5 +46,12 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
 	@Query("SELECT COUNT(t) FROM Ticket t WHERE t.event.id = ?1 AND (t.ticketState = 'AVAILABLE' OR t.ticketState = 'RESERVED')")
 	int availableTikcketsByEventId(Long eId);
+	
+
+	@Query("SELECT t FROM Ticket t WHERE t.seat.id = ?1  AND (t.ticketState = 'BOUGHT' OR t.ticketState = 'RESERVED')") 
+	Collection<Ticket> findTicketsBySeatId(Long seatId);
+	
+	@Query("SELECT t FROM Ticket t WHERE t.sectorCapacity.id = ?1  AND (t.ticketState = 'BOUGHT' OR t.ticketState = 'RESERVED') AND t.sectorCapacity.free< t.sectorCapacity.capacity")
+	Collection<Ticket> findTicketsBySectorCapacityId(Long seatId);
 
 }

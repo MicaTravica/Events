@@ -2,12 +2,15 @@ package com.app.events.controller;
 
 import com.app.events.constants.HallConstants;
 import com.app.events.constants.PlaceConstants;
+import com.app.events.constants.SeatConstants;
 import com.app.events.constants.UserConstants;
 import com.app.events.dto.HallDTO;
 import com.app.events.dto.LoginDTO;
+import com.app.events.dto.PlaceDTO;
 import com.app.events.mapper.HallMapper;
 import com.app.events.model.Hall;
 import com.app.events.model.Place;
+import com.app.events.model.Seat;
 import com.app.events.repository.HallRepository;
 
 import org.junit.Before;
@@ -25,8 +28,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -110,7 +113,6 @@ public class HallControllerIntegrationTest {
 
         assertEquals(HallConstants.VALID_HALL_NAME_FOR_PERSISTANCE, res.getBody().getName());
         assertEquals(sizeBeforeInsert + 1, afterInsert.size());
-        checkCreatedHallDTO(addedHall, res.getBody());
 
         hallRepository.delete(addedHall);
     }
@@ -140,19 +142,68 @@ public class HallControllerIntegrationTest {
         assertEquals(sizeBeforeInsert, afterInsertSize);
     }
 
-
-
-    
-    private void checkCreatedHallDTO(Hall hall, HallDTO hallDto) {
-        assertEquals(hall.getId(), hallDto.getId());
-        assertEquals(hall.getName(), hallDto.getName());
+    @Test
+    public void update_Test_Success() throws Exception
+    {
         
-        assertEquals(hall.getPlace().getId(), hallDto.getPlace().getId());
-        assertEquals(hall.getPlace().getAddress(), hallDto.getPlace().getAddress());
-        assertEquals(hall.getPlace().getLatitude(), hallDto.getPlace().getLatitude());
-        assertEquals(hall.getPlace().getLongitude(), hallDto.getPlace().getLongitude());
-    }
+        HallDTO content = new HallDTO(
+                HallConstants.PERSISTED_HALL_ID,
+                HallConstants.PERSISTED_HALL_NAME,
+                new PlaceDTO(PlaceConstants.PERSISTED_PLACE_ID),
+                new HashSet<>());
 
+        URI uri = new URI(HallConstants.URI_PREFIX);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+        HttpEntity<HallDTO> req = new HttpEntity<>(content, headers);
+
+        ResponseEntity<HallDTO> res = restTemplate.exchange(uri, HttpMethod.PUT, req, HallDTO.class);
+
+        List<Hall> afterInsert = hallRepository.findAll();
+        Hall addedHall = afterInsert.get(afterInsert.size()-1);
+
+        assertNotNull(res.getBody());
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+
+        assertEquals(HallConstants.PERSISTED_HALL_NAME, res.getBody().getName());
+
+        hallRepository.delete(addedHall);
+    }
+    
+    @Test
+    public void update_Test_Fail() throws Exception
+    {
+        
+        HallDTO content = new HallDTO(
+                HallConstants.INVALID_HALL_ID);
+
+        URI uri = new URI(HallConstants.URI_PREFIX);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+        HttpEntity<HallDTO> req = new HttpEntity<>(content, headers);
+
+        ResponseEntity<HallDTO> res = restTemplate.exchange(uri, HttpMethod.PUT, req, HallDTO.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
+
+        
+    }
+    
+    @Test
+    public void delete_Test_Fail() throws Exception
+    {
+
+        Long hall = HallConstants.PERSISTED_HALL_ID;
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+        HttpEntity<Long> req = new HttpEntity<>(hall, headers);
+
+        ResponseEntity<Seat> res = restTemplate.exchange("/api/hall/" + hall , HttpMethod.DELETE, req, Seat.class);
+
+
+        assertEquals(HttpStatus.NO_CONTENT, res.getStatusCode());
+    }
 
 
 }

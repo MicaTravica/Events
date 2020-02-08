@@ -1,5 +1,7 @@
 package com.app.events.serviceimpl.hall;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -52,6 +54,23 @@ public class HallServiceImplIntegrationTest {
     {
         hallService.findOne(HallConstants.INVALID_HALL_ID);
     }
+    
+    @Test
+    public void findOneAndLoadSectors_whenHallExsists() throws Exception
+    {
+        Hall hall = hallService.findOneAndLoadSectors(HallConstants.PERSISTED_HALL_ID);
+        assertNotNull(hall);
+        assertEquals(HallConstants.PERSISTED_HALL_ID, hall.getId());
+        assertEquals(HallConstants.PERSISTED_HALL_NAME, hall.getName());
+        assertEquals(HallConstants.PERSISTED_HALL_PLACE_ID, hall.getPlace().getId());
+    }
+    
+    @Test(expected = ResourceNotFoundException.class )
+    public void findOneAndLoadSectors_whenHallDoesNotExsist() throws Exception
+    {
+        hallService.findOneAndLoadSectors(HallConstants.INVALID_HALL_ID);
+    }
+    
 
     @Test(expected = ResourceExistsException.class)
     public void saveHall_when_Hall_ID_AllreadyGiven() throws Exception
@@ -123,14 +142,12 @@ public class HallServiceImplIntegrationTest {
     }
 
 
-
-
     @Test
     public void getHallsByPlaceId_Test_Success() {
     	Collection<Hall> results = hallRepository.findAllByPlaceId(HallConstants.PERSISTED_HALL_PLACE_ID);
     	Hall hall = results.iterator().next();
 		
-		assertEquals(results.size(),2);
+		assertEquals(results.size(),3);
 		assertEquals(hall.getId(), HallConstants.PERSISTED_HALL_ID);
     }
     
@@ -139,6 +156,20 @@ public class HallServiceImplIntegrationTest {
     	Collection<Hall> results = hallRepository.findAllByPlaceId(HallConstants.INVALID_PLACE_ID);
 		
 		assertEquals(results.size(),0);
+    }
+    
+    @Test
+    public void getHallByEventId_Test_Success() {
+    	Collection<Hall> results = hallRepository.findAllByEventsId(HallConstants.PERSISTED_HALL_EVENT_ID);
+    	
+    	assertFalse(results.isEmpty());
+    }
+    
+    @Test
+    public void getHallByEventId_Test_Fail() {
+    	Collection<Hall> results = hallRepository.findAllByEventsId(HallConstants.INVALID_EVENT_ID);
+    	
+    	assertTrue(results.isEmpty());
     }
     
     

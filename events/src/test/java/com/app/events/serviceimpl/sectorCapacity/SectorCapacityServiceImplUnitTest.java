@@ -1,10 +1,16 @@
 package com.app.events.serviceimpl.sectorCapacity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
 
 import com.app.events.constants.SectorCapacityConstants;
 import com.app.events.exception.ResourceNotFoundException;
@@ -22,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -30,6 +37,7 @@ public class SectorCapacityServiceImplUnitTest {
 
     public static SectorCapacity persistedSectorCap;
     public static SectorCapacity sc;
+    public static SectorCapacity invalidSectorCapacity;
 
     @Autowired
     public SectorCapacityServiceImpl sectorCapacityServiceImpl;
@@ -57,6 +65,8 @@ public class SectorCapacityServiceImplUnitTest {
                 new Sector(SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_SECTOR_ID),
                 SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_CAPACITY,
                 SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_FREE);
+        
+        invalidSectorCapacity = new SectorCapacity(SectorCapacityConstants.INVALID_SECTOR_CAPACITY_ID);
 
         Mockito.when(sectorCapacityRepository.findById(SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_ID)).
             thenReturn(Optional.of(persistedSectorCap));
@@ -119,4 +129,30 @@ public class SectorCapacityServiceImplUnitTest {
         sectorCapacityServiceImpl.create(sc);
     }
 
+    
+    @Test
+    public void updateSector_Test_Success() throws Exception
+    {
+        int numberOfSectors = sectorCapacityRepository.findAll().size();
+        
+        SectorCapacity sectorCapacity = sectorCapacityServiceImpl.update(persistedSectorCap);
+        
+        assertEquals(numberOfSectors, sectorCapacityRepository.findAll().size());
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void updateSectorCapacity_Test_Fail() throws Exception
+    {
+    	sectorCapacityServiceImpl.update(invalidSectorCapacity);
+    }
+
+    @Test
+    public void findBySectorId_Test_Fail()
+    {
+        Collection<SectorCapacity> retVal = sectorCapacityServiceImpl.findSectorCapacityBySectorId(SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_SECTOR_INVALID_ID);
+        assertTrue(retVal.isEmpty());
+    }
+    
+   
+    
 }

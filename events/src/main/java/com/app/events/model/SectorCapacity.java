@@ -44,5 +44,19 @@ public class SectorCapacity {
 	@PositiveOrZero(message ="free must be positive number or zero")
 	private int free;
 	
+	public SectorCapacity(Long id) {
+		super();
+		this.id = id;
+	}
+
+	public SectorCapacity(Long id, @NotNull(message = "SectorCapacity must be asociated with Sector") Sector sector,
+			@PositiveOrZero(message = "capacity must be positive number or zero") int capacity,
+			@PositiveOrZero(message = "free must be positive number or zero") int free) {
+		super();
+		this.id = id;
+		this.sector = sector;
+		this.capacity = capacity;
+		this.free = free;
+	}
 	
 }

@@ -5,12 +5,15 @@ import com.app.events.model.Sector;
 import com.app.events.repository.SectorRepository;
 import com.app.events.serviceimpl.SectorServiceImpl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.util.Collection;
 
 import com.app.events.constants.*;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.ResourceNullNumber;
+import com.app.events.exception.TicketBoughtOrReservedException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +62,17 @@ public class SectorServiceImplIntegrationTest {
         sectorServiceImpl.create(s);
     }
 
+    @Test(expected = ResourceNullNumber.class)
+    public void createSector_Test_Fail() throws Exception
+    {
+        Sector s = new Sector(null, SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE,
+                                    SectorConstants.INVALID_SECTOR_ROWS, 
+                                    SectorConstants.INVALID_SECTOR_COLUMNS);
+        s.setHall(new Hall(HallConstants.PERSISTED_HALL_ID));
+        sectorServiceImpl.create(s);
+    }
+
+    
     @Test
     @Rollback
     @Transactional
@@ -82,10 +96,10 @@ public class SectorServiceImplIntegrationTest {
         sectorServiceImpl.update(new Sector(SectorConstants.INVALID_SECTOR_ID));
     }
 
-    @Test
+    @Test(expected = TicketBoughtOrReservedException.class)
     @Rollback
     @Transactional
-    public void updateSector_when_FieldsValid_should_updateSector() throws Exception
+    public void updateSector_Test_Fail() throws Exception
     {
         int numberOfSectors = sectorRepository.findAll().size();
 
@@ -94,21 +108,66 @@ public class SectorServiceImplIntegrationTest {
                                     SectorConstants.PERSISTED_SECTOR_ROWS, 
                                     SectorConstants.PERSISTED_SECTOR_COLUMNS);
         s.setHall(new Hall(HallConstants.PERSISTED_HALL_ID));
-        Sector savedSector = sectorServiceImpl.update(s);
-
+        Sector sector = sectorServiceImpl.update(s);
+        
         assertEquals(numberOfSectors, sectorRepository.findAll().size());
-        assertEquals(SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE, savedSector.getName());
+        assertEquals(sector.getName(), SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE);
+
+
+    }
+    
+    @Test
+    @Rollback
+    @Transactional
+    public void updateSector_Test_Success() throws Exception
+    {
+
+        Sector s = new Sector(		SectorConstants.PERSISTED_SECTOR_ID3,
+                                    SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE,
+                                    SectorConstants.PERSISTED_SECTOR_ROWS, 
+                                    SectorConstants.PERSISTED_SECTOR_COLUMNS);
+        s.setHall(new Hall(HallConstants.PERSISTED_HALL_ID));
+        sectorServiceImpl.update(s);
+
     }
     
     @Test
     public void findAll_Sectors_By_HallID_should_returnSector() throws Exception
     {
         Collection<Sector> foundSector = sectorServiceImpl.getSectorsByHallId(SectorConstants.PERSISTED_SECTOR_HALL_ID);
-        Sector sector = foundSector.iterator().next();
-        assertEquals(sector.getHall().getId(), SectorConstants.PERSISTED_SECTOR_HALL_ID);
-        assertEquals(sector.getName(), SectorConstants.PERSISTED_SECTOR_NAME);
+        for(Sector s: foundSector) {
+        	assertSame(s.getHall().getId(), SectorConstants.PERSISTED_SECTOR_HALL_ID);
+        }
+        
         assertEquals(foundSector.size(), 2);
     }
+    
+
+	@Test 
+	public void findAllByHallId_Test_Fail() {
+		Collection<Sector> result = sectorRepository.findAllByHallId(HallConstants.INVALID_HALL_ID);
+		assertEquals(result.size(),0);
+
+	}
+	
+	@Test 
+	public void findAllByHallIdAndEventId_Test_Success() {
+		
+		Collection<Sector> result = sectorRepository.findAllByHallIdAndEventId(HallConstants.PERSISTED_HALL_ID, EventConstants.PERSISTED_EVENT_ID);
+		assertSame(2, result.size());
+		
+		for(Sector s: result) {
+			assertEquals(SectorConstants.PERSISTED_SECTOR_HALL_ID, s.getHall().getId());
+		}
+		
+	}
+	
+	@Test 
+	public void findAllByHallIdAndEventId_Test_Fail() {
+		
+		Collection<Sector> result = sectorRepository.findAllByHallIdAndEventId(HallConstants.INVALID_HALL_ID, EventConstants.INVALID_EVENT_ID);
+		assertEquals(result.size(),0);
+	}
     
 
 }

@@ -1,6 +1,7 @@
 package com.app.events.repository;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.util.Collection;
 
@@ -34,16 +35,30 @@ public class SectorRepositoryTest {
 		assertEquals(result.size(),0);
 	}
 	
+	@Test 
+	public void findAllByHallIdAndEventId_Test_Success() {
+		long idHall = 1l;
+		long idEvent = 1l;
+		
+		Collection<Sector> result = sectorRepository.findAllByHallIdAndEventId(idHall, idEvent);
+		assertSame(2, result.size());
+		
+		for(Sector s: result) {
+			assertEquals(SectorConstants.PERSISTED_SECTOR_HALL_ID, s.getHall().getId());
+		}
+		
+	}
+	
 	@Test
 	public void findAllByHallId_Test_Success() {
 		long id = 1;
 		
 		Collection<Sector> result = sectorRepository.findAllByHallId(id);
-		Sector sector = result.iterator().next();
-
-		assertEquals(result.size(),2);
-		assertEquals(sector.getId(), SectorConstants.PERSISTED_SECTOR_ID);
-		assertEquals(sector.getHall().getId(), SectorConstants.PERSISTED_SECTOR_HALL_ID);
+		assertEquals(2, result.size());
+		
+		for(Sector s: result) {
+			assertEquals(SectorConstants.PERSISTED_SECTOR_HALL_ID, s.getHall().getId());
+		}
 	}
 	
 
@@ -55,5 +70,4 @@ public class SectorRepositoryTest {
 		assertEquals(result.size(),0);
 
 	}
-
 }

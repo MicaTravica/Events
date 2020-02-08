@@ -17,9 +17,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.app.events.constants.EventConstants;
 import com.app.events.constants.HallConstants;
 import com.app.events.constants.SectorConstants;
 import com.app.events.exception.ResourceNotFoundException;
+import com.app.events.exception.ResourceNullNumber;
 import com.app.events.model.Hall;
 import com.app.events.model.Sector;
 import com.app.events.repository.HallRepository;
@@ -36,6 +38,7 @@ public class SectorServiceImplUnitTest {
     public static Sector NEW_SECTOR = null;
     public static Sector INVALID_SECTOR = null;
     public static Sector SAVED_SECTOR = null;
+    public static Sector SECTOR3 = null;
     
 
     @Autowired
@@ -63,6 +66,11 @@ public class SectorServiceImplUnitTest {
             SectorConstants.PERSISTED_SECTOR_NAME,
             SectorConstants.PERSISTED_SECTOR_ROWS,
             SectorConstants.PERSISTED_SECTOR_COLUMNS);
+        
+        SECTOR3 = new Sector(null,
+                SectorConstants.VALID_SECTOR_NAME_FOR_PERSISTANCE,
+                SectorConstants.INVALID_SECTOR_ROWS, 
+                SectorConstants.INVALID_SECTOR_COLUMNS);
 
         when(sectorRepository.findById(SectorConstants.PERSISTED_SECTOR_ID)).thenReturn(Optional.of(SAVED_SECTOR));
         when(sectorRepository.findById(SectorConstants.INVALID_SECTOR_ID)).thenReturn(Optional.empty());
@@ -81,11 +89,12 @@ public class SectorServiceImplUnitTest {
     }   
     @Test
     public void findSector_when_ValidID_then_Sector_ShouldBeFound() throws Exception {
-            Sector foundSector = sectorService.findOne(SectorConstants.PERSISTED_SECTOR_ID);
-            assertNotNull(foundSector);
-            assertEquals(SectorConstants.PERSISTED_SECTOR_ID, foundSector.getId());
-            assertEquals(SectorConstants.PERSISTED_SECTOR_NAME, foundSector.getName());
+        Sector foundSector = sectorService.findOne(SAVED_SECTOR.getId());
+        assertNotNull(foundSector);
+        assertEquals(SAVED_SECTOR.getId(), foundSector.getId());
+        assertEquals(SAVED_SECTOR.getName(), foundSector.getName());
     }
+  
 
     @Test(expected = ResourceNotFoundException.class)
     public void findSector_when_InvalidId_thenThrow_ResourceNotFoundException() throws ResourceNotFoundException
@@ -93,20 +102,12 @@ public class SectorServiceImplUnitTest {
         sectorService.findOne(SectorConstants.INVALID_SECTOR_ID);
     }
 
-    /*
-    @Test
-    public void createSector_when_CreateValidSector_thenSectorShouldBeSaved() throws Exception{
-
-        Hall hall = new Hall(HallConstants.PERSISTED_HALL_ID);
-
-        NEW_SECTOR.setHall(hall);
-        Sector savedSector = sectorService.create(NEW_SECTOR);
-
-        assertEquals(NEW_SECTOR.getName(), savedSector.getName());
-        assertEquals(NEW_SECTOR.getHall().getId(), savedSector.getHall().getId());
-        
-        sectorService.delete(savedSector.getId());
-    }*/
+    @Test(expected = ResourceNullNumber.class)
+    public void createSector_Test_Fail() throws Exception
+    {
+        sectorService.create(SECTOR3);
+    }
+    
 
     @Test(expected = ResourceNotFoundException.class)
     public void createSector_when_InValidSectorHall_thenThrow_ResourceNotFoundException() throws Exception{
@@ -115,11 +116,31 @@ public class SectorServiceImplUnitTest {
         sectorService.create(NEW_SECTOR);
     }
 
+    
     @Test(expected = ResourceNotFoundException.class)
     public void updateSector_when_SectorDoesntExist() throws Exception
     {
         sectorService.update(new Sector(SectorConstants.INVALID_SECTOR_ID));
     }
+    
+    
+
+	@Test 
+	public void findAllByHallId_Test_Fail() {
+		Collection<Sector> result = sectorRepository.findAllByHallId(HallConstants.INVALID_HALL_ID);
+		assertEquals(result.size(),0);
+
+	}
+
+	
+	@Test 
+	public void findAllByHallIdAndEventId_Test_Fail() {
+		
+		Collection<Sector> result = sectorRepository.findAllByHallIdAndEventId(HallConstants.INVALID_HALL_ID, EventConstants.INVALID_EVENT_ID);
+		assertEquals(result.size(),0);
+	}
+    
+
     
   
 }

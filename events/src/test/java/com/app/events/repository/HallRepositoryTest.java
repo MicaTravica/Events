@@ -49,11 +49,12 @@ public class HallRepositoryTest {
 		long id = 1l;
 		
 		Collection<Hall> result = hallRepository.findAllByPlaceId(id);
-		Hall hall = result.iterator().next();
 						
-		assertEquals(result.size(),2);
-		assertEquals(hall.getId(), HallConstants.PERSISTED_HALL_ID);
-
+		assertEquals(3, result.size());
+		
+		for(Hall p : result) {
+			assertEquals(HallConstants.PERSISTED_HALL_PLACE_ID, p.getPlace().getId());
+		}
 	}
 	
 	@Test 

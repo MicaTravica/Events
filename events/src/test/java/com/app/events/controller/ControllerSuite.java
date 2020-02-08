@@ -9,9 +9,11 @@ import org.junit.runners.Suite;
         HallControllerIntegrationTest.class,
         MediaControllerIntegrationTest.class,
         PlaceControllerIntegrationTest.class,
+        PriceListControllerIntegrationTest.class,
         SeatControllerIntegrationTest.class,
         SectorCapacityControllerIntegrationTest.class,
-        SectorControllerIntegrationTest.class
+        SectorControllerIntegrationTest.class,
+        UserControllerIntegrationTest.class
     })
 public class ControllerSuite {
 }

@@ -28,6 +28,8 @@ public class EventConstants {
 	public static final Date PERSISTED_EVENT_TO_DATE2 = new GregorianCalendar(2021, Calendar.JANUARY, 2, 1, 0)
 			.getTime();
 	public static final Long PERSISTED_EVENT_ID3 = 3l;
+	public static final String PERSISTED_EVENT_NAME1 = "UTAKMICA5";
+
 
 	public static final Long NEW_EVENT_ID = null;
 	public static final String NEW_EVENT_NAME = "Dogadjaj";

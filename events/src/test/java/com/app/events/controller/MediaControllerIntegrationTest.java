@@ -99,18 +99,5 @@ public class MediaControllerIntegrationTest {
 	        
     }
     
-    @Test
-    @Transactional
-    @Rollback(true)
-    public void testDeleteMedia() throws Exception {
-    	URI uri = new URI(MediaConstants.URL_PREFIX + '/' + MediaConstants.VALID_MEDIA_ID_FOR_DELETE);
-    	
-    	HttpHeaders headers = new HttpHeaders();
-    	headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-        HttpEntity<MediaDTO> req = new HttpEntity<>(headers);
-        
-        ResponseEntity<Object> response = restTemplate.exchange(uri, HttpMethod.DELETE, req, Object.class);
-        
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());      
-    }
+   
 }

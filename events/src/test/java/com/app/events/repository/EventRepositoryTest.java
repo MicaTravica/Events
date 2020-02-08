@@ -2,9 +2,11 @@ package com.app.events.repository;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertSame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -147,4 +149,30 @@ public class EventRepositoryTest {
 			assertEquals(EventType.SPORT, event.getEventType());
 		}
 	}
+	
+	@Test
+	public void findAllNotFinished() {
+		Collection<Event> events = eventRepository.findAllNotFinished();
+		
+		assertEquals(4, events.size());
+	}
+
+	@Test
+	public void findAllByPlaceId_Test_Fail() {
+		Long placeID = 5l;
+		Collection<Event> events = eventRepository.findAllByPlaceId(placeID);
+		assertSame(0, events.size());
+	}
+
+	@Test
+	public void findAllByPlaceId_Test_Success() {
+		Long placeID = 1l;
+		Collection<Event> events = eventRepository.findAllByPlaceId(placeID);
+		assertSame(1, events.size());
+		Event event = events.iterator().next();
+		assertEquals(EventState.FINISHED, event.getEventState());
+	}
+
+	
+	
 }

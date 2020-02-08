@@ -1,7 +1,7 @@
 package com.app.events.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.Assert.assertNotNull;
 
 import java.net.URI;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import com.app.events.constants.HallConstants;
 import com.app.events.constants.SectorConstants;
 import com.app.events.constants.UserConstants;
 import com.app.events.dto.LoginDTO;
+import com.app.events.dto.PasswordChangeDTO;
 import com.app.events.dto.SectorDTO;
 import com.app.events.mapper.SectorMapper;
 import com.app.events.model.Hall;
@@ -72,19 +73,7 @@ public class SectorControllerIntegrationTest {
         assertEquals(HttpStatus.OK, res.getStatusCode());
         assertEquals(SectorConstants.PERSISTED_SECTOR_ID, res.getBody().getId());
     }
-
-    @Test
-    public void finddSector_when_Invalid_ID_then_return_NotFound() throws Exception{
-        
-        URI uri = new URI(SectorConstants.URI_PREFIX + SectorConstants.INVALID_SECTOR_ID);
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
-        HttpEntity<String> req = new HttpEntity<>(headers);
-
-        ResponseEntity<String> res = restTemplate.exchange(uri, HttpMethod.GET, req, String.class);
-
-        assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
-    }
+    
 
     @Test
     public void addSector_when_ValidSector_then_SectorShouldBeAdded() throws Exception
@@ -121,6 +110,7 @@ public class SectorControllerIntegrationTest {
         sectorRepository.delete(addedSector);
     }
     
+    
     private void checkCreatedSectorDTO(Sector sector, SectorDTO sectorDto) {
         assertEquals(sector.getId(), sectorDto.getId());
         assertEquals(sector.getName(), sectorDto.getName());
@@ -130,6 +120,33 @@ public class SectorControllerIntegrationTest {
         assertEquals(sector.getHall().getId(), sectorDto.getHallID());
     }
 
+    
+    @Test
+    public void update_Test_Success() throws Exception
+    {
+    	SectorDTO sector = new SectorDTO(
+    			SectorConstants.PERSISTED_SECTOR_ID3,
+    			SectorConstants.PERSISTED_SECTOR_NAME3,
+    			SectorConstants.PERSISTED_SECTOR_ROWS3,
+    			SectorConstants.PERSISTED_SECTOR_COLUMNS3,
+    			0,
+    			SectorConstants.PERSISTED_SECTOR_HALL_ID3
+    			);
+    	
+        URI uri = new URI("/api/sector");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
+        HttpEntity<SectorDTO> req = new HttpEntity<>(sector, headers);
+
+        ResponseEntity<SectorDTO> res = restTemplate.exchange(uri, HttpMethod.PUT, req, SectorDTO.class);
+
+
+        assertNotNull(res.getBody());
+        assertEquals(HttpStatus.OK, res.getStatusCode());
+    }
+    
+ 
+    
 
 
 
