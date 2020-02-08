@@ -1,11 +1,8 @@
 package com.events.test;
 
-import com.events.config.BrowserFactory;
-import com.events.constants.TicketReservationConstants;
-import com.events.constants.UserConstants;
-import com.events.pages.ChangePasswordPage;
-import com.events.pages.LoginPage;
-import com.events.pages.ReservationTicketPage;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -14,8 +11,11 @@ import org.junit.runners.MethodSorters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import com.events.config.BrowserFactory;
+import com.events.constants.TicketReservationConstants;
+import com.events.constants.UserConstants;
+import com.events.pages.LoginPage;
+import com.events.pages.ReservationTicketPage;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ReservationTicketTest {
