@@ -59,6 +59,8 @@ public class SectorCapacityControllerIntegrationTest {
     @Test
     public void findOneById_when_validID_then_return_SectorCapacityDTO() throws Exception
     {
+        //TODO: sacuvati neki SC i onda testrati da li njega nalazi..
+
         URI uri = new URI(SectorCapacityConstants.URI_PREFIX + SectorCapacityConstants.PERSISTED_SECTOR_CAPACITY_ID);
 
 		ResponseEntity<SectorCapacityDTO> response = restTemplate.getForEntity(uri, SectorCapacityDTO.class);
