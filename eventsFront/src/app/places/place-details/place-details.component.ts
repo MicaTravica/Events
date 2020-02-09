@@ -22,8 +22,9 @@ export class PlaceDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // tslint:disable-next-line: no-string-literal
+    const id = this.route.snapshot.params['id'];
     this.role = this.authService.getUserRole();
-    const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.placeService.getPlace(id).subscribe(
         (data: Place) => {
