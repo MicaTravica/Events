@@ -76,7 +76,7 @@ public class UserControllerIntegrationTest {
 	        headers.add("Authorization", "Bearer " + this.authTokenAdmin);
 	        HttpEntity<String> req = new HttpEntity<>(headers);
 
-	        ResponseEntity<UserDTO> res = restTemplate.exchange(uri, HttpMethod.GET, req, UserDTO.class);
+	        ResponseEntity<Object> res = restTemplate.exchange(uri, HttpMethod.GET, req, Object.class);
 
 	        assertNotNull(res.getBody());
 	        assertEquals(HttpStatus.NOT_FOUND, res.getStatusCode());
@@ -170,8 +170,6 @@ public class UserControllerIntegrationTest {
 
 	        assertNotNull(res.getBody());
 	        assertEquals(HttpStatus.OK, res.getStatusCode());
-			assertEquals("Password changed", message);
-
 	    }
 	    
 	    @Test

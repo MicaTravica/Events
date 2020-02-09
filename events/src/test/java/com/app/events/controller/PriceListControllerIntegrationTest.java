@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.net.URI;
 import java.util.List;
 
+import com.app.events.model.Event;
+import com.app.events.model.Sector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +60,15 @@ public class PriceListControllerIntegrationTest {
     public void findOneById_Test_Success() throws Exception
     {
     	//TODO: osigurati se da u bazi postoji to sto trazi
+
+        Sector s = new Sector(PriceListConstants.PERSISTED_SECTOR_ID);
+        Event e = new Event(PriceListConstants.PERSISTED_EVENT_ID);
+
+        PriceList pl = new PriceList(PriceListConstants.PERSISTED_PL_ID, 200,e,s);
+        pl = priceListRepository.save(pl);
+
+        System.out.println(pl.getId());
+
     	URI uri = new URI(PriceListConstants.URI_PREFIX );
 
 		ResponseEntity<PriceListDTO> response = restTemplate.getForEntity(uri + "/" + PriceListConstants.PERSISTED_PL_ID, PriceListDTO.class);
@@ -145,13 +156,15 @@ public class PriceListControllerIntegrationTest {
 	@Rollback(true)
     public void update_Test_Success() throws Exception
     {
+
+
     	PriceListDTO sc = new PriceListDTO(
     			PriceListConstants.PERSISTED_PL_ID,
          		PriceListConstants.NEW_PRICE,
          		PriceListConstants.PERSISTED_EVENT_ID,
-         		PriceListConstants.INVALID_PL_ID
+         		PriceListConstants.PERSISTED_SECTOR_ID
          		);
-         
+     //TODO: pogresan status kod
 
     	
     	URI uri = new URI(PriceListConstants.URI_PREFIX );
